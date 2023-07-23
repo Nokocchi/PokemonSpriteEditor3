@@ -6,5 +6,5 @@
 </script>
 
 <button on:click={increment}>
-  count is half of {count*2}
+  count is equal to {count}
 </button>
