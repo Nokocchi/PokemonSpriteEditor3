@@ -13,7 +13,7 @@
     const slMaxValue = 100;
 
     export let initialValue: RGB;
-    let initialHSLValue: HSL = RGBToHSL(initialValue);
+    $: initialHSLValue = RGBToHSL(initialValue);
 
     let currentH: number, currentS: number, currentL: number;
 

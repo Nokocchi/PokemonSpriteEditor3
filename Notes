@@ -1,0 +1,3 @@
+Look into using actions for things like: When the original canvas gets set by Pokemon selection?
+Look into whether things would be better with stores, derived stores, more reactive statements? Currently everything is events and bind:this which might be bad
+Look into if it makes sense to use contexts for each sprite color, or something like that

@@ -3,10 +3,10 @@
 
 <script lang="ts">
     import HslColorPicker from "./HSLColorPicker.svelte";
-
     import RgbColorPicker from "./RGBColorPicker.svelte";
-
     import type { ColorPickerResult_i, RGB } from "./types";
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
     const ColorPickerMode = Object.freeze({
         RGB: "RGB",
@@ -14,14 +14,14 @@
         HEX: "HEX",
     });
 
-    let canvas: HTMLCanvasElement;
+    let colorPreview: HTMLCanvasElement;
     let colorPickerMode: string = ColorPickerMode.RGB;
-    let initialColor: RGB = {r: 255, g: 80, b: 21};
+    export let initialColor: RGB;
 
     let updateColor = (event: CustomEvent<ColorPickerResult_i>) => {
         let newColor: RGB = event.detail.colorAsRGB();
         initialColor = newColor;
-        const ctx = canvas.getContext("2d");
+        const ctx = colorPreview.getContext("2d");
         ctx.fillStyle =
             "rgba(" +
             newColor.r +
@@ -32,7 +32,8 @@
             "," +
             1 +
             ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, colorPreview.width, colorPreview.height);
+        dispatch("colorChange", newColor);
     };
 
     let changeMode = (mode: string) => {
@@ -42,7 +43,7 @@
 </script>
 
 <div class="container">
-    <canvas bind:this={canvas} height="50" width="50" />
+    <canvas bind:this={colorPreview} height="50" width="50" />
     <button
         on:click={() => changeMode(ColorPickerMode.HSL)}
         disabled={colorPickerMode == ColorPickerMode.HSL}
