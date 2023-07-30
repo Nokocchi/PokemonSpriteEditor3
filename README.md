@@ -67,11 +67,10 @@ Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I re
 - [x] Setup Github actions to deploy project to Github Pages when main branch is updated. Without any hacks, like having a separate repo or branch for the dist folder
 - [x] Correctly configure paths and and file locations such that images are accessible both locally and when deployed to Github 
 - [x] Simple first setup with some buttons, image and canvas, just to learn Svelte, and make sure that basic functionality works
-- [ ] Keep track of the Pokemon's pixel data in some variable, which is then drawn to the canvas when updated
-- [ ] Run through the Pokemon's pixel data, make a map of each color and which pixels belong to this color. 
-- [ ] Figure out: Should this map simply point to the index of pixels in the canvas data? Or can we draw directly from this map? What "feels best"? 
-- [ ] Hook up the Color Groups so that they update the pixel data of the Pokemon
-- [ ] Check that it's possible to change the color of the canvas by moving the slider
+- [x] Keep track of the Pokemon's pixel data in some variable, which is then drawn to the canvas when updated
+- [x] Run through the Pokemon's pixel data, make a map of each color and which pixels belong to this color. 
+- [x] Hook up the Color Groups so that they update the pixel data of the Pokemon
+- [x] Check that it's possible to change the color of the canvas by moving the slider
 - [ ] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly, and maybe with sprite size hardcoded to a certain size becuase the sprites are super small..
 - [ ] Pokemon search feature: Search by name
 - [ ] Pokemon search feature: Manual exploration of the image directories? 
@@ -83,8 +82,7 @@ Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I re
 - [ ] Allow importing of second pokemon as color palette
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors
-- [ ] Consider making a custom color changer
-- - [ ] 3x Sliders with a textbox each for 0-255 num value
-- - [ ] 3x Sliders with a textbox each for HSL values
-- - [ ] Hex color textbox with color picker
-- - [ ] Shared Pipette and result color for all of these modes.
+- [x] 3x Sliders with a textbox each for 0-255 num value
+- [x] 3x Sliders with a textbox each for HSL values
+- [ ] Hex color textbox with color picker
+- [ ] Shared Pipette and result color for all of these modes.
