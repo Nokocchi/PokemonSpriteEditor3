@@ -59,8 +59,15 @@
     };
 </script>
 
+<div class="canvas-container">
 <canvas bind:this={originalCanvas} />
 <canvas bind:this={resultCanvas} />
+</div>
 
 <style>
+    .canvas-container {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 25px;
+    }
 </style>

@@ -39,50 +39,75 @@
     let changeMode = (mode: string) => {
         colorPickerMode = mode;
     };
-
 </script>
 
-<div class="container">
-    <canvas bind:this={colorPreview} height="50" width="50" />
-    <button
-        on:click={() => changeMode(ColorPickerMode.HSL)}
-        disabled={colorPickerMode == ColorPickerMode.HSL}
-    >
-        Switch to HSL
-    </button>
-    <button
-        on:click={() => changeMode(ColorPickerMode.RGB)}
-        disabled={colorPickerMode == ColorPickerMode.RGB}
-    >
-        Switch to RGB
-    </button>
-    {#if colorPickerMode == ColorPickerMode.RGB}
-        <RgbColorPicker
-            initialValue={initialColor}
-            on:change={updateColor}
-        />
-    {:else if colorPickerMode == ColorPickerMode.HSL}
-        <HslColorPicker
-            initialValue={initialColor}
-            on:change={updateColor}
-        />
-    {:else}
-        <HslColorPicker
-            initialValue={initialColor}
-            on:change={updateColor}
-        />
-    {/if}
+<div class="color-picker-container">
+    <div class="color-picker-mode-btn-container">
+        <button
+            on:click={() => changeMode(ColorPickerMode.RGB)}
+            disabled={colorPickerMode == ColorPickerMode.RGB}
+        >
+            Switch to RGB
+        </button>
+        <button
+            on:click={() => changeMode(ColorPickerMode.HSL)}
+            disabled={colorPickerMode == ColorPickerMode.HSL}
+        >
+            Switch to HSL
+        </button>
+    </div>
+    <div class="color-picker-input-container">
+        <canvas bind:this={colorPreview} height="50" width="50" />
+        <div class="color-picker-slider-container">
+            {#if colorPickerMode == ColorPickerMode.RGB}
+                <RgbColorPicker
+                    initialValue={initialColor}
+                    on:change={updateColor}
+                />
+            {:else if colorPickerMode == ColorPickerMode.HSL}
+                <HslColorPicker
+                    initialValue={initialColor}
+                    on:change={updateColor}
+                />
+            {:else}
+                <HslColorPicker
+                    initialValue={initialColor}
+                    on:change={updateColor}
+                />
+            {/if}
+        </div>
+    </div>
 </div>
 
 <style>
-    .container {
+    .color-picker-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 25px;
+    }
+
+    .color-picker-mode-btn-container {
         display: flex;
         flex-direction: row;
+    }
+
+    .color-picker-input-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .color-picker-slider-container {
+        display: flex;
+        flex-direction: column;
     }
 
     div {
         min-width: 50px;
         min-height: 50px;
         background-color: rgb(var(--r), var(--g), var(--b));
+    }
+
+    button:disabled {
+        pointer-events: none;
     }
 </style>

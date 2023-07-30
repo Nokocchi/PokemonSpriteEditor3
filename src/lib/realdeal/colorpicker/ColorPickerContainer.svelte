@@ -53,9 +53,18 @@
     }
 </script>
 
+<div class="colorPickerContainer">
 {#each [...originalColorPixelLocationsMap.keys()] as color}
     <ColorPicker
         initialColor={getAsRGB(color)}
         on:colorChange={(newColor) => changeColor(color, newColor.detail)}
     />
 {/each}
+</div>
+
+<style>
+    .colorPickerContainer {
+       display: flex;
+       flex-direction: column;
+    }
+</style>

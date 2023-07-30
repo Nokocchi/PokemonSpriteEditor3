@@ -8,6 +8,7 @@
 
 </script>
 
+<div class="slider">
 <input
     bind:value={currentValue}
     type="range"
@@ -21,4 +22,17 @@
     type="text"
     id="value"
     name="value"
+    class="slider-input"
 />
+</div>
+
+<style>
+    .slider {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .slider-input {
+        width: 25px;
+    }
+</style>
