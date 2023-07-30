@@ -1,6 +1,7 @@
 <script lang="ts">
     import PokemonSelector from "./PokemonSelector.svelte";
     import Canvas from "./Canvas.svelte";
+    import ColorPicker from "./colorpicker/ColorPicker.svelte";
 
     let selectedPokemonImg: HTMLImageElement;
     let pokemonChangeHandler = (
@@ -12,6 +13,7 @@
 
 <div class="main-page">
     <Canvas {selectedPokemonImg} />
+    <ColorPicker/>
     <PokemonSelector on:pkmnChanged={pokemonChangeHandler} />
 </div>
 

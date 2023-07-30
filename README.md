@@ -68,7 +68,6 @@ Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I re
 - [x] Correctly configure paths and and file locations such that images are accessible both locally and when deployed to Github 
 - [x] Simple first setup with some buttons, image and canvas, just to learn Svelte, and make sure that basic functionality works
 - [ ] Keep track of the Pokemon's pixel data in some variable, which is then drawn to the canvas when updated
-- [ ] Implement a standard HTML color picker
 - [ ] Run through the Pokemon's pixel data, make a map of each color and which pixels belong to this color. 
 - [ ] Figure out: Should this map simply point to the index of pixels in the canvas data? Or can we draw directly from this map? What "feels best"? 
 - [ ] Hook up the Color Groups so that they update the pixel data of the Pokemon
