@@ -20,8 +20,6 @@
             originalCanvas.width = pkmnImage.width;
             resultCanvas.height = pkmnImage.height;
             resultCanvas.width = pkmnImage.width;
-            console.log("Canvas, pkmnImage height", pkmnImage.height);
-            console.log("Canvas, pkmnImage width", pkmnImage.width);
             getCanvasContext(originalCanvas).drawImage(pkmnImage, 0, 0);
             getCanvasContext(resultCanvas).drawImage(pkmnImage, 0, 0);
             dispatch("originalCanvasReady");
@@ -31,8 +29,6 @@
     export const getOriginalPixelData = (): ImageData => {
         let x = originalCanvas.width;
         let y = originalCanvas.height;
-        console.log("Canvas, originalCanvas width", x);
-        console.log("Canvas, originalCanvas height", y);
         return getCanvasContext(originalCanvas).getImageData(0, 0, x, y);
     };
 
