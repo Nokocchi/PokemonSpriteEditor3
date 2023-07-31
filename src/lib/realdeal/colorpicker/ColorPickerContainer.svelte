@@ -12,9 +12,11 @@
     export const setInitialValues = (imageData: ImageData): void => {
         originalColorPixelLocationsMap.clear();
         const imageHeight = imageData.height;
-
         const imageWidth = imageData.width;
         const imageRGBData = imageData.data;
+        console.log("imageWidth", imageWidth);
+        console.log("imageHeight", imageHeight);
+        console.log("imageRGBData", imageRGBData);
         //4 indexes for each pixel
         for (let i = 0; i < imageHeight * imageWidth * 4; i++) {
             //If fourth index for a pixel (the alpha value) is not 255, then it must be transparent and thus background
