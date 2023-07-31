@@ -55,7 +55,7 @@
     let getCanvasContext = (
         canvas: HTMLCanvasElement
     ): CanvasRenderingContext2D => {
-        return canvas.getContext("2d");
+        return canvas.getContext("2d", { willReadFrequently: true });
     };
 </script>
 
