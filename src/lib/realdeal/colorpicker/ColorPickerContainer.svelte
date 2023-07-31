@@ -12,6 +12,7 @@
     export const setInitialValues = (imageData: ImageData): void => {
         originalColorPixelLocationsMap.clear();
         const imageHeight = imageData.height;
+
         const imageWidth = imageData.width;
         const imageRGBData = imageData.data;
         //4 indexes for each pixel
@@ -32,6 +33,7 @@
             i += 3;
             originalColorPixelLocationsMap = originalColorPixelLocationsMap;
         }
+        console.log("original colors map", originalColorPixelLocationsMap);
     };
 
     let getAsRGB = (colorKey: string): RGB => {
@@ -44,27 +46,28 @@
     };
 
     const changeColor = (originalColorKey: string, newColor: RGB): void => {
-        const pixelsToChange: number[] = originalColorPixelLocationsMap.get(originalColorKey);
+        const pixelsToChange: number[] =
+            originalColorPixelLocationsMap.get(originalColorKey);
         const newColorResult = {
             pixelsToChange: pixelsToChange,
-            newColor: newColor
+            newColor: newColor,
         } as NewColorResult;
         dispatch("newColor", newColorResult);
-    }
+    };
 </script>
 
 <div class="colorPickerContainer">
-{#each [...originalColorPixelLocationsMap.keys()] as color}
-    <ColorPicker
-        initialColor={getAsRGB(color)}
-        on:colorChange={(newColor) => changeColor(color, newColor.detail)}
-    />
-{/each}
+    {#each [...originalColorPixelLocationsMap.keys()] as color}
+        <ColorPicker
+            initialColor={getAsRGB(color)}
+            on:colorChange={(newColor) => changeColor(color, newColor.detail)}
+        />
+    {/each}
 </div>
 
 <style>
     .colorPickerContainer {
-       display: flex;
-       flex-direction: column;
+        display: flex;
+        flex-direction: column;
     }
 </style>

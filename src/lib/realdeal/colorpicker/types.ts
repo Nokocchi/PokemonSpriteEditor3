@@ -91,3 +91,8 @@ export const RGBToHSL = (rgb: RGB) => {
     } as HSL;
   };
 
+  export type NewColorResult = {
+    pixelsToChange: number[]
+    newColor: RGB
+}
+
