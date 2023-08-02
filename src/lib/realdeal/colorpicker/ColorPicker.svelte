@@ -2,10 +2,23 @@
 </script>
 
 <script lang="ts">
+    import { derived, writable } from "svelte/store";
+    import { contextKeyOriginalRGBMap } from "./store";
+
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
-    import type { ColorPickerResult_i, RGB } from "./types";
-    import { createEventDispatcher } from "svelte";
+    import {
+        RGBToHSL,
+        HSLToRGB,
+        type ColorPickerResult_i,
+        type RGB,
+    } from "./types";
+    import {
+        createEventDispatcher,
+        getContext,
+        onMount,
+        setContext,
+    } from "svelte";
     const dispatch = createEventDispatcher();
 
     const ColorPickerMode = Object.freeze({
@@ -16,11 +29,38 @@
 
     let colorPreview: HTMLCanvasElement;
     let colorPickerMode: string = ColorPickerMode.RGB;
+    let rgbColorPicker: RgbColorPicker;
+    let hslColorPicker: HslColorPicker;
+
+    export let contextKey: string;
     export let initialColor: RGB;
 
-    let updateColor = (event: CustomEvent<ColorPickerResult_i>) => {
-        let newColor: RGB = event.detail.colorAsRGB();
-        initialColor = newColor;
+    const masterOutputRgbStore = writable(undefined);
+    const rgbStore = writable(undefined);
+    const resetStore = writable(undefined);
+    const hslStore = writable(undefined);
+    const hslFromRgb = derived(rgbStore, ($currentRGB) => {
+        // Ugly hack, fix
+        if (!$currentRGB) return;
+        RGBToHSL($currentRGB);
+    });
+    const rgbFromHsl = derived(hslStore, ($currentHSL) => {
+        // Ugly hack, fix
+        if (!$currentHSL) return;
+        HSLToRGB($currentHSL);
+    });
+
+    setContext(contextKey, {
+        rgbStore: rgbStore,
+        hslStore: hslStore,
+        hslFromRgb: hslFromRgb,
+        rgbFromHsl: rgbFromHsl,
+        resetStore: resetStore,
+        masterOutputRgbStore: masterOutputRgbStore,
+    });
+
+    const setPreviewColor = (newColor: RGB) => {
+        if (!colorPreview) return;
         const ctx = colorPreview.getContext("2d");
         ctx.fillStyle =
             "rgba(" +
@@ -33,10 +73,24 @@
             1 +
             ")";
         ctx.fillRect(0, 0, colorPreview.width, colorPreview.height);
-        dispatch("colorChange", newColor);
     };
 
-    let changeMode = (mode: string) => {
+    const reset = () => {
+        if (colorPickerMode === ColorPickerMode.RGB) {
+            rgbColorPicker.reset();
+        } else if (colorPickerMode === ColorPickerMode.HSL) {
+            hslColorPicker.reset();
+        } else {
+            hslColorPicker.reset();
+        }
+    };
+
+    $: {
+        setPreviewColor($masterOutputRgbStore);
+        dispatch("colorChange", $masterOutputRgbStore);
+    }
+
+    const changeMode = (mode: string) => {
         colorPickerMode = mode;
     };
 </script>
@@ -55,24 +109,28 @@
         >
             Switch to HSL
         </button>
+        <button on:click={reset}> Reset </button>
     </div>
     <div class="color-picker-input-container">
         <canvas bind:this={colorPreview} height="50" width="50" />
         <div class="color-picker-slider-container">
             {#if colorPickerMode == ColorPickerMode.RGB}
                 <RgbColorPicker
+                    bind:this={rgbColorPicker}
+                    {contextKey}
                     initialValue={initialColor}
-                    on:change={updateColor}
                 />
             {:else if colorPickerMode == ColorPickerMode.HSL}
                 <HslColorPicker
+                    bind:this={hslColorPicker}
+                    {contextKey}
                     initialValue={initialColor}
-                    on:change={updateColor}
                 />
             {:else}
                 <HslColorPicker
+                    bind:this={hslColorPicker}
+                    {contextKey}
                     initialValue={initialColor}
-                    on:change={updateColor}
                 />
             {/if}
         </div>

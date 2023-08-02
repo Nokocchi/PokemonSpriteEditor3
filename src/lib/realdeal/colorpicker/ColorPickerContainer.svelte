@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { writable, type Writable } from "svelte/store";
+    import { contextKeyOriginalRGBMap } from "./store";
     import ColorPicker from "./ColorPicker.svelte";
     import type { NewColorResult, RGB } from "./types";
     import { createEventDispatcher } from "svelte";
@@ -11,6 +13,7 @@
 
     export const setInitialValues = (imageData: ImageData): void => {
         originalColorPixelLocationsMap.clear();
+        $contextKeyOriginalRGBMap.clear();
         const imageHeight = imageData.height;
         const imageWidth = imageData.width;
         const imageRGBData = imageData.data;
@@ -26,6 +29,7 @@
                     originalColorPixelLocationsMap.get(colorKey).push(i);
                 } else {
                     originalColorPixelLocationsMap.set(colorKey, [i]);
+                    $contextKeyOriginalRGBMap.set(colorKey, getAsRGB(colorKey))
                 }
             }
             // We already increment i once in the for loop
@@ -44,8 +48,7 @@
     };
 
     const changeColor = (originalColorKey: string, newColor: RGB): void => {
-        const pixelsToChange: number[] =
-            originalColorPixelLocationsMap.get(originalColorKey);
+        const pixelsToChange: number[] = originalColorPixelLocationsMap.get(originalColorKey);
         const newColorResult = {
             pixelsToChange: pixelsToChange,
             newColor: newColor,
@@ -58,6 +61,7 @@
     {#each [...originalColorPixelLocationsMap.keys()] as color}
         <ColorPicker
             initialColor={getAsRGB(color)}
+            contextKey={color}
             on:colorChange={(newColor) => changeColor(color, newColor.detail)}
         />
     {/each}

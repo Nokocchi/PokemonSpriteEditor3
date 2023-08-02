@@ -4,7 +4,7 @@
 
 ### What is this?
 
-Back when I was a wee lad, just 20 years old and in my first year of university as a Computer Science student about 7 years ago, I found a video talking about hidden features in Pokemon Cold & Silver, with one of these features being the "Pokemon Sprite Color Changer" view in the Pokedex. It allowed the user to cycle through the two main colors of each Pokemon (other than black and white) and changing their colors by using RGB sliders: https://tcrf.net/Pok%C3%A9mon_Gold_and_Silver/Debug_Menus#Legend
+Back when I was a wee lad, just 20 years old and in my first year of university as a Computer Science student about 7 years ago, I found a video talking about hidden features in Pokemon Gold & Silver, with one of these features being the "Pokemon Sprite Color Changer" view in the Pokedex. It allowed the user to cycle through the two main colors of each Pokemon (other than black and white) and changing their colors by using RGB sliders: https://tcrf.net/Pok%C3%A9mon_Gold_and_Silver/Debug_Menus#Legend
 
 I was deeply inspired by this and thought to myself: I can build something like that! I still haven't, though, but we're getting there. Eventually. 
 
@@ -86,3 +86,7 @@ Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I re
 - [x] 3x Sliders with a textbox each for HSL values
 - [ ] Hex color textbox with color picker
 - [ ] Shared Pipette and result color for all of these modes.
+- [ ] Keep color palette when changing Pokemon.
+- [x] Add reset button to individual sliders
+- [x] Add reset button to Color Picker
+- [ ] Add reset button to whole Pokemon

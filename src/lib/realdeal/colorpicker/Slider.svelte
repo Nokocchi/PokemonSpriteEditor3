@@ -1,29 +1,40 @@
 <script lang="ts">
+    	import { onMount } from 'svelte';
+
     export let currentValue: number;
     export let minValue: number;
     export let maxValue: number;
     export let initialValue: number;
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
-    $: currentValue = initialValue;
+    onMount(() => {
+        currentValue = initialValue;
+    })
+
+    const reset = () => {
+        currentValue = initialValue;
+    }
 
 </script>
 
 <div class="slider">
-<input
-    bind:value={currentValue}
-    type="range"
-    min={minValue}
-    max={maxValue}
-    class="slider"
-    id="myRange"
-/>
-<input
-    bind:value={currentValue}
-    type="text"
-    id="value"
-    name="value"
-    class="slider-input"
-/>
+    <button on:click={reset}>Reset</button>
+    <input
+        bind:value={currentValue}
+        type="range"
+        min={minValue}
+        max={maxValue}
+        class="slider"
+        id="myRange"
+    />
+    <input
+        bind:value={currentValue}
+        type="text"
+        id="value"
+        name="value"
+        class="slider-input"
+    />
 </div>
 
 <style>

@@ -56,7 +56,7 @@ export class HslColorPickerResult implements HslColorPickerResult_i {
     }
 }
 
-const HSLToRGB = (hsl: HSL) => {
+export const HSLToRGB = (hsl: HSL) => {
     let {h, s, l} = hsl;
     s /= 100;
     l /= 100;
@@ -71,6 +71,7 @@ const HSLToRGB = (hsl: HSL) => {
   };
 
 export const RGBToHSL = (rgb: RGB) => {
+    console.log("Converting rgb", rgb)
     let {r, g, b} = rgb;
     r /= 255;
     g /= 255;
