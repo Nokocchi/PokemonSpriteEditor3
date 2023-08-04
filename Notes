@@ -1,1 +1,6 @@
-Look into using actions for things like: When the original canvas gets set by Pokemon selection?
+Look into using actions for things like: When the original canvas gets set by Pokemon selection, can I use an action for something useful here? 
+
+- Make HSL<->RGB conversion work. Currently it seems to reset back to initial color on conversion. Could probably fix it by removing the if-block and just setting the unused colorPickers invisble, but that's not svelte-like..
+- Simplify (if possible) the stores. It seems ridiculous to have an rgb store which is only used to make a derived store in HSL format which is then used to call setCurrentColor() in HSL colorPicker, and vice versa. And having a masterOutput on top of this.. I only did it to "be absolutely sure" that it worked, with the intention of cleaning it up later :( 
+- Get rid of events and dispatch-calls in the top level components. Since I need to write the full canvas with every change, I might as well just have the full canvas as a "write only" kind of output buffer that, through reactive stores, draw to the canvas.
+- Figure out generics. It seems silly that there is so much duplicate code, but on the other hand, it is limited to only 3 sliders and 3 formats, so... maybe its okay?

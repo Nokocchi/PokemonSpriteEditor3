@@ -34,8 +34,8 @@
             }
             // We already increment i once in the for loop
             i += 3;
-            originalColorPixelLocationsMap = originalColorPixelLocationsMap;
         }
+        originalColorPixelLocationsMap = originalColorPixelLocationsMap;
     };
 
     let getAsRGB = (colorKey: string): RGB => {
@@ -58,7 +58,7 @@
 </script>
 
 <div class="colorPickerContainer">
-    {#each [...originalColorPixelLocationsMap.keys()] as color}
+    {#each originalColorPixelLocationsMap.keys() as color}
         <ColorPicker
             initialColor={getAsRGB(color)}
             contextKey={color}

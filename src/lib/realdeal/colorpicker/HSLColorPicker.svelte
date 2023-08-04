@@ -32,10 +32,7 @@
         l: currentL,
     };
 
-    $: console.log("currentHSL", currentHSL);
-
     $: initialHSLValue = RGBToHSL(initialValue);
-    $: console.log("initialHSL", initialHSLValue);
 
     export const reset = () => {
         setCurrentColor(initialHSLValue);

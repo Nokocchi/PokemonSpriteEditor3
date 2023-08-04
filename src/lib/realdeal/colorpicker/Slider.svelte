@@ -8,18 +8,16 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    onMount(() => {
-        currentValue = initialValue;
-    })
-
-    const reset = () => {
-        currentValue = initialValue;
+    const setValue = (newValue: number) => {
+        currentValue = newValue;
     }
+
+    $: setValue(initialValue);
 
 </script>
 
 <div class="slider">
-    <button on:click={reset}>Reset</button>
+    <button on:click={() => setValue(initialValue)}>Reset</button>
     <input
         bind:value={currentValue}
         type="range"
