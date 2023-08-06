@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PokemonSelector from "./PokemonSelector.svelte";
+    import PokemonSelector from "./pokemonpicker/PokemonSelector.svelte";
     import Canvas from "./Canvas.svelte";
     import ColorPickerContainer from "./colorpicker/ColorPickerContainer.svelte";
     import type { NewColorResult } from "./colorpicker/types";
@@ -11,6 +11,7 @@
         pkmnChangeEvent: CustomEvent<HTMLImageElement>
     ) => {
         let selectedPokemonImg: HTMLImageElement = pkmnChangeEvent.detail;
+        if(selectedPokemonImg == null) return;
         canvas.setSelectedPokemon(selectedPokemonImg);
     };
 
