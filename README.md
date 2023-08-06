@@ -71,9 +71,21 @@ Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I re
 - [x] Run through the Pokemon's pixel data, make a map of each color and which pixels belong to this color. 
 - [x] Hook up the Color Groups so that they update the pixel data of the Pokemon
 - [x] Check that it's possible to change the color of the canvas by moving the slider
-- [ ] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly, and maybe with sprite size hardcoded to a certain size becuase the sprites are super small..
-- [ ] Pokemon search feature: Search by name
-- [ ] Pokemon search feature: Manual exploration of the image directories? 
+- [x] 3x Sliders with a textbox each for 0-255 num value
+- [x] 3x Sliders with a textbox each for HSL values
+- [ ] Hex color textbox with color picker
+- [ ] Shared Pipette for all of these modes
+- [x] Shared color preview / palette for all of these modes
+- [ ] Implement the browsers standard color picker?
+- [ ] Make it possible to seamlessly change between color formats for each color
+- [x] Add reset button to individual sliders
+- [x] Add reset button to Color Picker
+- [ ] Add reset button to whole Pokemon
+- [x] Pokemon search feature: Search by name
+- [x] After picking a Pokemon, order selectable sprites by generation and game
+- [x] Implement filters for back sprite, shiny, female, animation frames and so on
+- [ ] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly
+- [ ] Implement an upload image feature
 - [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
 - [ ] Select multiple colors at the same time and change all of them at the same time. This requires some math. 
 - - Select color a, b, c. Find the color x in [a, b, c] whose R is closest to 255 and y whose R is closest to 0. Make a new slider for R with step size 1, middle 0, and max 255 - x.r, and min -y.r. This allows all colors to change R proportionally using the smallest possible step size. Repeat for G and B
@@ -82,11 +94,5 @@ Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I re
 - [ ] Allow importing of second pokemon as color palette
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors
-- [x] 3x Sliders with a textbox each for 0-255 num value
-- [x] 3x Sliders with a textbox each for HSL values
-- [ ] Hex color textbox with color picker
-- [ ] Shared Pipette and result color for all of these modes.
-- [ ] Keep color palette when changing Pokemon.
-- [x] Add reset button to individual sliders
-- [x] Add reset button to Color Picker
-- [ ] Add reset button to whole Pokemon
+- [ ] Save color palette so it can be used for other Pokemons
+- [ ] Resizable canvas so the sprite is easier to see on large resolutions
