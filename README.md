@@ -20,6 +20,10 @@ Dunsparce is my favorite Pokemon, and my Github username is the Japanese name fo
 
 Have you seen that little bugger? So cute! It's a very forgettable Pokemon. I remember finding it in Dark Cave as a child and immediately liking it. Many children my age had never seen it before. I like how it's a rare little waspy earth snake, hiding in the dark, often forgettable and rarely liked. I want to show it some love. For a few years, I wanted to sew my own 1 meter long Dunsparce plushie but never got started. And I used Dunsparce as my lead Pokemon in HeartGold, and I freaking love how Dunsparce looks in pink instead of blue. Which is one of my main inspirations for this website in the first place.  
 
+### Why does the "female" filter not always work? Example: Kakuna, Diamon & Pearl
+
+The sprites are stored in a hierarchical folder structure using the folder names "female", "shiny", "frame2", "back" for all sprites that are not the main, front, male, non-shiny, frame1 sprite. Whever I downloaded this sprite directory from, they decided that for some folders, the female sprites are only included if they are different from the male sprites, and for other folders, the female sprites are always included even if they are identical to the male sprite. Or something like that. Testing seems to say that the filtering should work as intended, but the source data is inconsistent.
+
 ### Why is it called "v3"? Where are the other versions?
 
 - 2016: Version 1.

@@ -1,7 +1,10 @@
 <script lang="ts">
-    export let paths: string[];
+    import type { SpritePath } from "../colorpicker/types";
+
+    export let paths: SpritePath[];
+    let possiblePathVars: Set<string> = new Set();
+
     export let selectedPokemonImg: HTMLImageElement;
-    let pathVars: Set<string> = new Set();
     let filters: string[] = [];
     let filteredPathsToShow: string[] = [];
 
@@ -9,43 +12,63 @@
         selectedPokemonImg = clickEvent.target as HTMLImageElement;
     };
 
-    const setPathVars = (paths: string[]) => {
-        pathVars.clear();
-        paths.forEach((path) => {
-            let possiblePathVars: string[] = path.split("/");
-            let adjusted: string[] = possiblePathVars.slice(
-                3,
-                possiblePathVars.length - 1
-            );
-            adjusted.forEach((pathVariable) => pathVars.add(pathVariable));
-        });
+    const applyFilters = () => {
+        filteredPathsToShow = paths
+            .filter(
+                (path) =>
+                    // Base sprite is always included
+                    path.other.length === 0 ||
+                    // For other sprites, every single path variables must be selected in the filters
+                    path.other.every((otherPathVar) => filters.includes(otherPathVar)
+                    )
+            )
+            .map((path) => path.fullPath);
     };
 
-    const applyFilters = (filters: string[]) => {
-        filteredPathsToShow = paths.filter((path) =>
-        // FIX: 
-        // 1) Make it so that the string has to match all filters
-        // 2) Find a way to elegantly include "standard" sprites - maybe use SpritePath type or similar
-            filters.some((substring) => path.includes(substring)) || path.split("/").length === 4
+    const setup = (paths: SpritePath[]) => {
+        possiblePathVars.clear();
+        paths.forEach((path) =>
+            path.other.forEach((otherPathVar) =>
+                possiblePathVars.add(otherPathVar)
+            )
         );
+        possiblePathVars = possiblePathVars;
+        applyFilters();
     };
 
-    $: setPathVars(paths);
-    $: applyFilters(filters);
+    $: setup(paths);
+    $: filters && applyFilters();
 </script>
 
-{#each pathVars as pathVar}
+<div class="sprite-type-selector">
+<div class="filters">
+{#each possiblePathVars as pathVar}
     <input type="checkbox" bind:group={filters} value={pathVar} />
     {pathVar}
 {/each}
+</div>
 
+<div class="sprites">
 {#each filteredPathsToShow as path}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
     <img src={path} alt="img" on:click={selectPkmn} />
 {/each}
+</div>
+</div>
+
 
 <style>
+    .sprite-type-selector {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filters, .sprites {
+        display: flex;
+        flex-direction: row;
+    }
+
     img:hover {
         outline: 2px solid yellow;
     }

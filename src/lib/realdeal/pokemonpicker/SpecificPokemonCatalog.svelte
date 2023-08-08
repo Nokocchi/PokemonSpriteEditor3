@@ -6,10 +6,10 @@
     import SpriteTypeSelector from "./SpriteTypeSelector.svelte";
     export let selectedPokemonImg: HTMLImageElement;
     export let selectedPokemonNr: number;
-    let spritePaths: SpritePath[] = [];
-    let genGamePathMap: Map<string, Map<string, string[]>> = new Map<
+
+    let genGamePathMap: Map<string, Map<string, SpritePath[]>> = new Map<
         string,
-        Map<string, string[]>
+        Map<string, SpritePath[]>
     >();
 
     $: showCatalog(imgPathsByNr[selectedPokemonNr]);
@@ -21,17 +21,25 @@
                 let pathVariables: string[] = path.split("/");
                 let generation = pathVariables[1];
                 let game = pathVariables[2];
+                let otherVariables: string[] = pathVariables.slice(3, pathVariables.length-1);
 
                 if (!genGamePathMap.has(generation)) {
-                    genGamePathMap.set(generation, new Map<string, string[]>());
+                    genGamePathMap.set(generation, new Map<string, SpritePath[]>());
                 }
                 if (!genGamePathMap.get(generation).has(game)) {
                     genGamePathMap.get(generation).set(game, []);
                 }
-                genGamePathMap.get(generation).get(game).push(path);
+
+                let spritePath: SpritePath = {
+                    fullPath: path,
+                    generation: generation,
+                    game: game,
+                    other: otherVariables
+                }
+                genGamePathMap.get(generation).get(game).push(spritePath);
             });
+            genGamePathMap = genGamePathMap;
         }
-        genGamePathMap = genGamePathMap;
     };
 </script>
 

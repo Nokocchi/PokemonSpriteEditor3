@@ -4,6 +4,7 @@
 </script>
 
 <select placeholder="Select a Pokemon" bind:value={selectedPokemonNr}>
+    <option value="placeholder" disabled selected hidden>Pokedex number..</option>
     {#each pokemonSelectOptions as pokemon}
         <option value={pokemon.id}>
             #{pokemon.id}
