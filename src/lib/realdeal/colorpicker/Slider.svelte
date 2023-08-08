@@ -1,12 +1,9 @@
 <script lang="ts">
-    	import { onMount } from 'svelte';
 
     export let currentValue: number;
     export let minValue: number;
     export let maxValue: number;
     export let initialValue: number;
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
 
     const setValue = (newValue: number) => {
         currentValue = newValue;

@@ -3,51 +3,49 @@
 
 <script lang="ts">
     import Slider from "./Slider.svelte";
-    import { createEventDispatcher, getContext, onMount } from "svelte";
-    import {
-        HslColorPickerResult,
-        type HSL,
-        type RGB,
-        RGBToHSL,
-        type HslColorPickerResult_i,
-        HSLToRGB,
-    } from "./types";
+    import { getContext, onMount } from "svelte";
+    import { type HSL, type RGB, RGBToHSL, HSLToRGB } from "./types";
 
-    const dispatch = createEventDispatcher();
-    const minValue = 0;
-    const hMaxValue = 359;
-    const slMaxValue = 100;
-    let currentHSL: HSL;
+    export const reset = () => {
+        setCurrentColor(initialValue);
+    };
 
     export let initialValue: RGB;
     export let contextKey: string;
+
+    const minValue = 0;
+    const hMaxValue = 359;
+    const slMaxValue = 100;
+    const { rgbStore }: any = getContext(contextKey);
+
+    let initialHSLValue: HSL;
     let currentH: number, currentS: number, currentL: number;
 
-    const { rgbStore, hslStore, hslFromRgb, rgbFromHsl, masterOutputRgbStore }: any =
-        getContext(contextKey);
+    onMount(() => {
+        console.log("HSL Mounted")
+        console.log("Mounted with current RGB store", $rgbStore)
+    });
 
-    $: currentHSL = {
+    $:  console.log("Current RGB store", $rgbStore)
+
+    $: $rgbStore = HSLToRGB({
         h: currentH,
         s: currentS,
         l: currentL,
-    };
+    });
 
     $: initialHSLValue = RGBToHSL(initialValue);
+    $: setCurrentColor($rgbStore);
 
-    export const reset = () => {
-        setCurrentColor(initialHSLValue);
-    }
+    //$: ({h: currentH, s: currentS, l: currentL} = RGBToHSL($rgbStore));
 
-    const setCurrentColor = (colorFromOtherMode: HSL) => {
-        if(!colorFromOtherMode) return;
-        currentH = colorFromOtherMode.h;
-        currentS = colorFromOtherMode.s;
-        currentL = colorFromOtherMode.l;
-    }
+    const setCurrentColor = (newColor: RGB) => {
+        let asHSL: HSL = RGBToHSL(newColor);
+        currentH = asHSL.h;
+        currentS = asHSL.s;
+        currentL = asHSL.l;
+    };
 
-    $: $masterOutputRgbStore = HSLToRGB(currentHSL);
-
-    $: setCurrentColor($hslFromRgb);
 
 </script>
 

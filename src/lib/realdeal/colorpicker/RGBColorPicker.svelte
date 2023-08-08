@@ -3,44 +3,36 @@
 
 <script lang="ts">
     import Slider from "./Slider.svelte";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
     import {
-        RgbColorPickerResult,
         type RGB,
-        type RgbColorPickerResult_i,
     } from "./types";
-    const dispatch = createEventDispatcher();
-
-    export let initialValue: RGB;
-    export let contextKey: string;
-    let currentR: number, currentG: number, currentB: number;
-    let currentRGB: RGB;
-    const minValue = 0;
-    const maxValue = 255;
-
-    const { rgbStore, hslStore, hslFromRgb, rgbFromHsl, resetStore, masterOutputRgbStore }: any =
-        getContext(contextKey);
 
     export const reset = () => {
         setCurrentColor(initialValue);
-    }
+    };
 
-    const setCurrentColor = (colorFromOtherMode: RGB) => {
-        if(!colorFromOtherMode) return;
-        currentR = colorFromOtherMode.r;
-        currentG = colorFromOtherMode.g;
-        currentB = colorFromOtherMode.b;
-    }
+    export let initialValue: RGB;
+    export let contextKey: string;
 
-    $: $rgbStore = currentRGB;
-    $: $masterOutputRgbStore = $rgbStore;
+    const minValue = 0;
+    const maxValue = 255;
+    const { rgbStore }: any = getContext(contextKey);
 
-    $: setCurrentColor($rgbFromHsl);
+    let currentR: number, currentG: number, currentB: number;
 
-    $: currentRGB = {
+    $: setCurrentColor($rgbStore);
+
+    $: $rgbStore = {
         r: currentR,
         g: currentG,
         b: currentB,
+    };
+
+    const setCurrentColor = (newColor: RGB) => {
+        currentR = newColor.r;
+        currentG = newColor.g;
+        currentB = newColor.b;
     };
 
 </script>
