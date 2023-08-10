@@ -18,22 +18,19 @@
         const imageWidth = imageData.width;
         const imageRGBData = imageData.data;
         //4 indexes for each pixel
-        for (let i = 0; i < imageHeight * imageWidth * 4; i++) {
+        for (let i = 0; i < imageHeight * imageWidth * 4; i += 4) {
             //If fourth index for a pixel (the alpha value) is not 255, then it must be transparent and thus background
             if (imageRGBData[i + 3] == 255) {
                 let r: number = imageRGBData[i];
                 let g: number = imageRGBData[i + 1];
                 let b: number = imageRGBData[i + 2];
                 const colorKey: string = r + ":" + g + ":" + b;
-                if (originalColorPixelLocationsMap.has(colorKey)) {
-                    originalColorPixelLocationsMap.get(colorKey).push(i);
-                } else {
-                    originalColorPixelLocationsMap.set(colorKey, [i]);
-                    $contextKeyOriginalRGBMap.set(colorKey, getAsRGB(colorKey))
+                if (!originalColorPixelLocationsMap.has(colorKey)) {
+                    originalColorPixelLocationsMap.set(colorKey, []);
+                    $contextKeyOriginalRGBMap.set(colorKey, getAsRGB(colorKey));
                 }
+                originalColorPixelLocationsMap.get(colorKey).push(i);
             }
-            // We already increment i once in the for loop
-            i += 3;
         }
         originalColorPixelLocationsMap = originalColorPixelLocationsMap;
     };
@@ -48,7 +45,8 @@
     };
 
     const changeColor = (originalColorKey: string, newColor: RGB): void => {
-        const pixelsToChange: number[] = originalColorPixelLocationsMap.get(originalColorKey);
+        const pixelsToChange: number[] =
+            originalColorPixelLocationsMap.get(originalColorKey);
         const newColorResult = {
             pixelsToChange: pixelsToChange,
             newColor: newColor,
