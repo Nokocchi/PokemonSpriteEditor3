@@ -27,7 +27,7 @@
     export let contextKey: string;
     export let initialColor: RGB;
 
-    const rgbStore = writable(initialColor);
+    const rgbStore = writable();
 
     setContext(contextKey, {
         rgbStore: rgbStore

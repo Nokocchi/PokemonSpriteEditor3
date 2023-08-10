@@ -20,24 +20,7 @@
 
     let initialHSLValue: HSL;
     let currentH: number, currentS: number, currentL: number;
-
-    onMount(() => {
-        console.log("HSL Mounted")
-        console.log("Mounted with current RGB store", $rgbStore)
-    });
-
-    $:  console.log("Current RGB store", $rgbStore)
-
-    $: $rgbStore = HSLToRGB({
-        h: currentH,
-        s: currentS,
-        l: currentL,
-    });
-
-    $: initialHSLValue = RGBToHSL(initialValue);
-    $: setCurrentColor($rgbStore);
-
-    //$: ({h: currentH, s: currentS, l: currentL} = RGBToHSL($rgbStore));
+    let mounted: boolean = false;
 
     const setCurrentColor = (newColor: RGB) => {
         let asHSL: HSL = RGBToHSL(newColor);
@@ -46,7 +29,26 @@
         currentL = asHSL.l;
     };
 
+    onMount(() => {
+        mounted = true;
+        if ($rgbStore.r === undefined) return;
+        setCurrentColor($rgbStore);
 
+    });
+
+    $: mounted && setCurrentColor($rgbStore);
+
+    $: {
+        if (mounted && currentH && currentS && currentL) {
+            $rgbStore = HSLToRGB({
+                h: currentH,
+                s: currentS,
+                l: currentL,
+            });
+        }
+    }
+
+    $: initialHSLValue = RGBToHSL(initialValue);
 </script>
 
 <div class="column">
