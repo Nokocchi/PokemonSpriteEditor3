@@ -17,33 +17,36 @@
     const maxValue = 255;
     const { rgbStore }: any = getContext(contextKey);
 
+    let age2 = "27";
+    let age: string = "27";
     let currentR: number, currentG: number, currentB: number;
     let mounted: boolean = false;
 
     const setCurrentColor = (newColor: RGB) => {
-        if(newColor === undefined) return;
-        currentR = newColor.r;
-        currentG = newColor.g;
-        currentB = newColor.b;
+        // Only set current color if this component is mounted and the color has a value
+        if (!mounted || newColor === undefined) return;
+        ({ r: currentR, g: currentG, b: currentB } = newColor);
+    };
+
+    const setRgbStoreFromSlider = (r: number, g: number, b: number) => {
+        // We are not interested in updating the output color store (rgbstore) if this component isn't mounted.
+        // sliders will have undefined values before this component is mounted
+        if (mounted) {
+            $rgbStore = { r, g, b };
+        }
     };
 
     onMount(() => {
         mounted = true;
-        if ($rgbStore === undefined || $rgbStore.r === undefined) return;
-        ({ r: currentR, g: currentG, b: currentB } = $rgbStore);
+        // When switching color mode, the new color picker will get mounted with the initial colors. In this case, set sliders to the current rgbstore value
+        // Special case: At first "page load", the rgbstore is initialised with undefined value
+        // This means that when the Pokemon is loaded and color pickers initialised, we want to set the rgbstore value from the sliders, not the other way around
+        // Luckily, setCurrentColor doesn't allow setting the sliders to undefined, so we don't have to worry
+        setCurrentColor($rgbStore);
     });
 
-    $: mounted && setCurrentColor($rgbStore);
-
-    $: {
-        if (mounted && currentR >= 0 && currentG >= 0 && currentB >= 0) {
-            $rgbStore = {
-                r: currentR,
-                g: currentG,
-                b: currentB,
-            };
-        }
-    }
+    $: setCurrentColor($rgbStore);
+    $: setRgbStoreFromSlider(currentR, currentG, currentB);
 </script>
 
 <div class="column">

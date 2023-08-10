@@ -23,31 +23,23 @@
     let mounted: boolean = false;
 
     const setCurrentColor = (newColor: RGB) => {
-        let asHSL: HSL = RGBToHSL(newColor);
-        currentH = asHSL.h;
-        currentS = asHSL.s;
-        currentL = asHSL.l;
+        if(!mounted || newColor === undefined) return;
+        ({h: currentH, s: currentS, l: currentL} = RGBToHSL(newColor))
     };
 
-    onMount(() => {
-        mounted = true;
-        if ($rgbStore.r === undefined) return;
-        setCurrentColor($rgbStore);
-
-    });
-
-    $: mounted && setCurrentColor($rgbStore);
-
-    $: {
-        if (mounted && currentH && currentS && currentL) {
-            $rgbStore = HSLToRGB({
-                h: currentH,
-                s: currentS,
-                l: currentL,
-            });
+    const setRgbStoreFromSlider = (h: number, s: number, l: number) => {
+        if (mounted) {
+            $rgbStore = HSLToRGB({h, s, l});
         }
     }
 
+    onMount(() => {
+        mounted = true;
+        setCurrentColor($rgbStore);
+    });
+
+    $: setCurrentColor($rgbStore);
+    $: setRgbStoreFromSlider(currentH, currentS, currentL);
     $: initialHSLValue = RGBToHSL(initialValue);
 </script>
 
