@@ -85,7 +85,7 @@
         <button on:click={reset}> Reset </button>
     </div>
     <div class="color-picker-input-container">
-        <canvas bind:this={colorPreview} height="50" width="50" />
+        <canvas bind:this={colorPreview} height="20" width="20" />
         <div class="color-picker-slider-container">
             {#if colorPickerMode == ColorPickerMode.RGB}
                 <RgbColorPicker
@@ -112,6 +112,7 @@
         display: flex;
         flex-direction: column;
         margin-bottom: 25px;
+        margin-left: 60px;
     }
 
     .color-picker-mode-btn-container {

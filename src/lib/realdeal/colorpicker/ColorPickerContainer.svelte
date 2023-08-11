@@ -2,7 +2,7 @@
     import { writable, type Writable } from "svelte/store";
     import { contextKeyOriginalRGBMap } from "./store";
     import ColorPicker from "./ColorPicker.svelte";
-    import type { NewColorResult, RGB } from "./types";
+    import { RGBToHSL, type NewColorResult, type RGB } from "./types";
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
@@ -32,7 +32,14 @@
                 originalColorPixelLocationsMap.get(colorKey).push(i);
             }
         }
-        originalColorPixelLocationsMap = originalColorPixelLocationsMap;
+        let sortedByHue = new Map(
+            [...originalColorPixelLocationsMap].sort((entry1, entry2) => {
+                let hsl1 = RGBToHSL(getAsRGB(entry1[0]));
+                let hsl2 = RGBToHSL(getAsRGB(entry2[0]));
+                return Math.abs(360 - hsl1.h) - Math.abs(360 - hsl2.h);
+            })
+        );
+        originalColorPixelLocationsMap = sortedByHue;
     };
 
     let getAsRGB = (colorKey: string): RGB => {
@@ -68,6 +75,7 @@
 <style>
     .colorPickerContainer {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 </style>
