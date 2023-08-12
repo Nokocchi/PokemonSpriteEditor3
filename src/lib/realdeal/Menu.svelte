@@ -33,7 +33,7 @@
     .menu {
         position: absolute;
         top: 0px;
-        right: 0px;
+        width: 100%;
     }
 
     button.selected {

@@ -23,46 +23,6 @@ export type HEX = {
     val: string;
 };
 
-export interface ColorPickerResult_i {
-    color: Color;
-    colorAsRGB: () => RGB;
-}
-
-export interface RgbColorPickerResult_i extends ColorPickerResult_i {
-    color: RGB;
-    colorAsRGB: () => RGB;
-}
-
-export class RgbColorPickerResult implements RgbColorPickerResult_i {
-    color: RGB;
-
-    constructor(color: RGB) {
-        this.color = color;
-    }
-
-    colorAsRGB(): RGB {
-        return this.color;
-    }
-}
-
-export type Color = RGB | HSL | HEX;
-
-export interface HslColorPickerResult_i extends ColorPickerResult_i {
-    color: HSL;
-    colorAsRGB: () => RGB;
-}
-
-export class HslColorPickerResult implements HslColorPickerResult_i {
-    color: HSL;
-
-    constructor(color: HSL) {
-        this.color = color;
-    }
-
-    colorAsRGB(): RGB {
-        return HSLToRGB(this.color)
-    }
-}
 
 export const HSLToRGB = (hsl: HSL) => {
     let { h, s, l } = hsl;
@@ -110,3 +70,10 @@ export const CurrentWindow = Object.freeze({
     EDIT: "EDIT",
     PALETTES: "PALETTES",
 });
+
+export const isEquals = (color1: RGB, color2: RGB): boolean => {
+    return color1 && color2
+        && color1.r === color2.r
+        && color1.g === color2.g
+        && color1.b === color2.b;
+}

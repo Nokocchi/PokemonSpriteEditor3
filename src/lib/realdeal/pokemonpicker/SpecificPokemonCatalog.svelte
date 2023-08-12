@@ -21,10 +21,16 @@
                 let pathVariables: string[] = path.split("/");
                 let generation = pathVariables[1];
                 let game = pathVariables[2];
-                let otherVariables: string[] = pathVariables.slice(3, pathVariables.length-1);
+                let otherVariables: string[] = pathVariables.slice(
+                    3,
+                    pathVariables.length - 1
+                );
 
                 if (!genGamePathMap.has(generation)) {
-                    genGamePathMap.set(generation, new Map<string, SpritePath[]>());
+                    genGamePathMap.set(
+                        generation,
+                        new Map<string, SpritePath[]>()
+                    );
                 }
                 if (!genGamePathMap.get(generation).has(game)) {
                     genGamePathMap.get(generation).set(game, []);
@@ -34,8 +40,8 @@
                     fullPath: path,
                     generation: generation,
                     game: game,
-                    other: otherVariables
-                }
+                    other: otherVariables,
+                };
                 genGamePathMap.get(generation).get(game).push(spritePath);
             });
             genGamePathMap = genGamePathMap;
@@ -43,14 +49,20 @@
     };
 </script>
 
-{#each [...genGamePathMap] as [generation, games]}
-    <CollapsibleSection headerText={generation} expanded={true}>
-        {#each [...games] as [game, paths]}
-            <CollapsibleSection headerText={game} expanded={true}>
-                <SpriteTypeSelector {paths} bind:selectedPokemonImg />
-            </CollapsibleSection>
-        {/each}
-    </CollapsibleSection>
-{/each}
+<div class="specific-pokemon-catalog">
+    {#each [...genGamePathMap] as [generation, games]}
+        <CollapsibleSection headerText={generation} expanded={true}>
+            {#each [...games] as [game, paths]}
+                <CollapsibleSection headerText={game} expanded={true}>
+                    <SpriteTypeSelector {paths} bind:selectedPokemonImg />
+                </CollapsibleSection>
+            {/each}
+        </CollapsibleSection>
+    {/each}
+</div>
 
-
+<style>
+    .specific-pokemon-catalog {
+        margin-top: 25px;
+    }
+</style>

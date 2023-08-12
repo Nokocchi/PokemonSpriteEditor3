@@ -27,7 +27,12 @@
 
 <style>
     .collapsible {
-        border-bottom: 1px solid var(--gray-light, #eee);
+        border-bottom: 1px solid var(--gray-light, green);
+        width: 100%
+    }
+
+    .collapsible .collapsible button {
+        width: 80%
     }
 
     h3 {
@@ -35,7 +40,7 @@
     }
 
     button {
-        background-color: var(--background, #fff);
+        background-color: var(--background, white);
         color: var(--gray-darkest, #282828);
         display: flex;
         justify-content: space-between;
@@ -43,10 +48,12 @@
         border: none;
         margin: 0;
         padding: 1em 0.5em;
+        border-radius: 0%;
+        outline: 1px solid black;
     }
 
     button[aria-expanded="true"] {
-        border-bottom: 1px solid var(--gray-light, #eee);
+        border-bottom: 1px solid var(--gray-light, red);
     }
 
     button[aria-expanded="true"] .vert {

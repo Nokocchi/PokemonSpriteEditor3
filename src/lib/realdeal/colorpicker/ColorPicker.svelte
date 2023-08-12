@@ -2,10 +2,11 @@
 </script>
 
 <script lang="ts">
-    import { writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
     import {
+    isEquals,
         type RGB,
     } from "./types";
     import {
@@ -27,7 +28,7 @@
     export let contextKey: string;
     export let initialColor: RGB;
 
-    const rgbStore = writable();
+    const rgbStore: Writable<RGB> = writable();
 
     setContext(contextKey, {
         rgbStore: rgbStore
@@ -84,7 +85,7 @@
         </button>
         <button on:click={reset}> Reset </button>
     </div>
-    <div class="color-picker-input-container">
+    <div class="color-picker-input-container" class:changed = {!isEquals($rgbStore, initialColor)}>
         <canvas bind:this={colorPreview} height="20" width="20" />
         <div class="color-picker-slider-container">
             {#if colorPickerMode == ColorPickerMode.RGB}
@@ -113,6 +114,10 @@
         flex-direction: column;
         margin-bottom: 25px;
         margin-left: 60px;
+    }
+
+    .color-picker-input-container.changed {
+        outline: solid 2px blue;
     }
 
     .color-picker-mode-btn-container {
