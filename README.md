@@ -81,7 +81,7 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [ ] Shared Pipette for all of these modes
 - [x] Shared color preview / palette for all of these modes
 - [ ] Implement the browsers standard color picker?
-- [ ] Make it possible to seamlessly change between color formats for each color
+- [x] Make it possible to seamlessly change between color formats for each color
 - [x] Add reset button to individual sliders
 - [x] Add reset button to Color Picker
 - [ ] Add reset button to whole Pokemon
@@ -91,10 +91,8 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [ ] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly
 - [ ] Implement an upload image feature
 - [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
-- [ ] Select multiple colors at the same time and change all of them at the same time. This requires some math. 
-- - Select color a, b, c. Find the color x in [a, b, c] whose R is closest to 255 and y whose R is closest to 0. Make a new slider for R with step size 1, middle 0, and max 255 - x.r, and min -y.r. This allows all colors to change R proportionally using the smallest possible step size. Repeat for G and B
-- - Do something similar for hue
-- - This will probably act weird for random colors, but work well for similar-looking colors?
+- [x] Select multiple colors at the same time and change all of them at the same time. 
+- - [ ] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?
 - [ ] Allow importing of second pokemon as color palette
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors

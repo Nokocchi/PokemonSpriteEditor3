@@ -12,6 +12,7 @@
 
     export let initialValue: RGB;
     export let contextKey: string;
+    export let disabled: boolean;
 
     const minValue = 0;
     const hMaxValue = 359;
@@ -49,18 +50,21 @@
         initialValue={initialHSLValue.h}
         {minValue}
         maxValue={hMaxValue}
+        {disabled}
     />
     <Slider
         bind:currentValue={currentS}
         initialValue={initialHSLValue.s}
         {minValue}
         maxValue={slMaxValue}
+        {disabled}
     />
     <Slider
         bind:currentValue={currentL}
         initialValue={initialHSLValue.l}
         {minValue}
         maxValue={slMaxValue}
+        {disabled}
     />
 </div>
 

@@ -2,10 +2,12 @@
     import { writable, type Writable } from "svelte/store";
     import { contextKeyOriginalRGBMap } from "./store";
     import ColorPicker from "./ColorPicker.svelte";
-    import { RGBToHSL, type NewColorResult, type RGB } from "./types";
+    import { RGBToHSL, type NewColorResult, type RGB, getAsRGB } from "./types";
     import { createEventDispatcher } from "svelte";
+    import MultiColorPicker from "./MultiColorPicker.svelte";
     const dispatch = createEventDispatcher();
     export let imageData: ImageData;
+    let multiSelectContextKeys: string[] = [];
 
     let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
         string,
@@ -45,15 +47,6 @@
         originalColorPixelLocationsMap = sortedByHue;
     };
 
-    let getAsRGB = (colorKey: string): RGB => {
-        const chars: string[] = colorKey.split(":");
-        return {
-            r: Number(chars[0]),
-            g: Number(chars[1]),
-            b: Number(chars[2]),
-        };
-    };
-
     const changeColor = (originalColorKey: string, newColor: RGB): void => {
         const pixelsToChange: number[] =
             originalColorPixelLocationsMap.get(originalColorKey);
@@ -63,6 +56,12 @@
         } as NewColorResult;
         dispatch("newColor", newColorResult);
     };
+
+    const updateR = (offset: number) => {};
+
+    const updateG = (offset: number) => {};
+
+    const updateB = (offset: number) => {};
 </script>
 
 <div class="colorPickerContainer">
@@ -71,8 +70,19 @@
             initialColor={getAsRGB(color)}
             contextKey={color}
             on:colorChange={(newColor) => changeColor(color, newColor.detail)}
+            bind:multiSelectContextKeys
         />
     {/each}
+    {#key multiSelectContextKeys}
+        {#if multiSelectContextKeys.length}
+            <MultiColorPicker
+                {multiSelectContextKeys}
+                on:updateR={updateR}
+                on:updateG={updateG}
+                on:updateB={updateB}
+            />
+        {/if}
+    {/key}
 </div>
 
 <style>

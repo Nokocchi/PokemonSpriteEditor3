@@ -1,3 +1,5 @@
+import { writable, type Writable } from "svelte/store";
+
 export type SpritePath = {
     fullPath: string;
     generation: string;
@@ -77,3 +79,22 @@ export const isEquals = (color1: RGB, color2: RGB): boolean => {
         && color1.g === color2.g
         && color1.b === color2.b;
 }
+
+export let getAsRGB = (contextKey: string): RGB => {
+    const chars: string[] = contextKey.split(":");
+    return {
+        r: Number(chars[0]),
+        g: Number(chars[1]),
+        b: Number(chars[2]),
+    };
+};
+
+export const contextUpdateRStore: Writable<Map<string, Function>> = writable(
+    new Map<string, Function>()
+);
+export const contextUpdateGStore: Writable<Map<string, Function>> = writable(
+    new Map<string, Function>()
+);
+export const contextUpdateBStore: Writable<Map<string, Function>> = writable(
+    new Map<string, Function>()
+);
