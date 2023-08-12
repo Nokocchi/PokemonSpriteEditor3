@@ -2,34 +2,54 @@
     import PokemonSelector from "./pokemonpicker/PokemonSelector.svelte";
     import Canvas from "./Canvas.svelte";
     import ColorPickerContainer from "./colorpicker/ColorPickerContainer.svelte";
-    import type { NewColorResult } from "./colorpicker/types";
+    import { CurrentWindow, type NewColorResult } from "./colorpicker/types";
+    import Menu from "./Menu.svelte";
 
     let colorPickerContainer: ColorPickerContainer;
     let canvas: Canvas;
-
-    const pokemonChangeHandler = (
-        pkmnChangeEvent: CustomEvent<HTMLImageElement>
-    ) => {
-        let selectedPokemonImg: HTMLImageElement = pkmnChangeEvent.detail;
-        if(selectedPokemonImg == null) return;
-        canvas.setSelectedPokemon(selectedPokemonImg);
-    };
+    let currentWindow: string = CurrentWindow.SELECT;
+    let selectedPokemonImg: HTMLImageElement;
+    let imageData: ImageData
+    let selectedPokemonNr: number;
 
     const setInitialColorPickerValues = () => {
-        let imageData: ImageData = canvas.getOriginalPixelData();
-        colorPickerContainer.setInitialValues(imageData);
+        imageData = canvas.getOriginalPixelData();
     };
 
     const updateColorAtPixels = (newColorResult: NewColorResult): void => {
         canvas.updateColor(newColorResult);
-    }
+    };
 
+    const showPage = (page: string) => {
+        currentWindow = page;
+    };
 </script>
 
 <div class="main-page">
-    <Canvas bind:this={canvas} on:originalCanvasReady={setInitialColorPickerValues}/>
-    <ColorPickerContainer bind:this={colorPickerContainer} on:newColor={(newColorResult) => updateColorAtPixels(newColorResult.detail)}/>
-    <PokemonSelector on:pkmnChanged={pokemonChangeHandler} />
+    <Canvas
+        bind:this={canvas}
+        selectedPokemonImg={selectedPokemonImg}
+        on:originalCanvasReady={setInitialColorPickerValues}
+    />
+    {#if currentWindow == CurrentWindow.SELECT}
+        <PokemonSelector bind:selectedPokemonNr bind:selectedPokemonImg />
+    {:else if currentWindow == CurrentWindow.EDIT}
+        <ColorPickerContainer
+            bind:this={colorPickerContainer}
+            imageData = {imageData}
+            on:newColor={(newColorResult) =>
+                updateColorAtPixels(newColorResult.detail)}
+        />
+    {:else}
+        <p>not implemented</p>
+    {/if}
+    <Menu
+        bind:currentWindow
+        on:selectPokemon={() => showPage(CurrentWindow.SELECT)}
+        on:editSprite={() => showPage(CurrentWindow.EDIT)}
+        on:palettes={() => showPage(CurrentWindow.PALETTES)}
+        selectedPokemonImg = {selectedPokemonImg}
+    />
 </div>
 
 <style>

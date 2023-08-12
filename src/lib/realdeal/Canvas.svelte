@@ -7,6 +7,8 @@
     import type { NewColorResult, RGB } from "./colorpicker/types";
     const dispatch = createEventDispatcher();
 
+    export let selectedPokemonImg: HTMLImageElement;
+
     /* onMount(() => {
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = "blue";
@@ -14,7 +16,9 @@
     });
     */
 
-    export const setSelectedPokemon = (pkmnImage: HTMLImageElement): void => {
+    $: selectedPokemonImg && setSelectedPokemon(selectedPokemonImg);
+
+    const setSelectedPokemon = (pkmnImage: HTMLImageElement): void => {
         if (pkmnImage) {
             originalCanvas.height = pkmnImage.height;
             originalCanvas.width = pkmnImage.width;

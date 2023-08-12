@@ -10,6 +10,7 @@
 
     const selectPkmn = (clickEvent: MouseEvent) => {
         selectedPokemonImg = clickEvent.target as HTMLImageElement;
+        paths = paths;
     };
 
     const applyFilters = () => {
@@ -19,7 +20,8 @@
                     // Base sprite is always included
                     path.other.length === 0 ||
                     // For other sprites, every single path variables must be selected in the filters
-                    path.other.every((otherPathVar) => filters.includes(otherPathVar)
+                    path.other.every((otherPathVar) =>
+                        filters.includes(otherPathVar)
                     )
             )
             .map((path) => path.fullPath);
@@ -41,22 +43,26 @@
 </script>
 
 <div class="sprite-type-selector">
-<div class="filters">
-{#each possiblePathVars as pathVar}
-    <input type="checkbox" bind:group={filters} value={pathVar} />
-    {pathVar}
-{/each}
-</div>
+    <div class="filters">
+        {#each possiblePathVars as pathVar}
+            <input type="checkbox" bind:group={filters} value={pathVar} />
+            {pathVar}
+        {/each}
+    </div>
 
-<div class="sprites">
-{#each filteredPathsToShow as path}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-    <img src={path} alt="img" on:click={selectPkmn} />
-{/each}
+    <div class="sprites">
+        {#each filteredPathsToShow as path}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <img
+                src={path}
+                alt="img"
+                class:selected={selectedPokemonImg && selectedPokemonImg.src.includes(path)}
+                on:click={selectPkmn}
+            />
+        {/each}
+    </div>
 </div>
-</div>
-
 
 <style>
     .sprite-type-selector {
@@ -64,12 +70,17 @@
         flex-direction: column;
     }
 
-    .filters, .sprites {
+    .filters,
+    .sprites {
         display: flex;
         flex-direction: row;
     }
 
     img:hover {
         outline: 2px solid yellow;
+    }
+
+    img.selected {
+        outline: 2px solid green;
     }
 </style>

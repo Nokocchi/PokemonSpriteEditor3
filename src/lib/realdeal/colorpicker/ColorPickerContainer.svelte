@@ -5,13 +5,16 @@
     import { RGBToHSL, type NewColorResult, type RGB } from "./types";
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
+    export let imageData: ImageData;
 
     let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
         string,
         number[]
     >();
 
-    export const setInitialValues = (imageData: ImageData): void => {
+    $: imageData && setInitialValues(imageData);
+
+    const setInitialValues = (imageData: ImageData): void => {
         originalColorPixelLocationsMap.clear();
         $contextKeyOriginalRGBMap.clear();
         const imageHeight = imageData.height;

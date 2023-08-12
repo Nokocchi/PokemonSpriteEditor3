@@ -105,3 +105,8 @@ export type NewColorResult = {
     newColor: RGB
 }
 
+export const CurrentWindow = Object.freeze({
+    SELECT: "SELECT",
+    EDIT: "EDIT",
+    PALETTES: "PALETTES",
+});
