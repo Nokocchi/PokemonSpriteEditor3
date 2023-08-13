@@ -75,7 +75,7 @@
         />
     {/each}
     <div class="break" />
-    {#if contextKeysMultiSelect.length && !multiColorMode}
+    {#if contextKeysMultiSelect.length > 1 && !multiColorMode}
         <button on:click={() => {multiColorMode = true}}>START MULTICOLORING</button>
     {/if}
     {#if multiColorMode}

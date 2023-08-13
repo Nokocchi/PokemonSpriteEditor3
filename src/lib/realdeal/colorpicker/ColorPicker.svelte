@@ -41,9 +41,13 @@
 
     $: disabled = multiselected || multiselectBegun;
 
-    $: multiselected =
-        contextKeysMultiSelect.filter((color) => color === contextKey).length >
-        0;
+    $: {
+        let test: boolean =
+            contextKeysMultiSelect.filter((color) => color === contextKey)
+                .length > 0;
+        console.log("Updating multiselected with value", test);
+        multiselected = test;
+    }
 
     onMount(() => {
         // Once all the color pickers are ready, re-set the rgbstore to trigger drawing to the preview/palette
@@ -51,6 +55,17 @@
     });
 
     const multiSelect = () => {
+        if (multiselectBegun) return;
+
+        if (multiselected) {
+            contextKeysMultiSelect = contextKeysMultiSelect.filter(
+                (selectedColor) => selectedColor !== contextKey
+            );
+            return;
+        } else {
+            contextKeysMultiSelect = [...contextKeysMultiSelect, contextKey];
+        }
+
         // What is this magic? I cannot set currentValueLockedWhenMultiSelect = $rgbStore
         // Or even do = Object.create($rgbStore) or = Object.assign($rgbStore)
         // Because then the value of currentValueLockedWhenMultiSelect gets changed once more, somehow, without this method being run
@@ -62,16 +77,7 @@
             b: $rgbStore.b,
         };
 
-        if (multiselected) {
-            contextKeysMultiSelect = contextKeysMultiSelect.filter(
-                (selectedColor) => selectedColor === contextKey
-            );
-        } else {
-            contextKeysMultiSelect = [...contextKeysMultiSelect, contextKey];
-        }
-
         $contextUpdateRStore.set(contextKey, (newValue: number) => {
-            console.log("new R value", newValue);
             $rgbStore.r = newValue;
             $rgbStore = $rgbStore;
         });
@@ -86,7 +92,6 @@
             $rgbStore = $rgbStore;
         });
 
-        console.log("multiselect method run again");
         $contextCurrentLockedValueStore.set(
             contextKey,
             currentValueLockedWhenMultiSelect
@@ -150,6 +155,7 @@
             width="50"
             on:click={multiSelect}
             class:multiselected
+            class:multiselectBegun
         />
         <div class="color-picker-slider-container">
             {#if colorPickerMode == ColorPickerMode.RGB}
@@ -189,6 +195,10 @@
 
     canvas:hover {
         outline: 2px solid yellow;
+    }
+
+    canvas.multiselectBegun:hover {
+        outline: none;
     }
 
     .color-picker-input-container.changed {

@@ -5,7 +5,6 @@
         contextUpdateRStore,
         contextCurrentLockedValueStore,
         contextInitialValueStore,
-        getAsRGB,
         type RGB,
     } from "./types";
     import Slider from "./Slider.svelte";
@@ -18,61 +17,47 @@
     let bMin: number, bMax: number;
     let currentR: number, currentG: number, currentB: number;
 
-    const changeR = (rOffset: number) => {
-        if (rOffset === undefined) return;
+    const change = (offset: number, rgbVal: string) => {
+        if (offset === undefined) return;
         contextKeysMultiSelect.forEach((ck) => {
-            let newValue: number = $contextCurrentLockedValueStore.get(ck).r + rOffset;
-            $contextUpdateRStore.get(ck)(newValue);
+            let newValue: number =
+                $contextCurrentLockedValueStore.get(ck)[rgbVal] + offset;
+            getContextUpdateStore(rgbVal).get(ck)(newValue);
         });
     };
 
-    const changeG = (gOffset: number) => {
-        if (gOffset === undefined) return;
+    const resetFunction = (rgbVal: string) => {
         contextKeysMultiSelect.forEach((ck) => {
-            let newValue: number = $contextCurrentLockedValueStore.get(ck).g + gOffset;
-            $contextUpdateGStore.get(ck)(newValue);
+            let initialValue: RGB = $contextInitialValueStore.get(ck);
+            getContextUpdateStore(rgbVal).get(ck)(initialValue[rgbVal]);
+            $contextCurrentLockedValueStore.set(ck, initialValue);
         });
     };
 
-    const changeB = (bOffset: number) => {
-        if (bOffset === undefined) return;
-        contextKeysMultiSelect.forEach((ck) => {
-            let newValue: number = $contextCurrentLockedValueStore.get(ck).b + bOffset;
-            $contextUpdateBStore.get(ck)(newValue);
-        });
+    const getContextUpdateStore = (rgbVal: string) => {
+        if (rgbVal === RGBVal.r) return $contextUpdateRStore;
+        if (rgbVal === RGBVal.g) return $contextUpdateGStore;
+        if (rgbVal === RGBVal.b) return $contextUpdateBStore;
     };
 
-    const resetFunctionR = () => {
-        contextKeysMultiSelect.forEach((ck) => {
-            let newValue: number = $contextInitialValueStore.get(ck).r
-            $contextUpdateRStore.get(ck)(newValue);
-        });
-    }
-
-    const resetFunctionG = () => {
-        contextKeysMultiSelect.forEach((ck) => {
-            let newValue: number = $contextInitialValueStore.get(ck).g
-            $contextUpdateGStore.get(ck)(newValue);
-        });
-    }
-
-    const resetFunctionB = () => {
-        contextKeysMultiSelect.forEach((ck) => {
-            let newValue: number = $contextInitialValueStore.get(ck).b
-            $contextUpdateBStore.get(ck)(newValue);
-        });
-    }
+    const RGBVal = Object.freeze({
+        r: "r",
+        g: "g",
+        b: "b",
+    });
 
     const close = () => {
         dispatch("close");
-    }
+    };
 
-    $: changeR(currentR);
-    $: changeG(currentG);
-    $: changeB(currentB);
+    $: change(currentR, RGBVal.r);
+    $: change(currentG, RGBVal.g);
+    $: change(currentB, RGBVal.b);
 
     const createMultiColorPicker = (contextKeys: string[]) => {
-        let rgbValues: RGB[] = contextKeys.map(ck => $contextCurrentLockedValueStore.get(ck))
+        let rgbValues: RGB[] = contextKeys.map((ck) =>
+            $contextCurrentLockedValueStore.get(ck)
+        );
 
         let sortedByR = rgbValues.slice().sort((a, b) => {
             return a.r - b.r;
@@ -100,29 +85,26 @@
 <div class="multi-slider-container">
     <Slider
         initialValue={0}
-        disabled={false}
         bind:currentValue={currentR}
         minValue={rMin}
         maxValue={rMax}
-        resetFunction={resetFunctionR}
+        resetFunction={() => resetFunction(RGBVal.r)}
     />
 
     <Slider
         initialValue={0}
-        disabled={false}
         bind:currentValue={currentG}
         minValue={gMin}
         maxValue={gMax}
-        resetFunction={resetFunctionG}
+        resetFunction={() => resetFunction(RGBVal.g)}
     />
 
     <Slider
         initialValue={0}
-        disabled={false}
         bind:currentValue={currentB}
         minValue={bMin}
         maxValue={bMax}
-        resetFunction={resetFunctionB}
+        resetFunction={() => resetFunction(RGBVal.b)}
     />
 
     <button on:click={close}>Close</button>
