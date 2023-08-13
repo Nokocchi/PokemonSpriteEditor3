@@ -4,6 +4,7 @@
     export let maxValue: number;
     export let initialValue: number;
     export let disabled: boolean;
+    export let resetFunction: () => void = () => setValue(initialValue);
 
     const setValue = (newValue: number) => {
         currentValue = newValue;
@@ -13,7 +14,7 @@
 </script>
 
 <div class="slider">
-    <button on:click={() => setValue(initialValue)} {disabled}>Reset</button>
+    <button on:click={resetFunction} {disabled}>Reset</button>
     <input
         bind:value={currentValue}
         type="range"

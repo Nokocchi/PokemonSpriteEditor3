@@ -9,6 +9,10 @@
         contextUpdateBStore,
         contextUpdateGStore,
         contextUpdateRStore,
+        contextCurrentLockedValueStore,
+        contextInitialValueStore,
+        contextUpdateColorPickerStore,
+        getAsRGB,
         isEquals,
         type RGB,
     } from "./types";
@@ -21,11 +25,11 @@
         HEX: "HEX",
     });
 
-    export let colorsToChange: RGB[];
+    export let multiselectBegun: boolean;
+    export let contextKeysMultiSelect: string[];
     export let contextKey: string;
     export let initialColor: RGB;
 
-    let currentValueLockedWhenMultiSelect: RGB;
     let colorPreview: HTMLCanvasElement;
     let colorPickerMode: string = ColorPickerMode.RGB;
     let multiselected: boolean = false;
@@ -35,20 +39,11 @@
         rgbStore: rgbStore,
     });
 
-    const setCurrentValueLockedWhenMultiSelect = (color: RGB) => {
-        // What is this magic? I cannot set currentValueLockedWhenMultiSelect = $rgbStore
-        // Or even do = Object.create($rgbStore) or = Object.assign($rgbStore)
-        // Because then the value of currentValueLockedWhenMultiSelect gets changed once more, somehow, without this method being run
-        // Is it because these objects are being set by reference? Is the = $rgbStore being run asynchronously?
-        currentValueLockedWhenMultiSelect = {
-            r: color.r,
-            g: color.g,
-            b: color.b,
-        };
-    };
+    $: disabled = multiselected || multiselectBegun;
 
-    $: multiselected = colorsToChange.filter(color => isEquals(color, currentValueLockedWhenMultiSelect)).length > 0;
-    $: setCurrentValueLockedWhenMultiSelect(initialColor);
+    $: multiselected =
+        contextKeysMultiSelect.filter((color) => color === contextKey).length >
+        0;
 
     onMount(() => {
         // Once all the color pickers are ready, re-set the rgbstore to trigger drawing to the preview/palette
@@ -56,30 +51,47 @@
     });
 
     const multiSelect = () => {
-        setCurrentValueLockedWhenMultiSelect($rgbStore);
-        // Don't use context key. It only works for initial color :(
+        // What is this magic? I cannot set currentValueLockedWhenMultiSelect = $rgbStore
+        // Or even do = Object.create($rgbStore) or = Object.assign($rgbStore)
+        // Because then the value of currentValueLockedWhenMultiSelect gets changed once more, somehow, without this method being run
+        // Is it because these objects are being set by reference? Is the = $rgbStore being run asynchronously?
+
+        let currentValueLockedWhenMultiSelect: RGB = {
+            r: $rgbStore.r,
+            g: $rgbStore.g,
+            b: $rgbStore.b,
+        };
+
         if (multiselected) {
-            colorsToChange = colorsToChange.filter(
-                selectedColor => isEquals(selectedColor, currentValueLockedWhenMultiSelect)
+            contextKeysMultiSelect = contextKeysMultiSelect.filter(
+                (selectedColor) => selectedColor === contextKey
             );
         } else {
-            colorsToChange = [...colorsToChange, currentValueLockedWhenMultiSelect];
+            contextKeysMultiSelect = [...contextKeysMultiSelect, contextKey];
         }
 
-        $contextUpdateRStore.set(currentValueLockedWhenMultiSelect, (offset: number) => {
-            $rgbStore.r = currentValueLockedWhenMultiSelect.r + offset;
+        $contextUpdateRStore.set(contextKey, (newValue: number) => {
+            console.log("new R value", newValue);
+            $rgbStore.r = newValue;
             $rgbStore = $rgbStore;
         });
 
-        $contextUpdateGStore.set(currentValueLockedWhenMultiSelect, (offset: number) => {
-            $rgbStore.g = currentValueLockedWhenMultiSelect.g + offset;
+        $contextUpdateGStore.set(contextKey, (newValue: number) => {
+            $rgbStore.g = newValue;
             $rgbStore = $rgbStore;
         });
 
-        $contextUpdateBStore.set(currentValueLockedWhenMultiSelect, (offset: number) => {
-            $rgbStore.b = currentValueLockedWhenMultiSelect.b + offset;
+        $contextUpdateBStore.set(contextKey, (newValue: number) => {
+            $rgbStore.b = newValue;
             $rgbStore = $rgbStore;
         });
+
+        console.log("multiselect method run again");
+        $contextCurrentLockedValueStore.set(
+            contextKey,
+            currentValueLockedWhenMultiSelect
+        );
+        $contextInitialValueStore.set(contextKey, initialColor);
     };
 
     const setPreviewColor = (newColor: RGB) => {
@@ -126,7 +138,7 @@
         >
             Switch to HSL
         </button>
-        <button on:click={reset} disabled={multiselected}> Reset </button>
+        <button on:click={reset} {disabled}> Reset </button>
     </div>
     <div
         class="color-picker-input-container"
@@ -144,19 +156,19 @@
                 <RgbColorPicker
                     {contextKey}
                     initialValue={initialColor}
-                    disabled={multiselected}
+                    {disabled}
                 />
             {:else if colorPickerMode == ColorPickerMode.HSL}
                 <HslColorPicker
                     {contextKey}
                     initialValue={initialColor}
-                    disabled={multiselected}
+                    {disabled}
                 />
             {:else}
                 <HslColorPicker
                     {contextKey}
                     initialValue={initialColor}
-                    disabled={multiselected}
+                    {disabled}
                 />
             {/if}
         </div>

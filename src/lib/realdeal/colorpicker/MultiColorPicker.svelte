@@ -3,11 +3,16 @@
         contextUpdateBStore,
         contextUpdateGStore,
         contextUpdateRStore,
+        contextCurrentLockedValueStore,
+        contextInitialValueStore,
+        getAsRGB,
         type RGB,
     } from "./types";
     import Slider from "./Slider.svelte";
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
-    export let colorsToChange: RGB[];
+    export let contextKeysMultiSelect: string[];
     let rMin: number, rMax: number;
     let gMin: number, gMax: number;
     let bMin: number, bMax: number;
@@ -15,40 +20,67 @@
 
     const changeR = (rOffset: number) => {
         if (rOffset === undefined) return;
-        colorsToChange.forEach((color) => {
-            let method = $contextUpdateRStore.get(color);
-            method(rOffset);
+        contextKeysMultiSelect.forEach((ck) => {
+            let newValue: number = $contextCurrentLockedValueStore.get(ck).r + rOffset;
+            $contextUpdateRStore.get(ck)(newValue);
         });
     };
 
     const changeG = (gOffset: number) => {
         if (gOffset === undefined) return;
-        colorsToChange.forEach((color) => {
-            $contextUpdateGStore.get(color)(gOffset);
+        contextKeysMultiSelect.forEach((ck) => {
+            let newValue: number = $contextCurrentLockedValueStore.get(ck).g + gOffset;
+            $contextUpdateGStore.get(ck)(newValue);
         });
     };
 
     const changeB = (bOffset: number) => {
         if (bOffset === undefined) return;
-        colorsToChange.forEach((color) => {
-            $contextUpdateBStore.get(color)(bOffset);
+        contextKeysMultiSelect.forEach((ck) => {
+            let newValue: number = $contextCurrentLockedValueStore.get(ck).b + bOffset;
+            $contextUpdateBStore.get(ck)(newValue);
         });
     };
+
+    const resetFunctionR = () => {
+        contextKeysMultiSelect.forEach((ck) => {
+            let newValue: number = $contextInitialValueStore.get(ck).r
+            $contextUpdateRStore.get(ck)(newValue);
+        });
+    }
+
+    const resetFunctionG = () => {
+        contextKeysMultiSelect.forEach((ck) => {
+            let newValue: number = $contextInitialValueStore.get(ck).g
+            $contextUpdateGStore.get(ck)(newValue);
+        });
+    }
+
+    const resetFunctionB = () => {
+        contextKeysMultiSelect.forEach((ck) => {
+            let newValue: number = $contextInitialValueStore.get(ck).b
+            $contextUpdateBStore.get(ck)(newValue);
+        });
+    }
+
+    const close = () => {
+        dispatch("close");
+    }
 
     $: changeR(currentR);
     $: changeG(currentG);
     $: changeB(currentB);
 
-    const createMultiColorPicker = (colorsToChange: RGB[]) => {
-        let sortedByR = colorsToChange.slice().sort((a, b) => {
+    const createMultiColorPicker = (contextKeys: string[]) => {
+        let rgbValues: RGB[] = contextKeys.map(ck => $contextCurrentLockedValueStore.get(ck))
+
+        let sortedByR = rgbValues.slice().sort((a, b) => {
             return a.r - b.r;
         });
-
-        let sortedByG = colorsToChange.slice().sort((a, b) => {
+        let sortedByG = rgbValues.slice().sort((a, b) => {
             return a.g - b.g;
         });
-
-        let sortedByB = colorsToChange.slice().sort((a, b) => {
+        let sortedByB = rgbValues.slice().sort((a, b) => {
             return a.b - b.b;
         });
 
@@ -62,7 +94,7 @@
         bMax = 255 - sortedByB[sortedByB.length - 1].b;
     };
 
-    $: createMultiColorPicker(colorsToChange);
+    $: createMultiColorPicker(contextKeysMultiSelect);
 </script>
 
 <div class="multi-slider-container">
@@ -72,6 +104,7 @@
         bind:currentValue={currentR}
         minValue={rMin}
         maxValue={rMax}
+        resetFunction={resetFunctionR}
     />
 
     <Slider
@@ -80,6 +113,7 @@
         bind:currentValue={currentG}
         minValue={gMin}
         maxValue={gMax}
+        resetFunction={resetFunctionG}
     />
 
     <Slider
@@ -88,5 +122,8 @@
         bind:currentValue={currentB}
         minValue={bMin}
         maxValue={bMax}
+        resetFunction={resetFunctionB}
     />
+
+    <button on:click={close}>Close</button>
 </div>

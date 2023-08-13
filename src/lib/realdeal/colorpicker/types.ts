@@ -89,12 +89,22 @@ export let getAsRGB = (contextKey: string): RGB => {
     };
 };
 
-export const contextUpdateRStore: Writable<Map<RGB, Function>> = writable(
-    new Map<RGB, Function>()
+
+export const contextUpdateRStore: Writable<Map<string, (newValue: number) => void>> = writable(
+    new Map<string, (newValue: number) => void>()
 );
-export const contextUpdateGStore: Writable<Map<RGB, Function>> = writable(
-    new Map<RGB, Function>()
+export const contextUpdateGStore: Writable<Map<string, (newValue: number) => void>> = writable(
+    new Map<string, (newValue: number) => void>()
 );
-export const contextUpdateBStore: Writable<Map<RGB, Function>> = writable(
-    new Map<RGB, Function>()
+export const contextUpdateBStore: Writable<Map<string, (newValue: number) => void>> = writable(
+    new Map<string, (newValue: number) => void>()
+);
+export const contextCurrentLockedValueStore: Writable<Map<string, RGB>> = writable(
+    new Map<string, RGB>()
+);
+export const contextInitialValueStore: Writable<Map<string, RGB>> = writable(
+    new Map<string, RGB>()
+);
+export const contextUpdateColorPickerStore: Writable<Map<string, (newColor: RGB) => void>> = writable(
+    new Map<string, (newColor: RGB) => void>()
 );

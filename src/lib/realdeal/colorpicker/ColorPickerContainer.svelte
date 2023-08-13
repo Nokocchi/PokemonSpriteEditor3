@@ -7,7 +7,8 @@
     import MultiColorPicker from "./MultiColorPicker.svelte";
     const dispatch = createEventDispatcher();
     export let imageData: ImageData;
-    let colorsToChange: RGB[] = [];
+    let contextKeysMultiSelect: string[] = [];
+    let multiColorMode: boolean = false;
 
     let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
         string,
@@ -56,6 +57,11 @@
         } as NewColorResult;
         dispatch("newColor", newColorResult);
     };
+
+    const closeMultiColor = () => {
+        multiColorMode = false;
+        contextKeysMultiSelect = [];
+    }
 </script>
 
 <div class="colorPickerContainer">
@@ -64,14 +70,17 @@
             initialColor={getAsRGB(color)}
             contextKey={color}
             on:colorChange={(newColor) => changeColor(color, newColor.detail)}
-            bind:colorsToChange
+            bind:contextKeysMultiSelect
+            multiselectBegun = {multiColorMode}
         />
     {/each}
-        {#if colorsToChange.length}
-            <MultiColorPicker
-                colorsToChange={colorsToChange}
-            />
-        {/if}
+    <div class="break" />
+    {#if contextKeysMultiSelect.length && !multiColorMode}
+        <button on:click={() => {multiColorMode = true}}>START MULTICOLORING</button>
+    {/if}
+    {#if multiColorMode}
+    <MultiColorPicker {contextKeysMultiSelect} on:close={closeMultiColor} />
+    {/if}
 </div>
 
 <style>
@@ -79,5 +88,12 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+    }
+
+    /* Inserting this collapsed row between two flex items will make 
+ * the flex item that comes after it break to a new row */
+    .break {
+        flex-basis: 100%;
+        height: 0;
     }
 </style>
