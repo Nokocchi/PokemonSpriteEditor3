@@ -1,6 +1,5 @@
 <script lang="ts">
     import {
-        getAsRGB,
         contextUpdateBStore,
         contextUpdateGStore,
         contextUpdateRStore,
@@ -8,7 +7,7 @@
     } from "./types";
     import Slider from "./Slider.svelte";
 
-    export let multiSelectContextKeys: string[];
+    export let colorsToChange: RGB[];
     let rMin: number, rMax: number;
     let gMin: number, gMax: number;
     let bMin: number, bMax: number;
@@ -16,23 +15,23 @@
 
     const changeR = (rOffset: number) => {
         if (rOffset === undefined) return;
-        multiSelectContextKeys.forEach((contextKey) => {
-            let method = $contextUpdateRStore.get(contextKey);
+        colorsToChange.forEach((color) => {
+            let method = $contextUpdateRStore.get(color);
             method(rOffset);
         });
     };
 
     const changeG = (gOffset: number) => {
         if (gOffset === undefined) return;
-        multiSelectContextKeys.forEach((contextKey) => {
-            $contextUpdateGStore.get(contextKey)(gOffset);
+        colorsToChange.forEach((color) => {
+            $contextUpdateGStore.get(color)(gOffset);
         });
     };
 
     const changeB = (bOffset: number) => {
         if (bOffset === undefined) return;
-        multiSelectContextKeys.forEach((contextKey) => {
-            $contextUpdateBStore.get(contextKey)(bOffset);
+        colorsToChange.forEach((color) => {
+            $contextUpdateBStore.get(color)(bOffset);
         });
     };
 
@@ -40,20 +39,16 @@
     $: changeG(currentG);
     $: changeB(currentB);
 
-    const createMultiColorPicker = (multiSelectContextKeys: string[]) => {
-        let rgbValues: RGB[] = multiSelectContextKeys
-            .slice()
-            .map((ck) => getAsRGB(ck));
-
-        let sortedByR = rgbValues.slice().sort((a, b) => {
+    const createMultiColorPicker = (colorsToChange: RGB[]) => {
+        let sortedByR = colorsToChange.slice().sort((a, b) => {
             return a.r - b.r;
         });
 
-        let sortedByG = rgbValues.slice().sort((a, b) => {
+        let sortedByG = colorsToChange.slice().sort((a, b) => {
             return a.g - b.g;
         });
 
-        let sortedByB = rgbValues.slice().sort((a, b) => {
+        let sortedByB = colorsToChange.slice().sort((a, b) => {
             return a.b - b.b;
         });
 
@@ -67,7 +62,7 @@
         bMax = 255 - sortedByB[sortedByB.length - 1].b;
     };
 
-    $: createMultiColorPicker(multiSelectContextKeys);
+    $: createMultiColorPicker(colorsToChange);
 </script>
 
 <div class="multi-slider-container">

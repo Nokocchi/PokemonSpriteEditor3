@@ -97,4 +97,5 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors
 - [ ] Save color palette so it can be used for other Pokemons
-- [ ] Resizable canvas so the sprite is easier to see on large resolutions
+- [ ] Resizable canvas so the sprite is easier to see on large 
+- [ ] Add info page that explains how the app works

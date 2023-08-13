@@ -89,12 +89,12 @@ export let getAsRGB = (contextKey: string): RGB => {
     };
 };
 
-export const contextUpdateRStore: Writable<Map<string, Function>> = writable(
-    new Map<string, Function>()
+export const contextUpdateRStore: Writable<Map<RGB, Function>> = writable(
+    new Map<RGB, Function>()
 );
-export const contextUpdateGStore: Writable<Map<string, Function>> = writable(
-    new Map<string, Function>()
+export const contextUpdateGStore: Writable<Map<RGB, Function>> = writable(
+    new Map<RGB, Function>()
 );
-export const contextUpdateBStore: Writable<Map<string, Function>> = writable(
-    new Map<string, Function>()
+export const contextUpdateBStore: Writable<Map<RGB, Function>> = writable(
+    new Map<RGB, Function>()
 );

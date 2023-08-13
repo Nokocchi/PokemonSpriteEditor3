@@ -7,7 +7,7 @@
     import MultiColorPicker from "./MultiColorPicker.svelte";
     const dispatch = createEventDispatcher();
     export let imageData: ImageData;
-    let multiSelectContextKeys: string[] = [];
+    let colorsToChange: RGB[] = [];
 
     let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
         string,
@@ -56,12 +56,6 @@
         } as NewColorResult;
         dispatch("newColor", newColorResult);
     };
-
-    const updateR = (offset: number) => {};
-
-    const updateG = (offset: number) => {};
-
-    const updateB = (offset: number) => {};
 </script>
 
 <div class="colorPickerContainer">
@@ -70,19 +64,14 @@
             initialColor={getAsRGB(color)}
             contextKey={color}
             on:colorChange={(newColor) => changeColor(color, newColor.detail)}
-            bind:multiSelectContextKeys
+            bind:colorsToChange
         />
     {/each}
-    {#key multiSelectContextKeys}
-        {#if multiSelectContextKeys.length}
+        {#if colorsToChange.length}
             <MultiColorPicker
-                {multiSelectContextKeys}
-                on:updateR={updateR}
-                on:updateG={updateG}
-                on:updateB={updateB}
+                colorsToChange={colorsToChange}
             />
         {/if}
-    {/key}
 </div>
 
 <style>

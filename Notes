@@ -4,3 +4,4 @@ Look into using actions for things like: When the original canvas gets set by Po
 - Figure out generics for the colorpickers. It seems silly that there is so much duplicate code, but on the other hand, it is limited to only 3 sliders and 3 formats, so... maybe its okay?
 - RGB<->HSL Conversion function seems to be buggy and produce colors slightly off
 - Picking a new Pokemon and then using HSL causes a crash
+- MultiSlider should have initial value whatever the colors currently are, but resetting should set them all back to their original values

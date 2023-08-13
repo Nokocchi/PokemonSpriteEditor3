@@ -5,7 +5,13 @@
     import { writable, type Writable } from "svelte/store";
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
-    import { contextUpdateBStore, contextUpdateGStore, contextUpdateRStore, isEquals, type RGB } from "./types";
+    import {
+        contextUpdateBStore,
+        contextUpdateGStore,
+        contextUpdateRStore,
+        isEquals,
+        type RGB,
+    } from "./types";
     import { createEventDispatcher, onMount, setContext } from "svelte";
     const dispatch = createEventDispatcher();
 
@@ -15,40 +21,34 @@
         HEX: "HEX",
     });
 
-    export let multiSelectContextKeys: string[];
+    export let colorsToChange: RGB[];
     export let contextKey: string;
     export let initialColor: RGB;
 
-    // Same issue up here?! 
-    let currentValueLockedWhenMultiSelect: RGB = {r: initialColor.r, g: initialColor.g, b: initialColor.b};
+    let currentValueLockedWhenMultiSelect: RGB;
     let colorPreview: HTMLCanvasElement;
     let colorPickerMode: string = ColorPickerMode.RGB;
     let multiselected: boolean = false;
-
-
-
     const rgbStore: Writable<RGB> = writable();
-
-    $contextUpdateRStore.set(contextKey, (offset: number) => {
-        $rgbStore.r = (currentValueLockedWhenMultiSelect.r + offset);
-        $rgbStore = $rgbStore;
-    });
-
-    $contextUpdateGStore.set(contextKey, (offset: number) => {
-        $rgbStore.g = (currentValueLockedWhenMultiSelect.g + offset);
-        $rgbStore = $rgbStore;
-    });
-
-    $contextUpdateBStore.set(contextKey, (offset: number) => {
-        $rgbStore.b = (currentValueLockedWhenMultiSelect.b + offset);
-        $rgbStore = $rgbStore;
-    });
 
     setContext(contextKey, {
         rgbStore: rgbStore,
     });
 
-    $: multiselected = multiSelectContextKeys.includes(contextKey);
+    const setCurrentValueLockedWhenMultiSelect = (color: RGB) => {
+        // What is this magic? I cannot set currentValueLockedWhenMultiSelect = $rgbStore
+        // Or even do = Object.create($rgbStore) or = Object.assign($rgbStore)
+        // Because then the value of currentValueLockedWhenMultiSelect gets changed once more, somehow, without this method being run
+        // Is it because these objects are being set by reference? Is the = $rgbStore being run asynchronously?
+        currentValueLockedWhenMultiSelect = {
+            r: color.r,
+            g: color.g,
+            b: color.b,
+        };
+    };
+
+    $: multiselected = colorsToChange.filter(color => isEquals(color, currentValueLockedWhenMultiSelect)).length > 0;
+    $: setCurrentValueLockedWhenMultiSelect(initialColor);
 
     onMount(() => {
         // Once all the color pickers are ready, re-set the rgbstore to trigger drawing to the preview/palette
@@ -56,16 +56,30 @@
     });
 
     const multiSelect = () => {
-        // What is this magic? I cannot set currentValueLockedWhenMultiSelect = $rgbStore
-        // Or even do = Object.create($rgbStore) or = Object.assign($rgbStore)
-        // Because then the value of currentValueLockedWhenMultiSelect gets changed once more, somehow, without this method being run
-        // Is it because these objects are being set by reference? Is the = $rgbStore being run asynchronously? 
-        currentValueLockedWhenMultiSelect = {r: $rgbStore.r, g: $rgbStore.g, b: $rgbStore.b};
+        setCurrentValueLockedWhenMultiSelect($rgbStore);
+        // Don't use context key. It only works for initial color :(
         if (multiselected) {
-            multiSelectContextKeys = multiSelectContextKeys.filter((store) => store !== contextKey);
+            colorsToChange = colorsToChange.filter(
+                selectedColor => isEquals(selectedColor, currentValueLockedWhenMultiSelect)
+            );
         } else {
-            multiSelectContextKeys = [...multiSelectContextKeys, contextKey];
+            colorsToChange = [...colorsToChange, currentValueLockedWhenMultiSelect];
         }
+
+        $contextUpdateRStore.set(currentValueLockedWhenMultiSelect, (offset: number) => {
+            $rgbStore.r = currentValueLockedWhenMultiSelect.r + offset;
+            $rgbStore = $rgbStore;
+        });
+
+        $contextUpdateGStore.set(currentValueLockedWhenMultiSelect, (offset: number) => {
+            $rgbStore.g = currentValueLockedWhenMultiSelect.g + offset;
+            $rgbStore = $rgbStore;
+        });
+
+        $contextUpdateBStore.set(currentValueLockedWhenMultiSelect, (offset: number) => {
+            $rgbStore.b = currentValueLockedWhenMultiSelect.b + offset;
+            $rgbStore = $rgbStore;
+        });
     };
 
     const setPreviewColor = (newColor: RGB) => {
@@ -120,18 +134,30 @@
     >
         <canvas
             bind:this={colorPreview}
-            height="20"
-            width="20"
+            height="50"
+            width="50"
             on:click={multiSelect}
             class:multiselected
         />
         <div class="color-picker-slider-container">
             {#if colorPickerMode == ColorPickerMode.RGB}
-                <RgbColorPicker {contextKey} initialValue={initialColor} disabled={multiselected}/>
+                <RgbColorPicker
+                    {contextKey}
+                    initialValue={initialColor}
+                    disabled={multiselected}
+                />
             {:else if colorPickerMode == ColorPickerMode.HSL}
-                <HslColorPicker {contextKey} initialValue={initialColor} disabled={multiselected}/>
+                <HslColorPicker
+                    {contextKey}
+                    initialValue={initialColor}
+                    disabled={multiselected}
+                />
             {:else}
-                <HslColorPicker {contextKey} initialValue={initialColor} disabled={multiselected}/>
+                <HslColorPicker
+                    {contextKey}
+                    initialValue={initialColor}
+                    disabled={multiselected}
+                />
             {/if}
         </div>
     </div>
@@ -146,7 +172,7 @@
     }
 
     canvas.multiselected {
-        outline: 2px solid green;
+        border: 4px dotted white;
     }
 
     canvas:hover {
