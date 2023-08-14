@@ -17,6 +17,12 @@
     let bMin: number, bMax: number;
     let currentR: number, currentG: number, currentB: number;
 
+    const RGBVal = Object.freeze({
+        r: "r",
+        g: "g",
+        b: "b",
+    });
+
     const change = (offset: number, rgbVal: string) => {
         if (offset === undefined) return;
         contextKeysMultiSelect.forEach((ck) => {
@@ -40,46 +46,36 @@
         if (rgbVal === RGBVal.b) return $contextUpdateBStore;
     };
 
-    const RGBVal = Object.freeze({
-        r: "r",
-        g: "g",
-        b: "b",
-    });
-
     const close = () => {
         dispatch("close");
+    };
+
+    const setMinMax = (contextKeys: string[]) => {
+        let rgbValues: RGB[] = contextKeys.map((ck) =>
+            $contextCurrentLockedValueStore.get(ck)
+        );
+        
+        ({ min: rMin, max: rMax } = getMinMax(rgbValues, RGBVal.r));
+        ({ min: gMin, max: gMax } = getMinMax(rgbValues, RGBVal.g));
+        ({ min: bMin, max: bMax } = getMinMax(rgbValues, RGBVal.b));
+    };
+
+    const getMinMax = (rgbValues: RGB[], rgbVal: string) => {
+        let sortedByRGBVal = rgbValues.slice().sort((a, b) => {
+            return a[rgbVal] - b[rgbVal];
+        });
+
+        return {
+            min: 0 - sortedByRGBVal[0][rgbVal],
+            max: 255 - sortedByRGBVal[sortedByRGBVal.length - 1][rgbVal],
+        };
     };
 
     $: change(currentR, RGBVal.r);
     $: change(currentG, RGBVal.g);
     $: change(currentB, RGBVal.b);
+    $: setMinMax(contextKeysMultiSelect);
 
-    const createMultiColorPicker = (contextKeys: string[]) => {
-        let rgbValues: RGB[] = contextKeys.map((ck) =>
-            $contextCurrentLockedValueStore.get(ck)
-        );
-
-        let sortedByR = rgbValues.slice().sort((a, b) => {
-            return a.r - b.r;
-        });
-        let sortedByG = rgbValues.slice().sort((a, b) => {
-            return a.g - b.g;
-        });
-        let sortedByB = rgbValues.slice().sort((a, b) => {
-            return a.b - b.b;
-        });
-
-        rMin = 0 - sortedByR[0].r;
-        rMax = 255 - sortedByR[sortedByR.length - 1].r;
-
-        gMin = 0 - sortedByG[0].g;
-        gMax = 255 - sortedByG[sortedByG.length - 1].g;
-
-        bMin = 0 - sortedByB[0].b;
-        bMax = 255 - sortedByB[sortedByB.length - 1].b;
-    };
-
-    $: createMultiColorPicker(contextKeysMultiSelect);
 </script>
 
 <div class="multi-slider-container">
@@ -88,7 +84,7 @@
         bind:currentValue={currentR}
         minValue={rMin}
         maxValue={rMax}
-        resetFunction={() => resetFunction(RGBVal.r)}
+        resetCallback={() => resetFunction(RGBVal.r)}
     />
 
     <Slider
@@ -96,7 +92,7 @@
         bind:currentValue={currentG}
         minValue={gMin}
         maxValue={gMax}
-        resetFunction={() => resetFunction(RGBVal.g)}
+        resetCallback={() => resetFunction(RGBVal.g)}
     />
 
     <Slider
@@ -104,7 +100,7 @@
         bind:currentValue={currentB}
         minValue={bMin}
         maxValue={bMax}
-        resetFunction={() => resetFunction(RGBVal.b)}
+        resetCallback={() => resetFunction(RGBVal.b)}
     />
 
     <button on:click={close}>Close</button>

@@ -4,11 +4,11 @@
     export let maxValue: number;
     export let initialValue: number;
     export let disabled: boolean = false;
-    export let resetFunction: () => void;
+    export let resetCallback: () => void = () => {};
 
     const reset = () => {
         setValue(initialValue);
-        resetFunction && resetFunction()
+        resetCallback()
     }
 
     const setValue = (newValue: number) => {

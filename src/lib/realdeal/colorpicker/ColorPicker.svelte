@@ -41,13 +41,7 @@
 
     $: disabled = multiselected || multiselectBegun;
 
-    $: {
-        let test: boolean =
-            contextKeysMultiSelect.filter((color) => color === contextKey)
-                .length > 0;
-        console.log("Updating multiselected with value", test);
-        multiselected = test;
-    }
+    $: multiselected = contextKeysMultiSelect.filter((color) => color === contextKey).length > 0;
 
     onMount(() => {
         // Once all the color pickers are ready, re-set the rgbstore to trigger drawing to the preview/palette
