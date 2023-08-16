@@ -8,13 +8,8 @@
     let colorPickerContainer: ColorPickerContainer;
     let canvas: Canvas;
     let currentWindow: string = CurrentWindow.SELECT;
-    let selectedPokemonImg: HTMLImageElement;
-    let imageData: ImageData
+    let imageData: ImageData;
     let selectedPokemonNr: number;
-
-    const setInitialColorPickerValues = () => {
-        imageData = canvas.getOriginalPixelData();
-    };
 
     const updateColorAtPixels = (newColorResult: NewColorResult): void => {
         canvas.updateColor(newColorResult);
@@ -26,37 +21,43 @@
 </script>
 
 <div class="main-page">
-    <Canvas
-        bind:this={canvas}
-        selectedPokemonImg={selectedPokemonImg}
-        on:originalCanvasReady={setInitialColorPickerValues}
-    />
-    {#if currentWindow == CurrentWindow.SELECT}
-        <PokemonSelector bind:selectedPokemonNr bind:selectedPokemonImg />
-    {:else if currentWindow == CurrentWindow.EDIT}
-        <ColorPickerContainer
-            bind:this={colorPickerContainer}
-            imageData = {imageData}
-            on:newColor={(newColorResult) =>
-                updateColorAtPixels(newColorResult.detail)}
-        />
-    {:else}
-        <p>not implemented</p>
-    {/if}
+    <Canvas bind:this={canvas} {imageData} />
+    <div class="main-content">
+        {#if currentWindow == CurrentWindow.SELECT}
+            <PokemonSelector bind:selectedPokemonNr bind:imageData />
+        {:else if currentWindow == CurrentWindow.EDIT}
+            <ColorPickerContainer
+                bind:this={colorPickerContainer}
+                {imageData}
+                on:newColor={(newColorResult) =>
+                    updateColorAtPixels(newColorResult.detail)}
+            />
+        {:else}
+            <p>not implemented</p>
+        {/if}
+    </div>
     <Menu
         bind:currentWindow
         on:selectPokemon={() => showPage(CurrentWindow.SELECT)}
         on:editSprite={() => showPage(CurrentWindow.EDIT)}
         on:palettes={() => showPage(CurrentWindow.PALETTES)}
-        selectedPokemonImg = {selectedPokemonImg}
+        {imageData}
     />
 </div>
 
 <style>
     .main-page {
+        overflow-y: hidden;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 25px;
+    }
+
+    .main-content {
+        width: 100%;
+        position: fixed;
+        height: calc(100vh - (140px + 70px));
+        top: 140px;
+        overflow-y: scroll;
     }
 </style>

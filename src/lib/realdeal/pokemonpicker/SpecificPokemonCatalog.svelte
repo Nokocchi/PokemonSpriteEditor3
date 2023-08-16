@@ -1,5 +1,19 @@
+<script context="module" lang="ts">
+    // Super ugly, but I want to avoid doing another 10.000 file commit by changing the directory name
+       export const formatHeaderText = (headerText: string): string => {
+        return headerText
+        .replace("-", " / ")
+        .replace("1", " 1")
+        .replace("2", " 2")
+        .replace("3", " 3")
+        .replace("4", " 4")
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
+</script>
+
 <script lang="ts">
-    import { onMount } from "svelte";
     import imgPathsByNr from "./util/pathByNr.json";
     import type { SpritePath } from "../colorpicker/types";
     import CollapsibleSection from "./CollapsibleSection.svelte";
@@ -47,13 +61,17 @@
             genGamePathMap = genGamePathMap;
         }
     };
+
+
+
+
 </script>
 
 <div class="specific-pokemon-catalog">
     {#each [...genGamePathMap] as [generation, games]}
-        <CollapsibleSection headerText={generation} expanded={true}>
+        <CollapsibleSection headerText={formatHeaderText(generation)} expanded={true}>
             {#each [...games] as [game, paths]}
-                <CollapsibleSection headerText={game} expanded={true}>
+                <CollapsibleSection headerText={formatHeaderText(game)} expanded={true}>
                     <SpriteTypeSelector {paths} bind:selectedPokemonImg />
                 </CollapsibleSection>
             {/each}

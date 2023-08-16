@@ -2,7 +2,7 @@
     import { CurrentWindow } from "./colorpicker/types";
 
     export let currentWindow: string;
-    export let selectedPokemonImg: HTMLImageElement;
+    export let imageData: ImageData;
     let selectPokemonBtn: HTMLButtonElement;
     let editSpriteBtn: HTMLButtonElement;
     let palettesBtn: HTMLButtonElement;
@@ -19,7 +19,7 @@
         bind:this={editSpriteBtn}
         on:click={() => (currentWindow = CurrentWindow.EDIT)}
         class:selected={currentWindow === CurrentWindow.EDIT}
-        disabled={selectedPokemonImg === undefined || currentWindow === CurrentWindow.EDIT}>Edit sprite</button
+        disabled={imageData === undefined || currentWindow === CurrentWindow.EDIT}>Edit sprite</button
     >
     <button
         bind:this={palettesBtn}
@@ -31,9 +31,19 @@
 
 <style>
     .menu {
-        position: absolute;
-        top: 0px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
         width: 100%;
+        height: 70px;
+        position: fixed;
+        bottom: 0;
+        z-index: 1;
+    }
+
+    button {
+        border-radius: 0%;
+        width: calc(100dvw/3);
     }
 
     button.selected {

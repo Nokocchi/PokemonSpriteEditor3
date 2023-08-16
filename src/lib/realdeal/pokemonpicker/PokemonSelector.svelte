@@ -5,15 +5,25 @@
     import Dropdown from "./Dropdown.svelte";
     import type { PokemonSelectOption } from "../colorpicker/types";
     import SpecificPokemonCatalog from "./SpecificPokemonCatalog.svelte";
+    import Canvas from "../Canvas.svelte";
 
     export let selectedPokemonNr: number;
-    export let selectedPokemonImg: HTMLImageElement;
+    export let imageData: ImageData;
+    let selectedPokemonImg: HTMLImageElement;
 
     let files: FileList;
 
     let pokemonSelectOptions: PokemonSelectOption[] = data.map((entry) => {
         return { id: entry.id, name: entry.name.english };
     });
+
+    $: selectedPokemonImg && extractPixelData(selectedPokemonImg);
+
+    const extractPixelData = (pkmnImage: HTMLImageElement) => {
+        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(pkmnImage.width, pkmnImage.height)
+        tempCanvas.getContext("2d").drawImage(pkmnImage, 0, 0);
+        imageData = tempCanvas.getContext("2d").getImageData(0, 0, pkmnImage.width, pkmnImage.height);
+    }
 
     const setUploadedImage = (fileList: FileList) => {
         if(!files) return;

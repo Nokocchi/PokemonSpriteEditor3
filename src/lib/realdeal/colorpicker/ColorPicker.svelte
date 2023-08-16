@@ -180,7 +180,6 @@
         display: flex;
         flex-direction: column;
         margin-bottom: 25px;
-        margin-left: 60px;
     }
 
     canvas.multiselected {

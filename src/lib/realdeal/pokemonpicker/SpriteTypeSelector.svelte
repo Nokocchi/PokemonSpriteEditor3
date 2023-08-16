@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { SpritePath } from "../colorpicker/types";
+    import { formatHeaderText } from "./SpecificPokemonCatalog.svelte";
 
     export let paths: SpritePath[];
     let possiblePathVars: Set<string> = new Set();
@@ -46,7 +47,7 @@
     <div class="filters">
         {#each possiblePathVars as pathVar}
             <input type="checkbox" bind:group={filters} value={pathVar} />
-            {pathVar}
+            {formatHeaderText(pathVar)}
         {/each}
     </div>
 
