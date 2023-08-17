@@ -69,12 +69,26 @@
     .sprite-type-selector {
         display: flex;
         flex-direction: column;
+        padding: 20px;
     }
 
-    .filters,
+    .filters {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 20px;
+    }
+
+    .filters input {
+        height: 20px;
+        width: 20px;
+        margin-left: 15px;
+    }
+
     .sprites {
         display: flex;
         flex-direction: row;
+        gap: 15px;
+        overflow-x: scroll;
     }
 
     img:hover {
@@ -84,4 +98,5 @@
     img.selected {
         outline: 2px solid green;
     }
+
 </style>

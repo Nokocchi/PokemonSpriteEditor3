@@ -31,3 +31,15 @@
     valueFieldName="id"
     placeholder="Search (Alphabetical)"
 />
+
+<style>
+    /* Global needed as Svelte doesn't know we gave the AutoComplete a className**/
+    :global(.autocomplete) {
+        width: 100%;
+        height: 45px;
+    }
+
+    :global(.autocomplete-list) {
+        background-color: #000000 !important;
+    }
+</style>

@@ -12,6 +12,7 @@
     let selectedPokemonImg: HTMLImageElement;
 
     let files: FileList;
+    let fileInput: HTMLInputElement;
 
     let pokemonSelectOptions: PokemonSelectOption[] = data.map((entry) => {
         return { id: entry.id, name: entry.name.english };
@@ -20,13 +21,20 @@
     $: selectedPokemonImg && extractPixelData(selectedPokemonImg);
 
     const extractPixelData = (pkmnImage: HTMLImageElement) => {
-        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(pkmnImage.width, pkmnImage.height)
-        tempCanvas.getContext("2d").drawImage(pkmnImage, 0, 0);
-        imageData = tempCanvas.getContext("2d").getImageData(0, 0, pkmnImage.width, pkmnImage.height);
-    }
+        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(
+            pkmnImage.width,
+            pkmnImage.height
+        );
+        tempCanvas
+            .getContext("2d", { willReadFrequently: true })
+            .drawImage(pkmnImage, 0, 0);
+        imageData = tempCanvas
+            .getContext("2d")
+            .getImageData(0, 0, pkmnImage.width, pkmnImage.height);
+    };
 
     const setUploadedImage = (fileList: FileList) => {
-        if(!files) return;
+        if (!files) return;
 
         let file: File = fileList.item(0);
 
@@ -48,7 +56,35 @@
     $: setUploadedImage(files);
 </script>
 
-<input bind:files type="file" accept="image/*" />
-<Dropdown bind:selectedPokemonNr {pokemonSelectOptions} />
-<Search bind:selectedPokemonNr {pokemonSelectOptions} />
-<SpecificPokemonCatalog bind:selectedPokemonImg {selectedPokemonNr} />
+<div class="pokemon-selector">
+    <div class="selector-inputs">
+        <input bind:this={fileInput} bind:files type="file" accept="image/*"/>
+        <Dropdown bind:selectedPokemonNr {pokemonSelectOptions} />
+        <p>or</p>
+        <Search bind:selectedPokemonNr {pokemonSelectOptions} />
+        <p>or</p>
+        <button on:click={() => {fileInput.click()}}>Upload your own image</button>
+    </div>
+    <SpecificPokemonCatalog bind:selectedPokemonImg {selectedPokemonNr} />
+</div>
+
+<style>
+    .pokemon-selector {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .selector-inputs {
+        padding: 50px;
+        box-sizing: border-box;
+    }
+
+    .selector-inputs button {
+        width: 100%;
+        height: 45px;
+    }
+
+    input {
+        display: none;
+    }
+</style>

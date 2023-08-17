@@ -1,4 +1,5 @@
 <script>
+    import { slide } from "svelte/transition";
     export let headerText;
 
     export let expanded = false;
@@ -12,27 +13,29 @@
                 <path
                     class="vert"
                     d="M10 1V19"
-                    stroke="black"
+                    stroke="white"
                     stroke-width="2"
                 />
-                <path d="M1 10L19 10" stroke="black" stroke-width="2" />
+                <path d="M1 10L19 10" stroke="white" stroke-width="2" />
             </svg>
         </button>
     </h3>
 
-    <div class="contents" hidden={!expanded}>
-        <slot />
-    </div>
+    {#if expanded}
+        <div class="contents" transition:slide>
+            <slot />
+        </div>
+    {/if}
 </div>
 
 <style>
     .collapsible {
-        border-bottom: 1px solid var(--gray-light, green);
-        width: 100%
+        width: 100%;
     }
 
     .collapsible .collapsible button {
-        width: 80%
+        background-color: var(--background, #141414);
+        color: var(--gray-darkest, #888888);
     }
 
     h3 {
@@ -40,8 +43,8 @@
     }
 
     button {
-        background-color: var(--background, white);
-        color: var(--gray-darkest, #282828);
+        background-color: var(--background, #080808);
+        color: var(--gray-darkest, #b8b8b8);
         display: flex;
         justify-content: space-between;
         width: 100%;
@@ -53,15 +56,10 @@
     }
 
     button[aria-expanded="true"] {
-        border-bottom: 1px solid var(--gray-light, red);
     }
 
     button[aria-expanded="true"] .vert {
         display: none;
-    }
-
-    button:focus svg {
-        outline: 2px solid;
     }
 
     button [aria-expanded="true"] rect {

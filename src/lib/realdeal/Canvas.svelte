@@ -45,22 +45,25 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="canvas-container">
+<div class="canvas-container" class:pokemon-selected={imageData}>
     <canvas height="0" width="0" bind:this={originalCanvas} />
     <canvas height="0" width="0" bind:this={resultCanvas} />
 </div>
 
 <style>
     .canvas-container {
-        height: 100px;
-        display: flex;
+        display: none;
+        height: 150px;
         flex-direction: row;
         position: fixed;
         top: 0;
         z-index: 1;
-        background-color: black;
         justify-content: space-around;
-        padding: 20px;
         width: 100%;
+        background-color: black;
+    }
+
+    .canvas-container.pokemon-selected {
+        display: flex;
     }
 </style>

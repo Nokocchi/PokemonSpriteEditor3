@@ -21,8 +21,8 @@
 </script>
 
 <div class="main-page">
-    <Canvas bind:this={canvas} {imageData} />
-    <div class="main-content">
+    <Canvas bind:this={canvas} {imageData}/>
+    <div class="main-content" class:pokemon-selected={imageData}>
         {#if currentWindow == CurrentWindow.SELECT}
             <PokemonSelector bind:selectedPokemonNr bind:imageData />
         {:else if currentWindow == CurrentWindow.EDIT}
@@ -56,8 +56,13 @@
     .main-content {
         width: 100%;
         position: fixed;
+        height: calc(100vh - 70px);
+        top: 0;
+        overflow-y: scroll;
+    }
+
+    .main-content.pokemon-selected {
         height: calc(100vh - (140px + 70px));
         top: 140px;
-        overflow-y: scroll;
     }
 </style>

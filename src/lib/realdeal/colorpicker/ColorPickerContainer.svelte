@@ -64,7 +64,7 @@
     }
 </script>
 
-<div class="colorPickerContainer">
+<div class="color-picker-container">
     {#each originalColorPixelLocationsMap.keys() as color}
         <ColorPicker
             initialColor={getAsRGB(color)}
@@ -84,10 +84,11 @@
 </div>
 
 <style>
-    .colorPickerContainer {
+    .color-picker-container {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        padding: 30px;
     }
 
     /* Inserting this collapsed row between two flex items will make 

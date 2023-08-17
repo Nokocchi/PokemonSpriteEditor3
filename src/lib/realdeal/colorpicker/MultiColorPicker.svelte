@@ -8,10 +8,13 @@
         type RGB,
     } from "./types";
     import Slider from "./Slider.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
+    import type { Writable } from "svelte/store";
     const dispatch = createEventDispatcher();
 
     export let contextKeysMultiSelect: string[];
+    let testMap: Map<string, Writable<RGB>> = new Map(contextKeysMultiSelect.map(ck => [ck, getContext(ck) as Writable<RGB>]));
+
     let rMin: number, rMax: number;
     let gMin: number, gMax: number;
     let bMin: number, bMax: number;
@@ -51,10 +54,18 @@
     };
 
     const setMinMax = (contextKeys: string[]) => {
+        setTimeout(() => {
+            contextKeys.forEach(ck => {
+            console.log("Setting store value through map!!!", (testMap.get(ck)).set({r: 0, g: 0, b: 0} as RGB))
+        });
+
+        }, 5000)
+ 
+
         let rgbValues: RGB[] = contextKeys.map((ck) =>
             $contextCurrentLockedValueStore.get(ck)
         );
-        
+
         ({ min: rMin, max: rMax } = getMinMax(rgbValues, RGBVal.r));
         ({ min: gMin, max: gMax } = getMinMax(rgbValues, RGBVal.g));
         ({ min: bMin, max: bMax } = getMinMax(rgbValues, RGBVal.b));
@@ -75,7 +86,6 @@
     $: change(currentG, RGBVal.g);
     $: change(currentB, RGBVal.b);
     $: setMinMax(contextKeysMultiSelect);
-
 </script>
 
 <div class="multi-slider-container">
