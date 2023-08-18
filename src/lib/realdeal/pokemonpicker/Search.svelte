@@ -15,8 +15,9 @@
         sortedPokemonSelectOptions = [...options].sort((a, b) => a.name.localeCompare(b.name))
     };
 
+    // Currently trying to clear input on file upload..
     const setSelected = (selectedPokemonNr: number) => {
-        if (selectedPokemonNr && pokemonSelectOptions) {
+        if (pokemonSelectOptions) {
             selectedPokemon = pokemonSelectOptions.find(
                 (pkmn) => pkmn.id === selectedPokemonNr
             );

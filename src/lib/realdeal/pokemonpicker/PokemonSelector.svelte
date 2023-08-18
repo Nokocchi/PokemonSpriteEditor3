@@ -47,6 +47,7 @@
         };
 
         image.onload = () => {
+            selectedPokemonNr = undefined;
             selectedPokemonImg = image;
         };
 
