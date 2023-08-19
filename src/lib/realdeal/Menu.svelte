@@ -34,11 +34,6 @@
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        width: 100%;
-        height: 70px;
-        position: fixed;
-        bottom: 0;
-        z-index: 1;
     }
 
     button {

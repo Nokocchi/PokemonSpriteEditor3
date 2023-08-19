@@ -77,7 +77,6 @@
 
     .selector-inputs {
         padding: 50px;
-        box-sizing: border-box;
     }
 
     .selector-inputs button {

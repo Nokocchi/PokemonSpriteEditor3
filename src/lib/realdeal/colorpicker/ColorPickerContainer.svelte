@@ -5,6 +5,7 @@
     import { RGBToHSL, type NewColorResult, type RGB, getAsRGB } from "./types";
     import { createEventDispatcher } from "svelte";
     import MultiColorPicker from "./MultiColorPicker.svelte";
+    import Palette from "./Palette.svelte";
     const dispatch = createEventDispatcher();
     export let imageData: ImageData;
     let contextKeysMultiSelect: string[] = [];
@@ -65,6 +66,11 @@
 </script>
 
 <div class="color-picker-container">
+    <div class="palette-container">
+        {#each originalColorPixelLocationsMap.keys() as color}
+            <Palette/>
+        {/each}
+    </div>
     {#each originalColorPixelLocationsMap.keys() as color}
         <ColorPicker
             initialColor={getAsRGB(color)}
@@ -96,5 +102,10 @@
     .break {
         flex-basis: 100%;
         height: 0;
+    }
+
+    /*Should maybe be auto height?*/
+    .palette-container {
+        height: 200px;
     }
 </style>

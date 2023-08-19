@@ -52,18 +52,15 @@
 
 <style>
     .canvas-container {
-        display: none;
+        display: flex;
         height: 150px;
         flex-direction: row;
-        position: fixed;
-        top: 0;
-        z-index: 1;
         justify-content: space-around;
-        width: 100%;
-        background-color: black;
+        background-color: blue;
+        flex-shrink: 0;
     }
 
     .canvas-container.pokemon-selected {
-        display: flex;
+        background-color: white;
     }
 </style>
