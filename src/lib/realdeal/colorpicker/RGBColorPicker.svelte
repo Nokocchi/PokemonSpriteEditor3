@@ -5,6 +5,7 @@
     import Slider from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
     import { type RGB } from "./types";
+    import type { Writable } from "svelte/store";
 
     export const reset = () => {
         setCurrentColor(initialValue);
@@ -12,14 +13,11 @@
 
     export let initialValue: RGB;
     export let contextKey: string;
-    export let disabled: boolean;
 
     const minValue = 0;
     const maxValue = 255;
-    const { rgbStore }: any = getContext(contextKey);
+    let {rgbStore}: any = getContext(contextKey);
 
-    let age2 = "27";
-    let age: string = "27";
     let currentR: number, currentG: number, currentB: number;
     let mounted: boolean = false;
 
@@ -56,21 +54,18 @@
         initialValue={initialValue.r}
         {minValue}
         {maxValue}
-        {disabled}
     />
     <Slider
         bind:currentValue={currentG}
         initialValue={initialValue.g}
         {minValue}
         {maxValue}
-        {disabled}
     />
     <Slider
         bind:currentValue={currentB}
         initialValue={initialValue.b}
         {minValue}
         {maxValue}
-        {disabled}
     />
 </div>
 

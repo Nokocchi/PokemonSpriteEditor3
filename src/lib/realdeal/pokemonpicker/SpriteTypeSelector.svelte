@@ -91,12 +91,16 @@
         overflow-x: scroll;
     }
 
+    img {
+        border: 2px solid transparent;
+    }
+
     img:hover {
-        outline: 2px solid yellow;
+        border: 2px solid yellow;
     }
 
     img.selected {
-        outline: 2px solid green;
+        border: 2px solid green;
     }
 
 </style>

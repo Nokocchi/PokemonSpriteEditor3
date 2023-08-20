@@ -12,7 +12,9 @@
     $: pokemonSelectOptions && setSortedOptions(pokemonSelectOptions);
 
     const setSortedOptions = (options: PokemonSelectOption[]) => {
-        sortedPokemonSelectOptions = [...options].sort((a, b) => a.name.localeCompare(b.name))
+        sortedPokemonSelectOptions = [...options].sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
     };
 
     // Currently trying to clear input on file upload..
@@ -42,5 +44,9 @@
 
     :global(.autocomplete-list) {
         background-color: #000000 !important;
+    }
+
+    :global(.autocomplete-list.hidden) {
+        display: none;
     }
 </style>

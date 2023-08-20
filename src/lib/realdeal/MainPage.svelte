@@ -1,11 +1,11 @@
 <script lang="ts">
     import PokemonSelector from "./pokemonpicker/PokemonSelector.svelte";
     import Canvas from "./Canvas.svelte";
-    import ColorPickerContainer from "./colorpicker/ColorPickerContainer.svelte";
     import { CurrentWindow, type NewColorResult } from "./colorpicker/types";
     import Menu from "./Menu.svelte";
+    import SpriteEditor from "./colorpicker/SpriteEditor.svelte";
 
-    let colorPickerContainer: ColorPickerContainer;
+    let spriteEditor: SpriteEditor;
     let canvas: Canvas;
     let currentWindow: string = CurrentWindow.SELECT;
     let imageData: ImageData;
@@ -26,8 +26,8 @@
         {#if currentWindow == CurrentWindow.SELECT}
             <PokemonSelector bind:selectedPokemonNr bind:imageData />
         {:else if currentWindow == CurrentWindow.EDIT}
-            <ColorPickerContainer
-                bind:this={colorPickerContainer}
+            <SpriteEditor
+                bind:this={spriteEditor}
                 {imageData}
                 on:newColor={(newColorResult) =>
                     updateColorAtPixels(newColorResult.detail)}
@@ -47,7 +47,7 @@
 
 <style>
     .main-page {
-        overflow-y: hidden;
+        /*overflow-y: hidden;*/
         display: flex;
         flex-direction: column;
         height: 100dvh;

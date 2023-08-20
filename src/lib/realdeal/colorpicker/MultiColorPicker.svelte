@@ -8,12 +8,10 @@
         type RGB,
     } from "./types";
     import Slider from "./Slider.svelte";
-    import { createEventDispatcher, getContext } from "svelte";
-    import type { Writable } from "svelte/store";
+    import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let contextKeysMultiSelect: string[];
-    let testMap: Map<string, Writable<RGB>> = new Map(contextKeysMultiSelect.map(ck => [ck, getContext(ck) as Writable<RGB>]));
+    export let currentlyMultiSelectedColors: string[];
 
     let rMin: number, rMax: number;
     let gMin: number, gMax: number;
@@ -27,16 +25,18 @@
     });
 
     const change = (offset: number, rgbVal: string) => {
-        if (offset === undefined) return;
-        contextKeysMultiSelect.forEach((ck) => {
+        if (!offset) return;
+        console.log("Changing " +rgbVal + " with " + offset+ " from starting value");
+        currentlyMultiSelectedColors.forEach((ck) => {
             let newValue: number =
                 $contextCurrentLockedValueStore.get(ck)[rgbVal] + offset;
+            console.log("New value for " + rgbVal + " is", newValue);
             getContextUpdateStore(rgbVal).get(ck)(newValue);
         });
     };
 
     const resetFunction = (rgbVal: string) => {
-        contextKeysMultiSelect.forEach((ck) => {
+        currentlyMultiSelectedColors.forEach((ck) => {
             let initialValue: RGB = $contextInitialValueStore.get(ck);
             getContextUpdateStore(rgbVal).get(ck)(initialValue[rgbVal]);
             $contextCurrentLockedValueStore.set(ck, initialValue);
@@ -54,13 +54,6 @@
     };
 
     const setMinMax = (contextKeys: string[]) => {
-        setTimeout(() => {
-            contextKeys.forEach(ck => {
-            console.log("Setting store value through map!!!", (testMap.get(ck)).set({r: 0, g: 0, b: 0} as RGB))
-        });
-
-        }, 5000)
- 
 
         let rgbValues: RGB[] = contextKeys.map((ck) =>
             $contextCurrentLockedValueStore.get(ck)
@@ -85,7 +78,7 @@
     $: change(currentR, RGBVal.r);
     $: change(currentG, RGBVal.g);
     $: change(currentB, RGBVal.b);
-    $: setMinMax(contextKeysMultiSelect);
+    $: setMinMax(currentlyMultiSelectedColors);
 </script>
 
 <div class="multi-slider-container">
