@@ -1,11 +1,10 @@
 <script lang="ts">
     import {
-        contextUpdateBStore,
-        contextUpdateGStore,
-        contextUpdateRStore,
+        contextUpdateStore,
         contextCurrentLockedValueStore,
-        contextInitialValueStore,
         type RGB,
+        getAsRGB,
+        RGBVal,
     } from "./types";
     import Slider from "./Slider.svelte";
     import { createEventDispatcher } from "svelte";
@@ -18,36 +17,25 @@
     let bMin: number, bMax: number;
     let currentR: number, currentG: number, currentB: number;
 
-    const RGBVal = Object.freeze({
-        r: "r",
-        g: "g",
-        b: "b",
-    });
+
 
     const change = (offset: number, rgbVal: string) => {
         if (!offset) return;
-        console.log("Changing " +rgbVal + " with " + offset+ " from starting value");
         currentlyMultiSelectedColors.forEach((ck) => {
             let newValue: number =
                 $contextCurrentLockedValueStore.get(ck)[rgbVal] + offset;
-            console.log("New value for " + rgbVal + " is", newValue);
-            getContextUpdateStore(rgbVal).get(ck)(newValue);
+                $contextUpdateStore.get(ck)(rgbVal, newValue);
         });
     };
 
     const resetFunction = (rgbVal: string) => {
         currentlyMultiSelectedColors.forEach((ck) => {
-            let initialValue: RGB = $contextInitialValueStore.get(ck);
-            getContextUpdateStore(rgbVal).get(ck)(initialValue[rgbVal]);
+            let initialValue: RGB = getAsRGB(ck);
+            $contextUpdateStore.get(ck)(rgbVal, initialValue[rgbVal]);
             $contextCurrentLockedValueStore.set(ck, initialValue);
         });
     };
 
-    const getContextUpdateStore = (rgbVal: string) => {
-        if (rgbVal === RGBVal.r) return $contextUpdateRStore;
-        if (rgbVal === RGBVal.g) return $contextUpdateGStore;
-        if (rgbVal === RGBVal.b) return $contextUpdateBStore;
-    };
 
     const close = () => {
         dispatch("close");

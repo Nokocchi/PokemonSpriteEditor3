@@ -5,10 +5,7 @@
     import SelectedMultiSelectIcon from "~icons/mdi/check-circle-outline";
     import {
         contextCurrentLockedValueStore,
-        contextInitialValueStore,
-        contextUpdateBStore,
-        contextUpdateGStore,
-        contextUpdateRStore,
+        contextUpdateStore,
         getAsRGB,
         isEquals,
         type RGB,
@@ -82,19 +79,8 @@
             b: $rgbStore.b,
         };
 
-        $contextUpdateRStore.set(initialColorKey, (newValue: number) => {
-            console.log("IN METHOD, update r to new value", newValue);
-            $rgbStore.r = newValue;
-            $rgbStore = $rgbStore;
-        });
-
-        $contextUpdateGStore.set(initialColorKey, (newValue: number) => {
-            $rgbStore.g = newValue;
-            $rgbStore = $rgbStore;
-        });
-
-        $contextUpdateBStore.set(initialColorKey, (newValue: number) => {
-            $rgbStore.b = newValue;
+        $contextUpdateStore.set(initialColorKey, (rgbVal: string, newValue: number) => {
+            $rgbStore[rgbVal] = newValue;
             $rgbStore = $rgbStore;
         });
 
@@ -102,7 +88,6 @@
             initialColorKey,
             currentValueLockedWhenMultiSelect
         );
-        $contextInitialValueStore.set(initialColorKey, initialColorRGB);
     };
 </script>
 
@@ -129,10 +114,11 @@
 <style>
     .palette {
         position: relative;
-        height: 100px;
+        height: 100%;
         width: 100px;
         background-color: rgb(var(--r), var(--g), var(--b));
         box-sizing: border-box;
+        aspect-ratio: 1 / 1;
     }
 
     :global(.palette-icon){

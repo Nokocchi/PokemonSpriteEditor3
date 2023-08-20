@@ -1,53 +1,49 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import type { SpritePath } from "../colorpicker/types";
     import { formatHeaderText } from "./SpecificPokemonCatalog.svelte";
 
-    export let paths: SpritePath[];
-    let possiblePathVars: Set<string> = new Set();
-
+    export let allPathsForThisPokemon: SpritePath[];
     export let selectedPokemonImg: HTMLImageElement;
-    let filters: string[] = [];
+
+    let allPossibleFilters: Set<string> = new Set(allPathsForThisPokemon.map(path => path.other).flat(1).sort());
+    let selectedFilters: string[] = [];
     let filteredPathsToShow: string[] = [];
+
+    onMount(() => {
+        showPokemonsObeyingFilter();
+    });
 
     const selectPkmn = (clickEvent: MouseEvent) => {
         selectedPokemonImg = clickEvent.target as HTMLImageElement;
-        paths = paths;
+        allPathsForThisPokemon = allPathsForThisPokemon;
     };
 
-    const applyFilters = () => {
-        filteredPathsToShow = paths
+    const showPokemonsObeyingFilter = () => {
+        filteredPathsToShow = allPathsForThisPokemon
             .filter(
                 (path) =>
                     // Base sprite is always included
                     path.other.length === 0 ||
                     // For other sprites, every single path variables must be selected in the filters
                     path.other.every((otherPathVar) =>
-                        filters.includes(otherPathVar)
+                        selectedFilters.includes(otherPathVar)
                     )
             )
             .map((path) => path.fullPath);
     };
 
-    const setup = (paths: SpritePath[]) => {
-        possiblePathVars.clear();
-        paths.forEach((path) =>
-            path.other.forEach((otherPathVar) =>
-                possiblePathVars.add(otherPathVar)
-            )
-        );
-        possiblePathVars = possiblePathVars;
-        applyFilters();
-    };
 
-    $: setup(paths);
-    $: filters && applyFilters();
+    $: selectedFilters && showPokemonsObeyingFilter();
 </script>
 
 <div class="sprite-type-selector">
     <div class="filters">
-        {#each possiblePathVars as pathVar}
-            <input type="checkbox" bind:group={filters} value={pathVar} />
+        {#each allPossibleFilters as pathVar}
+        <div class="sprite-type-checkbox">
+            <input type="checkbox" bind:group={selectedFilters} value={pathVar} />
             {formatHeaderText(pathVar)}
+        </div>
         {/each}
     </div>
 
@@ -72,16 +68,22 @@
         padding: 20px;
     }
 
+    .sprite-type-checkbox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .filters {
         display: flex;
         flex-direction: row;
         margin-bottom: 20px;
+        gap: 25px;
     }
 
     .filters input {
         height: 20px;
         width: 20px;
-        margin-left: 15px;
     }
 
     .sprites {
@@ -93,6 +95,7 @@
 
     img {
         border: 2px solid transparent;
+        align-self: flex-end;
     }
 
     img:hover {

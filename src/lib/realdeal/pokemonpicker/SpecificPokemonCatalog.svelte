@@ -17,7 +17,8 @@
     import imgPathsByNr from "./util/pathByNr.json";
     import type { SpritePath } from "../colorpicker/types";
     import CollapsibleSection from "./CollapsibleSection.svelte";
-    import SpriteTypeSelector from "./SpriteTypeSelector.svelte";
+    import SpriteTypeSelector from "./SpecificPokemonSpriteTypeSelector.svelte";
+    import SpecificPokemonSpriteTypeSelector from "./SpecificPokemonSpriteTypeSelector.svelte";
     export let selectedPokemonImg: HTMLImageElement;
     export let selectedPokemonNr: number;
 
@@ -72,7 +73,7 @@
         <CollapsibleSection headerText={formatHeaderText(generation)} expanded={true}>
             {#each [...games] as [game, paths]}
                 <CollapsibleSection headerText={formatHeaderText(game)} expanded={true}>
-                    <SpriteTypeSelector {paths} bind:selectedPokemonImg />
+                    <SpecificPokemonSpriteTypeSelector allPathsForThisPokemon={paths} bind:selectedPokemonImg />
                 </CollapsibleSection>
             {/each}
         </CollapsibleSection>

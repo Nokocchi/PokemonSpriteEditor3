@@ -66,13 +66,17 @@
         <p>or</p>
         <button on:click={() => {fileInput.click()}}>Upload your own image</button>
     </div>
-    <SpecificPokemonCatalog bind:selectedPokemonImg {selectedPokemonNr} />
+    {#key selectedPokemonNr}
+        <SpecificPokemonCatalog bind:selectedPokemonImg {selectedPokemonNr} />
+    {/key}
 </div>
 
 <style>
     .pokemon-selector {
         display: flex;
         flex-direction: column;
+        overflow-y: scroll;
+        height: 100%; /* To enable scrolling */
     }
 
     .selector-inputs {

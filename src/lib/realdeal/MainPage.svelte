@@ -21,11 +21,11 @@
 </script>
 
 <div class="main-page">
-        <Canvas bind:this={canvas} {imageData} />
-    <div class="main-content">
-        {#if currentWindow == CurrentWindow.SELECT}
+    <Canvas bind:this={canvas} {imageData} />
+    <div class="main-content" class:should-scroll={currentWindow === CurrentWindow.SELECT}>
+        {#if currentWindow === CurrentWindow.SELECT}
             <PokemonSelector bind:selectedPokemonNr bind:imageData />
-        {:else if currentWindow == CurrentWindow.EDIT}
+        {:else if currentWindow === CurrentWindow.EDIT}
             <SpriteEditor
                 bind:this={spriteEditor}
                 {imageData}
@@ -54,7 +54,7 @@
     }
 
     .main-content {
-        overflow-y: scroll;
+        overflow-y: hidden;
         flex-grow: 1;
     }
 </style>

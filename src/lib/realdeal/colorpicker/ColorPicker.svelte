@@ -61,7 +61,6 @@
     .color-picker-container {
         display: flex;
         flex-direction: column;
-        margin-bottom: 25px;
     }
 
     .color-picker-mode-btn-container {

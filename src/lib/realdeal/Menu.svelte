@@ -34,6 +34,7 @@
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
+        flex-shrink: 0;
     }
 
     button {

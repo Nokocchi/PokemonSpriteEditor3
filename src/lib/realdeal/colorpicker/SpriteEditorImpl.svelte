@@ -53,6 +53,7 @@
             />
         {/each}
     </div>
+    <div class=divider/>
     <div class="color-pickers-container">
         {#if currentlySingleSelectedColor}
             {#key { currentlySingleSelectedColor }}
@@ -79,17 +80,27 @@
         display: flex;
         flex-direction: column;
         padding: 30px;
+        row-gap: 20px;
+        box-sizing: border-box;
+        height: 100%;
+    }
+
+    .divider {
+        width: 100%;
+        border-bottom: 1px solid white;
     }
 
     /*Should maybe be auto height?*/
     .palette-container {
         display: grid;
-        grid-template-rows: auto auto;
+        grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
         grid-auto-flow: column; 
         grid-gap: 5px;
         overflow-x: scroll;
+        flex-grow: 1;
     }
 
     .color-pickers-container {
+        height: 190px;
     }
 </style>
