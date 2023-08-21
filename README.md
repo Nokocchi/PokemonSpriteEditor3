@@ -79,8 +79,8 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] 3x Sliders with a textbox each for HSL values
 - [ ] Hex color textbox with color picker
 - [ ] Shared Pipette for all of these modes
-- [x] Shared color preview / palette for all of these modes
 - [ ] Implement the browsers standard color picker?
+- [x] Shared color preview / palette for all of these modes
 - [x] Make it possible to seamlessly change between color formats for each color
 - [x] Add reset button to individual sliders
 - [x] Add reset button to Color Picker
@@ -88,8 +88,8 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] Pokemon search feature: Search by name
 - [x] After picking a Pokemon, order selectable sprites by generation and game
 - [x] Implement filters for back sprite, shiny, female, animation frames and so on
-- [ ] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly
-- [ ] Implement an upload image feature
+- [x] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly
+- [x] Implement an upload image feature
 - [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
 - [x] Select multiple colors at the same time and change all of them at the same time. 
 - - [ ] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?
