@@ -76,6 +76,7 @@
 </div>
 
 <style>
+
     .container {
         display: flex;
         flex-direction: column;
@@ -90,17 +91,19 @@
         border-bottom: 1px solid white;
     }
 
-    /*Should maybe be auto height?*/
+
     .palette-container {
-        display: grid;
-        grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
-        grid-auto-flow: column; 
-        grid-gap: 5px;
-        overflow-x: scroll;
         flex-grow: 1;
+        overflow-x: scroll;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: flex-end;
     }
 
     .color-pickers-container {
         height: 190px;
+        flex-shrink: 0;
     }
 </style>

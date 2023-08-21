@@ -14,7 +14,6 @@
         createEventDispatcher,
         getContext,
         onMount,
-        setContext,
     } from "svelte";
 
     export let initialColorKey: string;
@@ -112,15 +111,19 @@
 </div>
 
 <style>
+
+    :root {
+        --grid-gap: 5px;
+    }
+    
     .palette {
         position: relative;
-        height: 100%;
-        width: 100px;
         background-color: rgb(var(--r), var(--g), var(--b));
         box-sizing: border-box;
         aspect-ratio: 1 / 1;
+        height: calc(50% - calc(var(--grid-gap) / 2));
     }
-
+    
     :global(.palette-icon){
         font-size: 1em;
         position: absolute;

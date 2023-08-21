@@ -7,3 +7,4 @@ Look into using actions for things like: When the original canvas gets set by Po
 - Resetting through multicolor does not work for colorpickers in HSL mode? Abra, red-blue, the dark yellow color didn't seem to get reset properly
 - Scale canvas properly to avoid blur
 - Consider changing the stores directly in MultiColorPicker if possible
+- Multi color picker should look the same as a normal color picker, no? 
