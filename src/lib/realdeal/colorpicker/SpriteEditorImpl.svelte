@@ -100,6 +100,7 @@
         flex-wrap: wrap;
         gap: 5px;
         justify-content: flex-end;
+        align-content: flex-start;
     }
 
     .color-pickers-container {
