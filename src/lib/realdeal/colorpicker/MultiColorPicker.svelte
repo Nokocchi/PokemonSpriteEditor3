@@ -1,13 +1,13 @@
 <script lang="ts">
     import {
-        contextUpdateStore,
-        contextCurrentLockedValueStore,
         type RGB,
         getAsRGB,
         RGBVal,
+        type multiSelectUpdate,
     } from "./types";
     import Slider from "./Slider.svelte";
     import { createEventDispatcher } from "svelte";
+    import { contextColorUpdateStore, contextCurrentLockedValueStore } from "./store";
     const dispatch = createEventDispatcher();
 
     export let currentlyMultiSelectedColors: string[];
@@ -17,32 +17,36 @@
     let bMin: number, bMax: number;
     let currentR: number, currentG: number, currentB: number;
 
-
-
     const change = (offset: number, rgbVal: string) => {
-        if (!offset) return;
-        currentlyMultiSelectedColors.forEach((ck) => {
-            let newValue: number =
-                $contextCurrentLockedValueStore.get(ck)[rgbVal] + offset;
-                $contextUpdateStore.get(ck)(rgbVal, newValue);
-        });
+        if (offset === undefined) return;
+        let updateMap: Map<string, multiSelectUpdate> = new Map(
+            currentlyMultiSelectedColors.map((ck) => [
+                ck,
+                createMultiSelectUpdateObj(rgbVal, $contextCurrentLockedValueStore.get(ck)[rgbVal] + offset)
+            ])
+        );
+        $contextColorUpdateStore = updateMap;
     };
 
     const resetFunction = (rgbVal: string) => {
-        currentlyMultiSelectedColors.forEach((ck) => {
-            let initialValue: RGB = getAsRGB(ck);
-            $contextUpdateStore.get(ck)(rgbVal, initialValue[rgbVal]);
-            $contextCurrentLockedValueStore.set(ck, initialValue);
-        });
+        let updateMap: Map<string, multiSelectUpdate> = new Map(
+            currentlyMultiSelectedColors.map((ck) => [
+                ck,
+                createMultiSelectUpdateObj(rgbVal, getAsRGB(ck)[rgbVal]),
+            ])
+        );
+        $contextColorUpdateStore = updateMap;
     };
 
+    const createMultiSelectUpdateObj = (rgbVal: string, newValue: number) => {
+        return {rgbVal, newValue};
+    }
 
     const close = () => {
         dispatch("close");
     };
 
     const setMinMax = (contextKeys: string[]) => {
-
         let rgbValues: RGB[] = contextKeys.map((ck) =>
             $contextCurrentLockedValueStore.get(ck)
         );

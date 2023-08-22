@@ -1,25 +1,24 @@
 <script lang="ts">
-    import { writable, type Writable } from "svelte/store";
     import Pencil from "~icons/mdi/pencil";
     import MultiSelectIcon from "~icons/mdi/checkbox-blank-circle-outline";
     import SelectedMultiSelectIcon from "~icons/mdi/check-circle-outline";
     import {
+        contextColorUpdateStore,
         contextCurrentLockedValueStore,
-        contextUpdateStore,
+    } from "./store";
+    import {
         getAsRGB,
         isEquals,
+        type multiSelectUpdate,
         type RGB,
     } from "./types";
-    import {
-        createEventDispatcher,
-        getContext,
-        onMount,
-    } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
 
     export let initialColorKey: string;
     export let currentlySingleSelectedColor: string;
     export let currentlyMultiSelectedColors: string[];
     export let multiColorModeStarted: boolean;
+    export let paletteGridSize: number;
     const dispatch = createEventDispatcher();
     const { rgbStore }: any = getContext(initialColorKey);
     let initialColorRGB: RGB = getAsRGB(initialColorKey);
@@ -30,14 +29,10 @@
         ).length > 0;
     $: multiSelectStarted = currentlyMultiSelectedColors.length > 0;
     $: selected = currentlySingleSelectedColor === initialColorKey;
+    $: updateColorFromMultiselect($contextColorUpdateStore);
     $: {
         dispatch("colorChange", $rgbStore);
     }
-
-    onMount(() => {
-        // Once all the color pickers are ready, re-set the rgbstore to trigger drawing to the preview/palette
-        //$rgbStore = $rgbStore;
-    });
 
     const click = () => {
         if (multiColorModeStarted) return;
@@ -59,7 +54,6 @@
             currentlyMultiSelectedColors = currentlyMultiSelectedColors.filter(
                 (selectedColor) => selectedColor !== initialColorKey
             );
-            return;
         } else {
             currentlyMultiSelectedColors = [
                 ...currentlyMultiSelectedColors,
@@ -67,33 +61,24 @@
             ];
         }
 
-        // What is this magic? I cannot set currentValueLockedWhenMultiSelect = $rgbStore
-        // Or even do = Object.create($rgbStore) or = Object.assign($rgbStore)
-        // Because then the value of currentValueLockedWhenMultiSelect gets changed once more, somehow, without this method being run
-        // Is it because these objects are being set by reference? Is the = $rgbStore being run asynchronously?
+        $contextCurrentLockedValueStore.set(initialColorKey, { ...$rgbStore });
+    };
 
-        let currentValueLockedWhenMultiSelect: RGB = {
-            r: $rgbStore.r,
-            g: $rgbStore.g,
-            b: $rgbStore.b,
-        };
-
-        $contextUpdateStore.set(initialColorKey, (rgbVal: string, newValue: number) => {
-            $rgbStore[rgbVal] = newValue;
+    const updateColorFromMultiselect = (
+        updateMap: Map<string, multiSelectUpdate>
+    ) => {
+        let update: multiSelectUpdate = updateMap.get(initialColorKey);
+        if (update) {
+            $rgbStore[update.rgbVal] = update.newValue;
             $rgbStore = $rgbStore;
-        });
-
-        $contextCurrentLockedValueStore.set(
-            initialColorKey,
-            currentValueLockedWhenMultiSelect
-        );
+        }
     };
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    style="--r: {$rgbStore.r}; --g: {$rgbStore.g}; --b: {$rgbStore.b}; "
+    style="--r: {$rgbStore.r}; --g: {$rgbStore.g}; --b: {$rgbStore.b}; --palette-grid-size: {paletteGridSize}"
     class="palette"
     on:click={click}
     on:contextmenu|preventDefault|stopPropagation={multiSelect}
@@ -103,28 +88,39 @@
     class:selected
     class:changed={!isEquals($rgbStore, initialColorRGB)}
 >
-    <MultiSelectIcon class="palette-icon multi-select-icon"/>
-    <SelectedMultiSelectIcon class="palette-icon selected-multi-select-icon"/>
-    <Pencil
-        class="palette-icon changed-icon"
-    />
+    <MultiSelectIcon class="palette-icon multi-select-icon" />
+    <SelectedMultiSelectIcon class="palette-icon selected-multi-select-icon" />
+    <Pencil class="palette-icon changed-icon" />
 </div>
 
 <style>
-
     :root {
         --grid-gap: 5px;
     }
-    
+
     .palette {
         position: relative;
         background-color: rgb(var(--r), var(--g), var(--b));
         box-sizing: border-box;
         aspect-ratio: 1 / 1;
-        height: calc(50% - calc(var(--grid-gap) / 2));
+        /* The hight of an element should be 100% divided by how many elements we want in the height. Minus the gap between each element.
+        There's a gap between each element, so if the grid has n elements in a column, there will be n-1 grid gaps*/
+        width: calc(
+            calc(100% / var(--palette-grid-size)) -
+                calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1))
+        );
+        height: auto;
     }
-    
-    :global(.palette-icon){
+
+    :global(.wide .palette) {
+        height: calc(
+            calc(100% / var(--palette-grid-size)) -
+                calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1))
+        );
+        width: auto;
+    }
+
+    :global(.palette-icon) {
         font-size: 1em;
         position: absolute;
         top: 5px;

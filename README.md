@@ -84,7 +84,7 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] Make it possible to seamlessly change between color formats for each color
 - [x] Add reset button to individual sliders
 - [x] Add reset button to Color Picker
-- [ ] Add reset button to whole Pokemon
+- [x] Add reset button to whole Pokemon
 - [x] Pokemon search feature: Search by name
 - [x] After picking a Pokemon, order selectable sprites by generation and game
 - [x] Implement filters for back sprite, shiny, female, animation frames and so on
@@ -94,8 +94,10 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] Select multiple colors at the same time and change all of them at the same time. 
 - - [ ] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?
 - [ ] Allow importing of second pokemon as color palette
+- - [ ] Use the Pokemon Selector component
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors
 - [ ] Save color palette so it can be used for other Pokemons
-- [ ] Resizable canvas so the sprite is easier to see on large 
+- [ ] Resizable canvas
 - [ ] Add info page that explains how the app works
+- [ ] Make a banner for the Select Pokemon screen when no pokemon has been selected. Maybe Pokemon whose colors are being changed randomly as they are flying by? Or pre-defined by me? 

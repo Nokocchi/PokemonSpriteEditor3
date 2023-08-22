@@ -95,13 +95,8 @@ export const RGBVal = Object.freeze({
     b: "b",
 });
 
-export const contextUpdateStore: Writable<Map<string, (rgbVal: string, newValue: number) => void>> = writable(
-    new Map<string, (rgbVal: string, newValue: number) => void>()
-);
+export type multiSelectUpdate = {
+    rgbVal: string,
+    newValue: number
+};
 
-export const contextCurrentLockedValueStore: Writable<Map<string, RGB>> = writable(
-    new Map<string, RGB>()
-);
-export const contextInitialValueStore: Writable<Map<string, RGB>> = writable(
-    new Map<string, RGB>()
-);

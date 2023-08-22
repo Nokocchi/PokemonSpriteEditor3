@@ -28,7 +28,8 @@
         {:else if currentWindow === CurrentWindow.EDIT}
             <SpriteEditor
                 bind:this={spriteEditor}
-                {imageData}
+                bind:imageData
+                on:resetPokemon={() => imageData = imageData}
                 on:newColor={(newColorResult) =>
                     updateColorAtPixels(newColorResult.detail)}
             />

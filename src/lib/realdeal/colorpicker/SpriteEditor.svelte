@@ -4,13 +4,14 @@
     // Could I clean this up by just calling setInitialValues during component initialization intead of reactively? Or would that be more messy?
 
     import SpriteEditorImpl from "./SpriteEditorImpl.svelte";
-    import { contextKeyOriginalRGBMap } from "./store";
 
     import { RGBToHSL, getAsRGB, type NewColorResult } from "./types";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
     export let imageData: ImageData;
+
+    $: setInitialValues(imageData);
 
     let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
         string,
@@ -19,11 +20,10 @@
 
     const changeColor = (newColor: NewColorResult) => {
         dispatch("newColor", newColor);
-    }
+    };
 
     const setInitialValues = (imageData: ImageData): void => {
         originalColorPixelLocationsMap.clear();
-        $contextKeyOriginalRGBMap.clear();
         const imageHeight = imageData.height;
         const imageWidth = imageData.width;
         const imageRGBData = imageData.data;
@@ -37,7 +37,6 @@
                 const colorKey: string = r + ":" + g + ":" + b;
                 if (!originalColorPixelLocationsMap.has(colorKey)) {
                     originalColorPixelLocationsMap.set(colorKey, []);
-                    $contextKeyOriginalRGBMap.set(colorKey, getAsRGB(colorKey));
                 }
                 originalColorPixelLocationsMap.get(colorKey).push(i);
             }
@@ -51,11 +50,12 @@
         );
         originalColorPixelLocationsMap = sortedByHue;
     };
-
-    setInitialValues(imageData);
-
 </script>
 
-
-<SpriteEditorImpl originalColorPixelLocationsMap={originalColorPixelLocationsMap} on:newColor={(newColor) => changeColor(newColor.detail)}/>
-
+{#key imageData}
+    <SpriteEditorImpl
+        {originalColorPixelLocationsMap}
+        on:newColor={(newColor) => changeColor(newColor.detail)}
+        on:resetPokemon
+    />
+{/key}
