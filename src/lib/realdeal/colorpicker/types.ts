@@ -100,3 +100,76 @@ export type multiSelectUpdate = {
     newValue: number
 };
 
+export const extractPixelData = (pkmnImage: HTMLImageElement): ImageData => {
+    if (!pkmnImage) return;
+    let tempCanvas: OffscreenCanvas = new OffscreenCanvas(
+        pkmnImage.width,
+        pkmnImage.height
+    );
+    tempCanvas
+        .getContext("2d", { willReadFrequently: true })
+        .drawImage(pkmnImage, 0, 0);
+    return tempCanvas
+        .getContext("2d")
+        .getImageData(0, 0, pkmnImage.width, pkmnImage.height);
+};
+
+export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanvasSize, updateFunction]) => {
+
+    // How important are destroy and update functions in the return value? 
+    // Maybe only allow drag / show drag handle when there is a pokemon selected?
+    // Make the resizing of the canvas prettier. Avoid all those weird if(undefined). Maybe use a keyblock around the whole canvas? 
+    let moving = false;
+
+    dragHandle.style.top = `${initialHeight}px`;
+
+    dragHandle.addEventListener('mousedown', () => {
+        moving = true;
+    });
+
+    dragHandle.addEventListener('touchstart', () => {
+        moving = true;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        let mouseYPos: number = e.clientY;
+        if (moving && 0 <= mouseYPos && mouseYPos <= maxCanvasSize) {
+            dragHandle.style.top = `${mouseYPos}px`;
+            updateFunction(mouseYPos);
+        }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+        let mouseYPos: number = e.touches[0].clientY;
+        if (moving && 0 <= mouseYPos && mouseYPos <= maxCanvasSize) {
+            dragHandle.style.top = `${mouseYPos}px`;
+            updateFunction(mouseYPos);
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        moving = false;
+    });
+
+    window.addEventListener('touchup', () => {
+        moving = false;
+    });
+
+    /*
+    return {
+        update(options) {
+            tooltip.setProps(options);
+        },
+        destroy() {
+            tooltip.destroy();
+        }
+    };*/
+
+}
+
+export const getMaxCanvasSize = (imageData: ImageData, screenWidth: number) => {
+    if(!imageData) return 0;
+    let maxMultipleOfImageHeight: number = screenWidth / (imageData.width * 2);
+    return imageData.height * maxMultipleOfImageHeight;
+}
+

@@ -1,40 +1,72 @@
 <script lang="ts">
-    import type { NewColorResult, RGB } from "./colorpicker/types";
+    import {
+        canvasScaler,
+        getMaxCanvasSize,
+        type NewColorResult,
+        type RGB,
+    } from "./colorpicker/types";
 
-    export let imageData: ImageData;
+    export let originalImageData: ImageData;
+    let dirtyImageData: ImageData;
     let originalCanvas: HTMLCanvasElement;
     let resultCanvas: HTMLCanvasElement;
+    let canvasHeight: number;
+    let screenWidth: number;
+    let maxCanvasSize: number;
 
-    $: imageData && setSelectedPokemon(imageData);
+    $: dirtyImageData = originalImageData;
+    $: canvasHeight = originalImageData ? originalImageData.height * 2 : 0;
+    $: maxCanvasSize = getMaxCanvasSize(originalImageData, screenWidth);
+    $: setSelectedPokemon(originalImageData);
+    $: resizeCanvas(canvasHeight);
+
+    const resizeCanvas = (canvasHeight: number) => {
+        presentImage(originalCanvas, originalImageData);
+        presentImage(resultCanvas, dirtyImageData);
+    };
+
+    const updateCanvasHeight = (newValue: number) => {
+        canvasHeight = newValue;
+    };
+
+    const presentImage = (canvas: HTMLCanvasElement, imageData: ImageData) => {
+        if (!imageData) return;
+
+        let height: number = imageData.height;
+        let width: number = imageData.width;
+
+        let scale: number = canvasHeight / height;
+
+        canvas.height = height * scale;
+        canvas.width = width * scale;
+
+        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(width, height);
+        tempCanvas.getContext("2d").putImageData(imageData, 0, 0);
+
+        let context = getCanvasContext(canvas);
+        context.imageSmoothingEnabled = false;
+        context.scale(scale, scale);
+        context.drawImage(tempCanvas, 0, 0);
+    };
 
     const setSelectedPokemon = (imageData: ImageData): void => {
-        originalCanvas.height = imageData.height;
-        originalCanvas.width = imageData.width;
-        getCanvasContext(originalCanvas).putImageData(imageData, 0, 0);
-
-        resultCanvas.height = imageData.height;
-        resultCanvas.width = imageData.width;
-        getCanvasContext(resultCanvas).putImageData(imageData, 0, 0);
+        if (imageData) {
+            presentImage(originalCanvas, imageData);
+            presentImage(resultCanvas, imageData);
+        }
     };
 
     export const updateColor = (newColorResult: NewColorResult) => {
         const newColor: RGB = newColorResult.newColor;
         const pixelsToUpdate: number[] = newColorResult.pixelsToChange;
-        const context: CanvasRenderingContext2D =
-            getCanvasContext(resultCanvas);
-        let width = resultCanvas.width;
-        let height = resultCanvas.height;
-        let resultImageData: ImageData = getCanvasContext(
-            resultCanvas
-        ).getImageData(0, 0, width, height);
 
         for (let i = 0; i < pixelsToUpdate.length; i++) {
             const pixelToUpdate: number = pixelsToUpdate[i];
-            resultImageData.data[pixelToUpdate] = newColor.r;
-            resultImageData.data[pixelToUpdate + 1] = newColor.g;
-            resultImageData.data[pixelToUpdate + 2] = newColor.b;
+            dirtyImageData.data[pixelToUpdate] = newColor.r;
+            dirtyImageData.data[pixelToUpdate + 1] = newColor.g;
+            dirtyImageData.data[pixelToUpdate + 2] = newColor.b;
         }
-        context.putImageData(resultImageData, 0, 0);
+        presentImage(resultCanvas, dirtyImageData);
     };
 
     let getCanvasContext = (
@@ -45,22 +77,42 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="canvas-container" class:pokemon-selected={imageData}>
-    <canvas height="0" width="0" bind:this={originalCanvas} />
-    <canvas height="0" width="0" bind:this={resultCanvas} />
+<div class="canvas-container" class:pokemon-selected={originalImageData}>
+    <canvas bind:this={originalCanvas} />
+    <canvas bind:this={resultCanvas} />
 </div>
+{#key maxCanvasSize}
+    <div
+        class="canvas-resize-handle"
+        use:canvasScaler={[canvasHeight, maxCanvasSize, updateCanvasHeight]}
+        class:hidden={!originalImageData}
+    />
+{/key}
+<svelte:window bind:innerWidth={screenWidth} />
 
 <style>
     .canvas-container {
         display: flex;
-        height: 150px;
         flex-direction: row;
         justify-content: space-around;
         background-color: blue;
+        height: 150px;
         flex-shrink: 0;
     }
 
     .canvas-container.pokemon-selected {
         background-color: white;
+        height: auto;
+    }
+
+    .canvas-resize-handle {
+        position: absolute;
+        border-bottom: 6px solid purple;
+        cursor: move;
+        width: 100%;
+    }
+
+    .canvas-resize-handle.hidden {
+        display: none;
     }
 </style>

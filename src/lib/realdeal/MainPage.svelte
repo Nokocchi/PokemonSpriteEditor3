@@ -1,7 +1,7 @@
 <script lang="ts">
     import PokemonSelector from "./pokemonpicker/PokemonSelector.svelte";
     import Canvas from "./Canvas.svelte";
-    import { CurrentWindow, type NewColorResult } from "./colorpicker/types";
+    import { CurrentWindow, canvasScaler, type NewColorResult } from "./colorpicker/types";
     import Menu from "./Menu.svelte";
     import SpriteEditor from "./colorpicker/SpriteEditor.svelte";
 
@@ -11,24 +11,33 @@
     let imageData: ImageData;
     let selectedPokemonNr: number;
 
+
+
+
     const updateColorAtPixels = (newColorResult: NewColorResult): void => {
         canvas.updateColor(newColorResult);
     };
 
-    const showPage = (page: string) => {
-        currentWindow = page;
-    };
+
+
+    const setImageData = (newImageData: ImageData) => {
+        imageData = newImageData;
+    }
+
+    //TODO: ImageData seems to be updated by SpriteEditor, and this updates originalImageData in Canvas
+    //TODO: Clicking Reset puts the canvases back to original size, but keeps resize handle where it is
 </script>
 
+
 <div class="main-page">
-    <Canvas bind:this={canvas} {imageData} />
+    <Canvas bind:this={canvas} originalImageData={imageData}/>
     <div class="main-content" class:should-scroll={currentWindow === CurrentWindow.SELECT}>
         {#if currentWindow === CurrentWindow.SELECT}
-            <PokemonSelector bind:selectedPokemonNr bind:imageData />
+            <PokemonSelector bind:selectedPokemonNr on:imageSelected={(e) => setImageData(e.detail)} />
         {:else if currentWindow === CurrentWindow.EDIT}
             <SpriteEditor
                 bind:this={spriteEditor}
-                bind:imageData
+                imageData={imageData}
                 on:resetPokemon={() => imageData = imageData}
                 on:newColor={(newColorResult) =>
                     updateColorAtPixels(newColorResult.detail)}
@@ -39,19 +48,16 @@
     </div>
     <Menu
         bind:currentWindow
-        on:selectPokemon={() => showPage(CurrentWindow.SELECT)}
-        on:editSprite={() => showPage(CurrentWindow.EDIT)}
-        on:palettes={() => showPage(CurrentWindow.PALETTES)}
         {imageData}
     />
 </div>
 
 <style>
     .main-page {
-        /*overflow-y: hidden;*/
         display: flex;
         flex-direction: column;
         height: 100dvh;
+        position: relative;
     }
 
     .main-content {

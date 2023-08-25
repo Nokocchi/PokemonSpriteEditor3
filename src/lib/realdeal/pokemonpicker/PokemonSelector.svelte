@@ -1,14 +1,13 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import data from "./util/pokedex.json";
     import Search from "./Search.svelte";
     import Dropdown from "./Dropdown.svelte";
-    import type { PokemonSelectOption } from "../colorpicker/types";
+    import { extractPixelData, type PokemonSelectOption } from "../colorpicker/types";
     import SpecificPokemonCatalog from "./SpecificPokemonCatalog.svelte";
-    import Canvas from "../Canvas.svelte";
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
     export let selectedPokemonNr: number;
-    export let imageData: ImageData;
     let selectedPokemonImg: HTMLImageElement;
 
     let files: FileList;
@@ -18,20 +17,7 @@
         return { id: entry.id, name: entry.name.english };
     });
 
-    $: selectedPokemonImg && extractPixelData(selectedPokemonImg);
-
-    const extractPixelData = (pkmnImage: HTMLImageElement) => {
-        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(
-            pkmnImage.width,
-            pkmnImage.height
-        );
-        tempCanvas
-            .getContext("2d", { willReadFrequently: true })
-            .drawImage(pkmnImage, 0, 0);
-        imageData = tempCanvas
-            .getContext("2d")
-            .getImageData(0, 0, pkmnImage.width, pkmnImage.height);
-    };
+    $: dispatch("imageSelected", extractPixelData(selectedPokemonImg));
 
     const setUploadedImage = (fileList: FileList) => {
         if (!files) return;
