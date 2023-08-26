@@ -5,7 +5,7 @@
     import SpecificPokemonCatalog from "./spritecatalog/SpecificPokemonCatalog.svelte";
     import { createEventDispatcher } from "svelte";
     import { extractPixelData, type PokemonSelectOption } from "../spriteeditor/types";
-    import { dirtyImageDataStore } from "../spriteeditor/store";
+    import { contextColorUpdateStore, contextCurrentLockedValueStore, dirtyImageDataStore } from "../spriteeditor/store";
     import data from "./spritecatalog/util/pokedex.json";
     const dispatch = createEventDispatcher();
 
@@ -23,6 +23,8 @@
     const handlePokemonSelected = (image: HTMLImageElement) => {
         if (!image) return;
         let imageData: ImageData = extractPixelData(image);
+        $contextCurrentLockedValueStore.clear();
+        $contextColorUpdateStore.clear();
         $dirtyImageDataStore = new Uint8ClampedArray(imageData.data);
         dispatch("imageSelected", imageData);
     };
