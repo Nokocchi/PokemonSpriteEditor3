@@ -103,7 +103,7 @@
         background-color: rgb(var(--r), var(--g), var(--b));
         box-sizing: border-box;
         aspect-ratio: 1 / 1;
-        /* The hight of an element should be 100% divided by how many elements we want in the height. Minus the gap between each element.
+        /* The height of an element should be 100% divided by how many elements we want in the height. Minus the gap between each element.
         There's a gap between each element, so if the grid has n elements in a column, there will be n-1 grid gaps*/
         width: calc(
             calc(100% / var(--palette-grid-size)) -

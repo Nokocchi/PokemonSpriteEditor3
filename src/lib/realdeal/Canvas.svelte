@@ -14,8 +14,8 @@
     let screenWidth: number;
     let maxCanvasSize: number;
 
-    $: dirtyImageData = originalImageData;
-    $: canvasHeight = originalImageData ? originalImageData.height * 2 : 0;
+    $: dirtyImageData = originalImageData && new ImageData(new Uint8ClampedArray(originalImageData.data), originalImageData.width, originalImageData.height);
+    $: canvasHeight = getCanvasHeight(originalImageData);
     $: maxCanvasSize = getMaxCanvasSize(originalImageData, screenWidth);
     $: setSelectedPokemon(originalImageData);
     $: resizeCanvas(canvasHeight);
@@ -25,9 +25,15 @@
         presentImage(resultCanvas, dirtyImageData);
     };
 
-    const updateCanvasHeight = (newValue: number) => {
+    const updateCanvasHeightFromResizeHandle = (newValue: number) => {
         canvasHeight = newValue;
     };
+
+    const getCanvasHeight = (imageData: ImageData) => {
+        // If the heigh has already been set earlier, don't mess with it
+        if(canvasHeight) return canvasHeight;
+        return originalImageData ? originalImageData.height * 2 : 0
+    }
 
     const presentImage = (canvas: HTMLCanvasElement, imageData: ImageData) => {
         if (!imageData) return;
@@ -83,7 +89,7 @@
     {#key maxCanvasSize}
         <div
             class="canvas-resize-handle"
-            use:canvasScaler={[canvasHeight, maxCanvasSize, updateCanvasHeight]}
+            use:canvasScaler={[canvasHeight, maxCanvasSize, updateCanvasHeightFromResizeHandle]}
             class:hidden={!originalImageData}
         />
     {/key}

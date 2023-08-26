@@ -7,7 +7,7 @@
 
     let canvas: Canvas;
     let currentWindow: string = CurrentWindow.SELECT;
-    let imageData: ImageData;
+    let originalImageData: ImageData;
     let selectedPokemonNr: number;
 
 
@@ -20,23 +20,21 @@
 
 
     const setImageData = (newImageData: ImageData) => {
-        imageData = newImageData;
+        originalImageData = newImageData;
     }
 
-    //TODO: ImageData seems to be updated by SpriteEditor, and this updates originalImageData in Canvas
-    //TODO: Clicking Reset puts the canvases back to original size, but keeps resize handle where it is
 </script>
 
 
 <div class="main-page">
-    <Canvas bind:this={canvas} originalImageData={imageData}/>
+    <Canvas bind:this={canvas} {originalImageData}/>
     <div class="main-content" class:should-scroll={currentWindow === CurrentWindow.SELECT}>
         {#if currentWindow === CurrentWindow.SELECT}
             <PokemonSelector bind:selectedPokemonNr on:imageSelected={(e) => setImageData(e.detail)} />
         {:else if currentWindow === CurrentWindow.EDIT}
             <SpriteEditor
-                imageData={imageData}
-                on:resetPokemon={() => imageData = imageData}
+                {originalImageData}
+                on:resetPokemon={() => originalImageData = originalImageData}
                 on:newColor={(newColorResult) =>
                     updateColorAtPixels(newColorResult.detail)}
             />
@@ -46,7 +44,7 @@
     </div>
     <Menu
         bind:currentWindow
-        {imageData}
+        imageData={originalImageData}
     />
 </div>
 

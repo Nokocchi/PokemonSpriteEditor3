@@ -9,9 +9,9 @@
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
-    export let imageData: ImageData;
+    export let originalImageData: ImageData;
 
-    $: setInitialValues(imageData);
+    $: setInitialValues(originalImageData);
 
     let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
         string,
@@ -52,7 +52,7 @@
     };
 </script>
 
-{#key imageData}
+{#key originalImageData}
     <SpriteEditorImpl
         {originalColorPixelLocationsMap}
         on:newColor={(newColor) => changeColor(newColor.detail)}
