@@ -5,7 +5,6 @@
     import Menu from "./Menu.svelte";
     import SpriteEditor from "./colorpicker/SpriteEditor.svelte";
 
-    let spriteEditor: SpriteEditor;
     let canvas: Canvas;
     let currentWindow: string = CurrentWindow.SELECT;
     let imageData: ImageData;
@@ -36,7 +35,6 @@
             <PokemonSelector bind:selectedPokemonNr on:imageSelected={(e) => setImageData(e.detail)} />
         {:else if currentWindow === CurrentWindow.EDIT}
             <SpriteEditor
-                bind:this={spriteEditor}
                 imageData={imageData}
                 on:resetPokemon={() => imageData = imageData}
                 on:newColor={(newColorResult) =>

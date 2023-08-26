@@ -80,14 +80,14 @@
 <div class="canvas-container" class:pokemon-selected={originalImageData}>
     <canvas bind:this={originalCanvas} />
     <canvas bind:this={resultCanvas} />
+    {#key maxCanvasSize}
+        <div
+            class="canvas-resize-handle"
+            use:canvasScaler={[canvasHeight, maxCanvasSize, updateCanvasHeight]}
+            class:hidden={!originalImageData}
+        />
+    {/key}
 </div>
-{#key maxCanvasSize}
-    <div
-        class="canvas-resize-handle"
-        use:canvasScaler={[canvasHeight, maxCanvasSize, updateCanvasHeight]}
-        class:hidden={!originalImageData}
-    />
-{/key}
 <svelte:window bind:innerWidth={screenWidth} />
 
 <style>
@@ -98,6 +98,8 @@
         background-color: blue;
         height: 150px;
         flex-shrink: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
     }
 
     .canvas-container.pokemon-selected {
