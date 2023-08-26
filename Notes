@@ -1,11 +1,12 @@
-Look into using actions for things like: When the original canvas gets set by Pokemon selection, can I use an action for something useful here? 
-
-- Get rid of events and dispatch-calls in the top level components. Since I need to write the full canvas with every change, I might as well just have the full canvas as a "write only" kind of output buffer that, through reactive stores, draw to the canvas.
 - Figure out generics for the colorpickers. It seems silly that there is so much duplicate code, but on the other hand, it is limited to only 3 sliders and 3 formats, so... maybe its okay?
 - RGB<->HSL Conversion function seems to be buggy and produce colors slightly off
-- Picking a new Pokemon and then using HSL causes a crash
 - Resetting through multicolor does not work for colorpickers in HSL mode? Abra, red-blue, the dark yellow color didn't seem to get reset properly
 - Update color picker:
     - Multi color picker should look the same as a normal color picker
     - Mobile version, less buttons and textfields
     - Full width
+
+
+Reset full pokemon doesn't work if it has been changed with multicolor
+Keep palette grid size when resetting
+Avoid the browser refreshing when pulling the resize handle on mobile

@@ -90,6 +90,7 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] Implement filters for back sprite, shiny, female, animation frames and so on
 - [x] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly
 - [x] Implement an upload image feature
+- [x] Resizable canvas
 - [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
 - [x] Select multiple colors at the same time and change all of them at the same time. 
 - - [ ] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?
@@ -98,6 +99,5 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors
 - [ ] Save color palette so it can be used for other Pokemons
-- [ ] Resizable canvas
 - [ ] Add info page that explains how the app works
 - [ ] Make a banner for the Select Pokemon screen when no pokemon has been selected. Maybe Pokemon whose colors are being changed randomly as they are flying by? Or pre-defined by me? 

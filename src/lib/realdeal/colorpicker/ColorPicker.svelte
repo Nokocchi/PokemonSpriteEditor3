@@ -4,19 +4,13 @@
 <script lang="ts">
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
-    import { getAsRGB, isEquals, type RGB } from "./types";
+    import { colorPickerModeStore } from "./store";
+    import { ColorPickerMode, getAsRGB, type RGB } from "./types";
     import { getContext } from "svelte";
-
-    const ColorPickerMode = Object.freeze({
-        RGB: "RGB",
-        HSL: "HSL",
-        HEX: "HEX",
-    });
 
     export let contextKey: string;
     let initialColor: RGB = getAsRGB(contextKey);
 
-    let colorPickerMode: string = ColorPickerMode.RGB;
     let { rgbStore }: any = getContext(contextKey);
 
     const reset = () => {
@@ -24,7 +18,7 @@
     };
 
     const changeMode = (mode: string) => {
-        colorPickerMode = mode;
+        $colorPickerModeStore = mode;
     };
 </script>
 
@@ -32,13 +26,13 @@
     <div class="color-picker-mode-btn-container">
         <button
             on:click={() => changeMode(ColorPickerMode.RGB)}
-            disabled={colorPickerMode == ColorPickerMode.RGB}
+            disabled={$colorPickerModeStore == ColorPickerMode.RGB}
         >
             Switch to RGB
         </button>
         <button
             on:click={() => changeMode(ColorPickerMode.HSL)}
-            disabled={colorPickerMode == ColorPickerMode.HSL}
+            disabled={$colorPickerModeStore == ColorPickerMode.HSL}
         >
             Switch to HSL
         </button>
@@ -46,9 +40,9 @@
     </div>
     <div class="color-picker-input-container">
         <div class="color-picker-slider-container">
-            {#if colorPickerMode == ColorPickerMode.RGB}
+            {#if $colorPickerModeStore == ColorPickerMode.RGB}
                 <RgbColorPicker {contextKey} initialValue={initialColor} />
-            {:else if colorPickerMode == ColorPickerMode.HSL}
+            {:else if $colorPickerModeStore == ColorPickerMode.HSL}
                 <HslColorPicker {contextKey} initialValue={initialColor} />
             {:else}
                 <HslColorPicker {contextKey} initialValue={initialColor} />

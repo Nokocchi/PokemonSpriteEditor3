@@ -5,11 +5,13 @@
     import { extractPixelData, type PokemonSelectOption } from "../colorpicker/types";
     import SpecificPokemonCatalog from "./SpecificPokemonCatalog.svelte";
     import { createEventDispatcher } from "svelte";
+    import { dirtyImageDataStore } from "../colorpicker/store";
     const dispatch = createEventDispatcher();
 
     export let selectedPokemonNr: number;
-    let selectedPokemonImg: HTMLImageElement;
+    export let invisible: boolean;
 
+    let selectedPokemonImg: HTMLImageElement;
     let files: FileList;
     let fileInput: HTMLInputElement;
 
@@ -17,7 +19,14 @@
         return { id: entry.id, name: entry.name.english };
     });
 
-    $: dispatch("imageSelected", extractPixelData(selectedPokemonImg));
+    $: handlePokemonSelected(selectedPokemonImg);
+    
+    const handlePokemonSelected = (image: HTMLImageElement) => {
+        if(!image) return;
+        let imageData: ImageData = extractPixelData(image);
+        $dirtyImageDataStore = new Uint8ClampedArray(imageData.data)
+        dispatch("imageSelected", imageData);
+    }
 
     const setUploadedImage = (fileList: FileList) => {
         if (!files) return;
@@ -43,7 +52,7 @@
     $: setUploadedImage(files);
 </script>
 
-<div class="pokemon-selector">
+<div class="pokemon-selector" class:invisible>
     <div class="selector-inputs">
         <input bind:this={fileInput} bind:files type="file" accept="image/*"/>
         <Dropdown bind:selectedPokemonNr {pokemonSelectOptions} />
@@ -63,6 +72,10 @@
         flex-direction: column;
         overflow-y: scroll;
         height: 100%; /* To enable scrolling */
+    }
+
+    .pokemon-selector.invisible {
+        display: none;
     }
 
     .selector-inputs {

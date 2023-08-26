@@ -5,10 +5,9 @@
 
     import SpriteEditorImpl from "./SpriteEditorImpl.svelte";
 
-    import { RGBToHSL, getAsRGB, type NewColorResult } from "./types";
-    import { createEventDispatcher } from "svelte";
+    import { RGBToHSL, getAsRGB } from "./types";
 
-    const dispatch = createEventDispatcher();
+    export let invisible: boolean;
     export let originalImageData: ImageData;
 
     $: setInitialValues(originalImageData);
@@ -18,11 +17,8 @@
         number[]
     >();
 
-    const changeColor = (newColor: NewColorResult) => {
-        dispatch("newColor", newColor);
-    };
-
     const setInitialValues = (imageData: ImageData): void => {
+        if (!imageData) return;
         originalColorPixelLocationsMap.clear();
         const imageHeight = imageData.height;
         const imageWidth = imageData.width;
@@ -52,10 +48,6 @@
     };
 </script>
 
-{#key originalImageData}
-    <SpriteEditorImpl
-        {originalColorPixelLocationsMap}
-        on:newColor={(newColor) => changeColor(newColor.detail)}
-        on:resetPokemon
-    />
-{/key}
+<SpriteEditorImpl {originalColorPixelLocationsMap} {invisible} on:resetPokemon />
+
+

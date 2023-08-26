@@ -1,78 +1,61 @@
 <script lang="ts">
+    import {dirtyImageDataStore,} from "./colorpicker/store";
     import {
         canvasScaler,
         getMaxCanvasSize,
-        type NewColorResult,
-        type RGB,
     } from "./colorpicker/types";
 
     export let originalImageData: ImageData;
-    let dirtyImageData: ImageData;
+    let imageHeight: number;
+    let imageWidth: number;
+    let originalImagePixels: Uint8ClampedArray;
     let originalCanvas: HTMLCanvasElement;
     let resultCanvas: HTMLCanvasElement;
     let canvasHeight: number;
     let screenWidth: number;
     let maxCanvasSize: number;
 
-    $: dirtyImageData = originalImageData && new ImageData(new Uint8ClampedArray(originalImageData.data), originalImageData.width, originalImageData.height);
-    $: canvasHeight = getCanvasHeight(originalImageData);
-    $: maxCanvasSize = getMaxCanvasSize(originalImageData, screenWidth);
-    $: setSelectedPokemon(originalImageData);
-    $: resizeCanvas(canvasHeight);
+    $: handleNewPokemon(originalImageData);
+    $: updateDirtyCanvas($dirtyImageDataStore);
 
-    const resizeCanvas = (canvasHeight: number) => {
-        presentImage(originalCanvas, originalImageData);
-        presentImage(resultCanvas, dirtyImageData);
-    };
+    const handleNewPokemon = (imageData: ImageData) => {
+        if(!imageData) return;
+        imageHeight = imageData.height;
+        imageWidth = imageData.width;
+        originalImagePixels = imageData.data;
+        // Use previous canvasHeighti if already set. Else, two times the height of the sprite
+        canvasHeight = canvasHeight ? canvasHeight : imageHeight * 2;
+        maxCanvasSize = getMaxCanvasSize(imageHeight, imageWidth, screenWidth);
+        presentImage(originalCanvas, originalImagePixels);
+        presentImage(resultCanvas, originalImagePixels);
+    }
+    
+    const updateDirtyCanvas = (dirtyImageData: Uint8ClampedArray) => {
+        presentImage(resultCanvas, dirtyImageData)
+    }
 
     const updateCanvasHeightFromResizeHandle = (newValue: number) => {
         canvasHeight = newValue;
+        presentImage(originalCanvas, originalImagePixels);
+        presentImage(resultCanvas, $dirtyImageDataStore);
     };
 
-    const getCanvasHeight = (imageData: ImageData) => {
-        // If the heigh has already been set earlier, don't mess with it
-        if(canvasHeight) return canvasHeight;
-        return originalImageData ? originalImageData.height * 2 : 0
-    }
+    const presentImage = (presentCanvas: HTMLCanvasElement, imagePixels: Uint8ClampedArray) => {
+        if (!originalImagePixels) return;
 
-    const presentImage = (canvas: HTMLCanvasElement, imageData: ImageData) => {
-        if (!imageData) return;
+        let scale: number = canvasHeight / imageHeight;
 
-        let height: number = imageData.height;
-        let width: number = imageData.width;
+        presentCanvas.height = imageHeight * scale;
+        presentCanvas.width = imageWidth * scale;
 
-        let scale: number = canvasHeight / height;
+        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(imageWidth, imageHeight);
+        let tempImageData: ImageData = new ImageData(imagePixels, imageWidth, imageHeight);
+        tempCanvas.getContext("2d").putImageData(tempImageData, 0, 0);
 
-        canvas.height = height * scale;
-        canvas.width = width * scale;
-
-        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(width, height);
-        tempCanvas.getContext("2d").putImageData(imageData, 0, 0);
-
-        let context = getCanvasContext(canvas);
-        context.imageSmoothingEnabled = false;
-        context.scale(scale, scale);
-        context.drawImage(tempCanvas, 0, 0);
-    };
-
-    const setSelectedPokemon = (imageData: ImageData): void => {
-        if (imageData) {
-            presentImage(originalCanvas, imageData);
-            presentImage(resultCanvas, imageData);
-        }
-    };
-
-    export const updateColor = (newColorResult: NewColorResult) => {
-        const newColor: RGB = newColorResult.newColor;
-        const pixelsToUpdate: number[] = newColorResult.pixelsToChange;
-
-        for (let i = 0; i < pixelsToUpdate.length; i++) {
-            const pixelToUpdate: number = pixelsToUpdate[i];
-            dirtyImageData.data[pixelToUpdate] = newColor.r;
-            dirtyImageData.data[pixelToUpdate + 1] = newColor.g;
-            dirtyImageData.data[pixelToUpdate + 2] = newColor.b;
-        }
-        presentImage(resultCanvas, dirtyImageData);
+        let presentContext: CanvasRenderingContext2D = getCanvasContext(presentCanvas);
+        presentContext.imageSmoothingEnabled = false;
+        presentContext.scale(scale, scale);
+        presentContext.drawImage(tempCanvas, 0, 0);
     };
 
     let getCanvasContext = (

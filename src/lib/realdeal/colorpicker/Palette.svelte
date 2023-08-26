@@ -3,6 +3,7 @@
     import MultiSelectIcon from "~icons/mdi/checkbox-blank-circle-outline";
     import SelectedMultiSelectIcon from "~icons/mdi/check-circle-outline";
     import {
+        dirtyImageDataStore,
         contextColorUpdateStore,
         contextCurrentLockedValueStore,
     } from "./store";
@@ -12,14 +13,14 @@
         type multiSelectUpdate,
         type RGB,
     } from "./types";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { getContext } from "svelte";
 
     export let initialColorKey: string;
     export let currentlySingleSelectedColor: string;
     export let currentlyMultiSelectedColors: string[];
     export let multiColorModeStarted: boolean;
     export let paletteGridSize: number;
-    const dispatch = createEventDispatcher();
+    export let pixelLocations: number[];
     const { rgbStore }: any = getContext(initialColorKey);
     let initialColorRGB: RGB = getAsRGB(initialColorKey);
 
@@ -30,8 +31,16 @@
     $: multiSelectStarted = currentlyMultiSelectedColors.length > 0;
     $: selected = currentlySingleSelectedColor === initialColorKey;
     $: updateColorFromMultiselect($contextColorUpdateStore);
-    $: {
-        dispatch("colorChange", $rgbStore);
+    $: updateResultCanvas($rgbStore);
+
+    const updateResultCanvas = (newColor: RGB) => {
+        for (let i = 0; i < pixelLocations.length; i++) {
+            const pixelToUpdate: number = pixelLocations[i];
+            $dirtyImageDataStore[pixelToUpdate] = newColor.r;
+            $dirtyImageDataStore[pixelToUpdate + 1] = newColor.g;
+            $dirtyImageDataStore[pixelToUpdate + 2] = newColor.b;
+        }
+        $dirtyImageDataStore = $dirtyImageDataStore;
     }
 
     const click = () => {

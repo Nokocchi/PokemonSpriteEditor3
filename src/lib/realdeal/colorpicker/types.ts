@@ -167,9 +167,15 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
 
 }
 
-export const getMaxCanvasSize = (imageData: ImageData, screenWidth: number) => {
-    if(!imageData) return 0;
-    let maxMultipleOfImageHeight: number = screenWidth / (imageData.width * 2);
-    return imageData.height * maxMultipleOfImageHeight;
-}
+export const getMaxCanvasSize = (imageHeight: number, imageWidth: number, screenWidth: number) => {
+    let maxMultipleOfImageHeight: number = screenWidth / (imageWidth * 2);
+    return imageHeight * maxMultipleOfImageHeight;
+};
+
+export const ColorPickerMode = Object.freeze({
+    RGB: "RGB",
+    HSL: "HSL",
+    HEX: "HEX",
+});
+
 
