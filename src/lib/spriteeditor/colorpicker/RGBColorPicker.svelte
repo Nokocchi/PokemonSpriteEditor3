@@ -4,7 +4,7 @@
 <script lang="ts">
     import Slider from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
-    import { type RGB } from "./types";
+    import { type RGB } from "../types";
     import type { Writable } from "svelte/store";
 
     export const reset = () => {

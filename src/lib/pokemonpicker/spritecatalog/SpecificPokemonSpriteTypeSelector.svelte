@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { SpritePath } from "../colorpicker/types";
     import { formatHeaderText } from "./SpecificPokemonCatalog.svelte";
+    import type { SpritePath } from "../../spriteeditor/types";
 
     export let allPathsForThisPokemon: SpritePath[];
     export let selectedPokemonImg: HTMLImageElement;

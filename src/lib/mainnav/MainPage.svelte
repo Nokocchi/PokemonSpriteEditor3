@@ -1,14 +1,10 @@
 <script lang="ts">
-    import PokemonSelector from "./pokemonpicker/PokemonSelector.svelte";
     import Canvas from "./Canvas.svelte";
-    import {
-        CurrentWindow,
-        canvasScaler,
-        type NewColorResult,
-    } from "./colorpicker/types";
     import Menu from "./Menu.svelte";
-    import SpriteEditor from "./colorpicker/SpriteEditor.svelte";
-    import { dirtyImageDataStore } from "./colorpicker/store";
+    import PokemonSelector from "../pokemonpicker/PokemonSelector.svelte";
+    import SpriteEditor from "../spriteeditor/SpriteEditor.svelte";
+    import { dirtyImageDataStore } from "../spriteeditor/store";
+    import { CurrentWindow } from "../spriteeditor/types";
 
     let canvas: Canvas;
     let currentWindow: string = CurrentWindow.SELECT;

@@ -10,3 +10,4 @@
 Reset full pokemon doesn't work if it has been changed with multicolor
 Keep palette grid size when resetting
 Avoid the browser refreshing when pulling the resize handle on mobile
+Check all the store/mount logic in the colorpicker. Is it still needed now that they are created on demand? 

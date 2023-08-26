@@ -4,10 +4,10 @@
         getAsRGB,
         RGBVal,
         type multiSelectUpdate,
-    } from "./types";
+    } from "../types";
     import Slider from "./Slider.svelte";
     import { createEventDispatcher } from "svelte";
-    import { contextColorUpdateStore, contextCurrentLockedValueStore } from "./store";
+    import { contextColorUpdateStore, contextCurrentLockedValueStore } from "../store";
     const dispatch = createEventDispatcher();
 
     export let currentlyMultiSelectedColors: string[];

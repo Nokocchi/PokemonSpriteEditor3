@@ -15,10 +15,9 @@
 
 <script lang="ts">
     import imgPathsByNr from "./util/pathByNr.json";
-    import type { SpritePath } from "../colorpicker/types";
     import CollapsibleSection from "./CollapsibleSection.svelte";
-    import SpriteTypeSelector from "./SpecificPokemonSpriteTypeSelector.svelte";
     import SpecificPokemonSpriteTypeSelector from "./SpecificPokemonSpriteTypeSelector.svelte";
+    import type { SpritePath } from "../../spriteeditor/types";
     export let selectedPokemonImg: HTMLImageElement;
     export let selectedPokemonNr: number;
 
@@ -62,9 +61,6 @@
             genGamePathMap = genGamePathMap;
         }
     };
-
-
-
 
 </script>
 

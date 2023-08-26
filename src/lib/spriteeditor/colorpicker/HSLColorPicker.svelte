@@ -4,7 +4,7 @@
 <script lang="ts">
     import Slider from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
-    import { type HSL, type RGB, RGBToHSL, HSLToRGB } from "./types";
+    import { type HSL, type RGB, RGBToHSL, HSLToRGB } from "../types";
 
     export const reset = () => {
         setCurrentColor(initialValue);

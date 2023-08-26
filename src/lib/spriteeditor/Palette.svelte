@@ -121,7 +121,7 @@
         height: auto;
     }
 
-    :global(.wide .palette) {
+    :global(.screen-wider-than-tall .palette) {
         height: calc(
             calc(100% / var(--palette-grid-size)) -
                 calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1))

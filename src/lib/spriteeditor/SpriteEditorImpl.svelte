@@ -1,7 +1,7 @@
 <script lang="ts">
     import Palette from "./Palette.svelte";
-    import MultiColorPicker from "./MultiColorPicker.svelte";
-    import ColorPicker from "./ColorPicker.svelte";
+    import MultiColorPicker from "./colorpicker/MultiColorPicker.svelte";
+    import ColorPicker from "./colorpicker/ColorPicker.svelte";
     import { getAsRGB} from "./types";
     import { createEventDispatcher, onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
@@ -46,7 +46,7 @@
 </script>
 
 <div class="container" class:invisible>
-    <div class="palette-container" class:wide = {clientWidth/clientHeight > 1} bind:clientHeight bind:clientWidth>
+    <div class="palette-container" class:screen-wider-than-tall = {clientWidth/clientHeight > 1} bind:clientHeight bind:clientWidth>
         {#each [...originalColorPixelLocationsMap] as [initialColorKey, pixelLocations]}
             <Palette
                 {initialColorKey}

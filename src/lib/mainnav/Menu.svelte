@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { CurrentWindow } from "./colorpicker/types";
+    import { CurrentWindow } from "../spriteeditor/types";
+
+
 
     export let currentWindow: string;
     export let noPokemonSelected: boolean;

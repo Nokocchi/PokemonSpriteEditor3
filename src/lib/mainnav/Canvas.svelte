@@ -1,9 +1,6 @@
 <script lang="ts">
-    import {dirtyImageDataStore,} from "./colorpicker/store";
-    import {
-        canvasScaler,
-        getMaxCanvasSize,
-    } from "./colorpicker/types";
+    import { dirtyImageDataStore } from "../spriteeditor/store";
+    import { canvasScaler, getMaxCanvasSize } from "../spriteeditor/types";
 
     export let originalImageData: ImageData;
     let imageHeight: number;

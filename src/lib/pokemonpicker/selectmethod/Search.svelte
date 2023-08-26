@@ -1,6 +1,6 @@
 <script lang="ts">
     import AutoComplete from "simple-svelte-autocomplete"; // https://github.com/pstanoev/simple-svelte-autocomplete
-    import type { PokemonSelectOption } from "../colorpicker/types";
+    import type { PokemonSelectOption } from "../../spriteeditor/types";
 
     export let selectedPokemonNr: number;
     export let pokemonSelectOptions: PokemonSelectOption[];

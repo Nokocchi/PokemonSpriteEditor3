@@ -2,10 +2,11 @@
 </script>
 
 <script lang="ts">
+    import { colorPickerModeStore } from "../store";
+    import { ColorPickerMode, getAsRGB, type RGB } from "../types";
+
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
-    import { colorPickerModeStore } from "./store";
-    import { ColorPickerMode, getAsRGB, type RGB } from "./types";
     import { getContext } from "svelte";
 
     export let contextKey: string;
