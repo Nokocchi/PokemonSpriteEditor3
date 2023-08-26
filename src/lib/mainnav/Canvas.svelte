@@ -99,6 +99,7 @@
         cursor: move;
         width: 100%;
         overscroll-behavior: none;
+        touch-action: none;
     }
 
     .canvas-resize-handle.hidden {

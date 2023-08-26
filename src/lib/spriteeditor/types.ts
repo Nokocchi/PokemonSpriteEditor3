@@ -127,9 +127,11 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
         moving = true;
     });
 
-    dragHandle.addEventListener('touchstart', () => {
+    dragHandle.addEventListener('touchstart', (e) => {
         moving = true;
-    });
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    }, { passive: false });
 
     window.addEventListener('mousemove', (e) => {
         let mouseYPos: number = e.clientY;
@@ -145,7 +147,9 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
             dragHandle.style.top = `${mouseYPos}px`;
             updateFunction(mouseYPos);
         }
-    });
+        e.preventDefault();
+        //e.stopImmediatePropagation();
+    }, { passive: false });
 
     window.addEventListener('mouseup', () => {
         moving = false;
