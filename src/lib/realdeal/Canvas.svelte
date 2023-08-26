@@ -110,6 +110,7 @@
         border-bottom: 6px solid purple;
         cursor: move;
         width: 100%;
+        overscroll-behavior: none;
     }
 
     .canvas-resize-handle.hidden {
