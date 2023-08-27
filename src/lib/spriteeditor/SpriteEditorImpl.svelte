@@ -59,7 +59,7 @@
         {/each}
     </div>
     <div class=actions>
-        <button on:click={resetPokemon}>reset</button>
+        <button on:click={resetPokemon} class="reset">Reset Pokemon</button>
         <select bind:value={paletteGridSize} class="dropdown">
             {#each paletteGridSizes as gridSize}
                 <option value={gridSize}>
@@ -128,7 +128,11 @@
     }
 
     .color-pickers-container {
-        height: 190px;
+        height: 240px;
         flex-shrink: 0;
+    }
+
+    .reset {
+        background-color: maroon;
     }
 </style>

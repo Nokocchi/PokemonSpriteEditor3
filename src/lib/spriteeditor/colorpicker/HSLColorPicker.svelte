@@ -2,7 +2,7 @@
 </script>
 
 <script lang="ts">
-    import Slider from "./Slider.svelte";
+    import Slider, { SliderType } from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
     import { type HSL, type RGB, RGBToHSL, HSLToRGB } from "../types";
 
@@ -21,6 +21,11 @@
     let initialHSLValue: HSL;
     let currentH: number, currentS: number, currentL: number;
     let mounted: boolean = false;
+    let minLRGB: RGB;
+    let maxLRGB: RGB;
+    let minSRGB: RGB;
+    let maxSRGB: RGB;
+    let currentRGB: RGB;
 
     const setCurrentColor = (newColor: RGB) => {
         if(!mounted || newColor === undefined) return;
@@ -38,9 +43,43 @@
         setCurrentColor($rgbStore);
     });
 
+    const minL = (h: number) => {
+        let hsl: HSL = {h: h, s: 100, l: 50};
+        hsl.l = 0;
+        return HSLToRGB(hsl);
+    }
+
+    const maxL = (h: number) => {
+        let hsl: HSL = {h: h, s: 100, l: 50};
+        hsl.l = 100;
+        return HSLToRGB(hsl);
+    }
+
+    const minS = (h: number) => {
+        let hsl: HSL = {h: h, s: 100, l: 50};
+        hsl.s = 0;
+        return HSLToRGB(hsl);
+    }
+
+    const maxS = (h: number) => {
+        let hsl: HSL = {h: h, s: 100, l: 50};
+        hsl.s = 100;
+        return HSLToRGB(hsl);
+    }
+
+    const getCurrentRGB = (h: number) => {
+        let hsl: HSL = {h: h, s: 100, l: 50};
+        return HSLToRGB(hsl);
+    }
+
     $: setCurrentColor($rgbStore);
     $: setRgbStoreFromSlider(currentH, currentS, currentL);
     $: initialHSLValue = RGBToHSL(initialValue);
+    $: minLRGB = minL(currentH)
+    $: maxLRGB = maxL(currentH)
+    $: minSRGB = minS(currentH)
+    $: maxSRGB = maxS(currentH)
+    $: currentRGB = getCurrentRGB(currentH);
 </script>
 
 <div class="column">
@@ -49,18 +88,26 @@
         initialValue={initialHSLValue.h}
         {minValue}
         maxValue={hMaxValue}
+        sliderType={SliderType.H}
     />
     <Slider
         bind:currentValue={currentS}
         initialValue={initialHSLValue.s}
         {minValue}
         maxValue={slMaxValue}
+        sliderType={SliderType.S}
+        --color-min={"rgb(" + minSRGB.r + ", " + minSRGB.g + ", " + minSRGB.b + ")"}
+        --color-max={"rgb(" + maxSRGB.r + ", " + maxSRGB.g + ", " + maxSRGB.b + ")"}
     />
     <Slider
         bind:currentValue={currentL}
         initialValue={initialHSLValue.l}
         {minValue}
         maxValue={slMaxValue}
+        sliderType={SliderType.L}
+        --color-min={"rgb(" + minLRGB.r + ", " + minLRGB.g + ", " + minLRGB.b + ")"}
+        --color-mid={"rgb(" + currentRGB.r + ", " + currentRGB.g + ", " + currentRGB.b + ")"}
+        --color-max={"rgb(" + maxLRGB.r + ", " + maxLRGB.g + ", " + maxLRGB.b + ")"}
     />
 </div>
 

@@ -29,33 +29,30 @@
             on:click={() => changeMode(ColorPickerMode.RGB)}
             disabled={$colorPickerModeStore == ColorPickerMode.RGB}
         >
-            Switch to RGB
+            RGB
         </button>
         <button
             on:click={() => changeMode(ColorPickerMode.HSL)}
             disabled={$colorPickerModeStore == ColorPickerMode.HSL}
         >
-            Switch to HSL
+            HSL
         </button>
-        <button on:click={reset}> Reset </button>
+        <button on:click={reset} class="reset">Reset Color</button>
     </div>
-    <div class="color-picker-input-container">
-        <div class="color-picker-slider-container">
-            {#if $colorPickerModeStore == ColorPickerMode.RGB}
-                <RgbColorPicker {contextKey} initialValue={initialColor} />
-            {:else if $colorPickerModeStore == ColorPickerMode.HSL}
-                <HslColorPicker {contextKey} initialValue={initialColor} />
-            {:else}
-                <HslColorPicker {contextKey} initialValue={initialColor} />
-            {/if}
-        </div>
-    </div>
+    {#if $colorPickerModeStore == ColorPickerMode.RGB}
+        <RgbColorPicker {contextKey} initialValue={initialColor} />
+    {:else if $colorPickerModeStore == ColorPickerMode.HSL}
+        <HslColorPicker {contextKey} initialValue={initialColor} />
+    {:else}
+        <HslColorPicker {contextKey} initialValue={initialColor} />
+    {/if}
 </div>
 
 <style>
     .color-picker-container {
         display: flex;
         flex-direction: column;
+        width: 100%;
     }
 
     .color-picker-mode-btn-container {
@@ -63,17 +60,11 @@
         flex-direction: row;
     }
 
-    .color-picker-input-container {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .color-picker-slider-container {
-        display: flex;
-        flex-direction: column;
-    }
-
     button:disabled {
         pointer-events: none;
+    }
+
+    .reset {
+        background-color: maroon;
     }
 </style>

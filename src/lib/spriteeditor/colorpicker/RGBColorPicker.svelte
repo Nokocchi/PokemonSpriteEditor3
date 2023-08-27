@@ -2,9 +2,9 @@
 </script>
 
 <script lang="ts">
-    import Slider from "./Slider.svelte";
+    import Slider, { SliderType } from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
-    import { type RGB } from "../types";
+    import { RGBVal, type RGB } from "../types";
     import type { Writable } from "svelte/store";
 
     export const reset = () => {
@@ -54,18 +54,21 @@
         initialValue={initialValue.r}
         {minValue}
         {maxValue}
+        sliderType={SliderType.R}
     />
     <Slider
         bind:currentValue={currentG}
         initialValue={initialValue.g}
         {minValue}
         {maxValue}
+        sliderType={SliderType.G}
     />
     <Slider
         bind:currentValue={currentB}
         initialValue={initialValue.b}
         {minValue}
         {maxValue}
+        sliderType={SliderType.B}
     />
 </div>
 
