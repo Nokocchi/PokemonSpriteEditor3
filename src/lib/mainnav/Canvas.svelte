@@ -85,6 +85,7 @@
         height: 150px;
         flex-shrink: 0;
         color: black;
+        overflow-x: hidden;
     }
 
     .canvas-container.pokemon-selected {
