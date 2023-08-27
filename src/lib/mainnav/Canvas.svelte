@@ -1,6 +1,6 @@
 <script lang="ts">
     import { dirtyImageDataStore } from "../spriteeditor/store";
-    import { canvasScaler, getMaxCanvasSize } from "../spriteeditor/types";
+    import { canvasScaler, getMaxCanvasHeight } from "../spriteeditor/types";
 
     export let originalImageData: ImageData;
     let imageHeight: number;
@@ -20,9 +20,9 @@
         imageHeight = imageData.height;
         imageWidth = imageData.width;
         originalImagePixels = imageData.data;
-        // Use previous canvasHeighti if already set. Else, two times the height of the sprite
-        canvasHeight = canvasHeight ? canvasHeight : imageHeight * 2;
-        maxCanvasSize = getMaxCanvasSize(imageHeight, imageWidth, screenWidth);
+        // Use previous canvasHeight if already set. But at most the new picture's maxHeight. Else, pick a default of two times the height of the sprite
+        maxCanvasSize = getMaxCanvasHeight(imageHeight, imageWidth, screenWidth);
+        canvasHeight = canvasHeight ? Math.min(canvasHeight, maxCanvasSize) : imageHeight * 2;
         presentImage(originalCanvas, originalImagePixels);
         presentImage(resultCanvas, originalImagePixels);
     }
@@ -84,8 +84,7 @@
         background-color: blue;
         height: 150px;
         flex-shrink: 0;
-        overflow: hidden;
-        overscroll-behavior: none;
+        color: black;
     }
 
     .canvas-container.pokemon-selected {
@@ -98,8 +97,8 @@
         border-bottom: 6px solid purple;
         cursor: move;
         width: 100%;
-        overscroll-behavior: none;
         touch-action: none;
+        top: 0;
     }
 
     .canvas-resize-handle.hidden {

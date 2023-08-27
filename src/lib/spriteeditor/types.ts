@@ -121,7 +121,7 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
     // Make the resizing of the canvas prettier. Avoid all those weird if(undefined). Maybe use a keyblock around the whole canvas? 
     let moving = false;
 
-    dragHandle.style.top = `${initialHeight}px`;
+    dragHandle.style.height = `${initialHeight}px`;
 
     dragHandle.addEventListener('mousedown', () => {
         moving = true;
@@ -129,14 +129,14 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
 
     dragHandle.addEventListener('touchstart', (e) => {
         moving = true;
-        e.preventDefault();
-        e.stopImmediatePropagation();
+        //e.preventDefault();
+        //e.stopImmediatePropagation();
     }, { passive: false });
 
     window.addEventListener('mousemove', (e) => {
         let mouseYPos: number = e.clientY;
         if (moving && 0 <= mouseYPos && mouseYPos <= maxCanvasSize) {
-            dragHandle.style.top = `${mouseYPos}px`;
+            dragHandle.style.height = `${mouseYPos}px`;
             updateFunction(mouseYPos);
         }
     });
@@ -144,10 +144,10 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
     window.addEventListener('touchmove', (e) => {
         let mouseYPos: number = e.touches[0].clientY;
         if (moving && 0 <= mouseYPos && mouseYPos <= maxCanvasSize) {
-            dragHandle.style.top = `${mouseYPos}px`;
+            dragHandle.style.height = `${mouseYPos}px`;
             updateFunction(mouseYPos);
         }
-        e.preventDefault();
+        //e.preventDefault();
         //e.stopImmediatePropagation();
     }, { passive: false });
 
@@ -171,9 +171,10 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
 
 }
 
-export const getMaxCanvasSize = (imageHeight: number, imageWidth: number, screenWidth: number) => {
-    let maxMultipleOfImageHeight: number = screenWidth / (imageWidth * 2);
-    return imageHeight * maxMultipleOfImageHeight;
+export const getMaxCanvasHeight = (imageHeight: number, imageWidth: number, screenWidth: number) => {
+    let imageProportions: number = imageHeight / imageWidth;
+    let maxWidthOfSingleCanvas: number = screenWidth / 2;
+    return maxWidthOfSingleCanvas * imageProportions;
 };
 
 export const ColorPickerMode = Object.freeze({

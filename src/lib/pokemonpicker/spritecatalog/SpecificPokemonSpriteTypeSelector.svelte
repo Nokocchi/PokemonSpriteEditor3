@@ -103,7 +103,7 @@
     }
 
     img.selected {
-        border: 2px solid green;
+        border: 2px dotted lightgreen;
     }
 
 </style>
