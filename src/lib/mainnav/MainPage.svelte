@@ -3,7 +3,7 @@
     import Menu from "./Menu.svelte";
     import PokemonSelector from "../pokemonpicker/PokemonSelector.svelte";
     import SpriteEditor from "../spriteeditor/SpriteEditor.svelte";
-    import { dirtyImageDataStore } from "../spriteeditor/store";
+    import { contextColorUpdateStore, contextCurrentLockedValueStore, dirtyImageDataStore } from "../spriteeditor/store";
     import { CurrentWindow } from "../spriteeditor/types";
 
     let canvas: Canvas;
@@ -17,6 +17,8 @@
 
     const resetPokemon = () => {
         $dirtyImageDataStore = new Uint8ClampedArray(originalImageData.data);
+        $contextColorUpdateStore.clear();
+        $contextCurrentLockedValueStore.clear();
         originalImageData = originalImageData;
     };
 </script>
