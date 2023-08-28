@@ -55,6 +55,7 @@
         {minValue}
         {maxValue}
         sliderType={SliderType.R}
+        resetButtondisabled = {initialValue.r === $rgbStore.r}
     />
     <Slider
         bind:currentValue={currentG}
@@ -62,6 +63,7 @@
         {minValue}
         {maxValue}
         sliderType={SliderType.G}
+        resetButtondisabled = {initialValue.g === $rgbStore.g}
     />
     <Slider
         bind:currentValue={currentB}
@@ -69,6 +71,7 @@
         {minValue}
         {maxValue}
         sliderType={SliderType.B}
+        resetButtondisabled = {initialValue.b === $rgbStore.b}
     />
 </div>
 
@@ -76,5 +79,6 @@
     .column {
         display: flex;
         flex-direction: column;
+        gap: 15px;
     }
 </style>

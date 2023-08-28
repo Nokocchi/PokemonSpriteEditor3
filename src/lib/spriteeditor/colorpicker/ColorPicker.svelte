@@ -3,7 +3,7 @@
 
 <script lang="ts">
     import { colorPickerModeStore } from "../store";
-    import { ColorPickerMode, getAsRGB, type RGB } from "../types";
+    import { ColorPickerMode, getAsRGB, isEquals, type RGB } from "../types";
 
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
@@ -25,6 +25,7 @@
 
 <div class="color-picker-container">
     <div class="color-picker-mode-btn-container">
+        <button on:click={reset} class="reset" disabled={isEquals(initialColor, $rgbStore)}>Reset Color</button>
         <button
             on:click={() => changeMode(ColorPickerMode.RGB)}
             disabled={$colorPickerModeStore == ColorPickerMode.RGB}
@@ -37,7 +38,6 @@
         >
             HSL
         </button>
-        <button on:click={reset} class="reset">Reset Color</button>
     </div>
     {#if $colorPickerModeStore == ColorPickerMode.RGB}
         <RgbColorPicker {contextKey} initialValue={initialColor} />
@@ -53,18 +53,20 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+        gap: 15px;
     }
 
     .color-picker-mode-btn-container {
         display: flex;
         flex-direction: row;
+        gap: 15px;
     }
 
     button:disabled {
         pointer-events: none;
     }
 
-    .reset {
+    .reset:enabled {
         background-color: maroon;
     }
 </style>

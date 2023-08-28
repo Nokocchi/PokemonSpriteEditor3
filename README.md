@@ -91,6 +91,7 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] Make a better layout. Nothing responsive and fancy for now, but just a bit more user friendly
 - [x] Implement an upload image feature
 - [x] Resizable canvas
+- [ ] Add a download button for the re-colored result
 - [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
 - [x] Select multiple colors at the same time and change all of them at the same time. 
 - - [ ] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?

@@ -10,13 +10,12 @@
 </script>
 
 <script lang="ts">
-    import type { RGB } from "../types";
-
     export let currentValue: number;
     export let minValue: number;
     export let maxValue: number;
     export let initialValue: number;
     export let sliderType: string;
+    export let resetButtondisabled: boolean;
     export let resetCallback: () => void = () => {};
 
     const reset = () => {
@@ -32,7 +31,7 @@
 </script>
 
 <div class="slider-component">
-    <button on:click={reset} class="reset">Reset</button>
+    <button on:click={reset} class="reset" disabled={resetButtondisabled}>Reset</button>
     <div class="slider-input-container">
         <input
             bind:value={currentValue}
@@ -42,21 +41,33 @@
             class="slider {sliderType}"
             id="myRange"
         />
-        <div class="min-max-container">
-            <p>{minValue}</p>
-            <p>{maxValue}</p>
+        <div class="label-container">
+            <p class="min">{minValue}</p>
+            <input
+                bind:value={currentValue}
+                type="text"
+                id="value"
+                name="value"
+                class="textbox"
+            />
+            <p class="max">{maxValue}</p>
         </div>
     </div>
-    <input
-        bind:value={currentValue}
-        type="text"
-        id="value"
-        name="value"
-        class="textbox"
-    />
 </div>
 
 <style>
+    p {
+        width: 50px;
+    }
+
+    .min {
+        text-align: left;
+    }
+
+    .max {
+        text-align: right;
+    }
+
     .slider-component {
         display: flex;
         flex-direction: row;
@@ -70,10 +81,15 @@
         flex-grow: 1;
     }
 
-    .min-max-container {
+    .label-container {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+    }
+
+    .label-container p {
+        margin: 0;
+        align-items: end;
     }
 
     .slider {
@@ -124,10 +140,15 @@
     }
 
     .textbox {
-        width: 25px;
+        width: 30px;
+        text-align: center;
     }
 
-    .reset {
+    .reset:enabled {
         background-color: maroon;
+    }
+
+    .reset:disabled {
+        pointer-events: none;
     }
 </style>

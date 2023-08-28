@@ -163,6 +163,10 @@
         display: block;
     }
 
+    :global(.multiColorModeStarted .multi-select-icon) {
+        display: none;
+    }
+
     :global(.changed .changed-icon) {
         display: block;
     }

@@ -4,7 +4,8 @@
 - Update color picker:
     - Multi color picker should look the same as a normal color picker
     - Mobile version, less buttons and textfields
-    - Full width
 
 Keep palette grid size when resetting
 Check all the store/mount logic in the colorpicker. Is it still needed now that they are created on demand? 
+Figure out how to handle the palette grid thing. Pinch-zoom? maybe a vertical slider next to it? 
+Palette grid, make edges blurry or add arrows or something to show scrollablenessability
