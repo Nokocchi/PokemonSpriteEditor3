@@ -5,6 +5,7 @@
     import { getAsRGB} from "./types";
     import { createEventDispatcher, onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
+    import { downloadPokemonStore } from "./store";
 
     export let invisible: boolean;
     export let originalColorPixelLocationsMap: Map<string, number[]>;
@@ -43,6 +44,10 @@
         dispatch("resetPokemon");
     }
 
+    const downloadPokemon = () => {
+        $downloadPokemonStore = !$downloadPokemonStore;
+    }
+
 </script>
 
 <div class="container" class:invisible>
@@ -67,6 +72,7 @@
                 </option>
             {/each}
         </select>
+        <button on:click={downloadPokemon} class="save">Download</button>
     </div>
     <div class=divider/>
     <div class="color-pickers-container">
@@ -108,12 +114,16 @@
     .actions {
         display:flex;
         flex-direction: row;
-        justify-content: center;
+        gap: 40px;
     }
 
     .divider {
         width: 100%;
         border-bottom: 1px solid white;
+    }
+
+    .dropdown {
+        width: 100%;
     }
 
 
@@ -133,6 +143,7 @@
     }
 
     .reset {
+        white-space: nowrap;
         background-color: maroon;
     }
 </style>

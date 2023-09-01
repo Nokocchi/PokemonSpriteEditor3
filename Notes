@@ -1,11 +1,9 @@
-- Figure out generics for the colorpickers. It seems silly that there is so much duplicate code, but on the other hand, it is limited to only 3 sliders and 3 formats, so... maybe its okay?
 - RGB<->HSL Conversion function seems to be buggy and produce colors slightly off
-- Resetting through multicolor does not work for colorpickers in HSL mode? Abra, red-blue, the dark yellow color didn't seem to get reset properly
 - Update color picker:
-    - Multi color picker should look the same as a normal color picker
-    - Mobile version, less buttons and textfields
-
-Keep palette grid size when resetting
-Check all the store/mount logic in the colorpicker. Is it still needed now that they are created on demand? 
-Figure out how to handle the palette grid thing. Pinch-zoom? maybe a vertical slider next to it? 
-Palette grid, make edges blurry or add arrows or something to show scrollablenessability
+    - Use same Color Picker component for both single and multicolor change. 
+    - Check all the store/mount logic in the colorpicker. Is it still needed now that they are created on demand? 
+- Palette Grid
+    - Keep palette grid size when resetting
+    - Should it be changed in a different way than a dropdown? 
+- Palette grid, make edges blurry or add arrows or something to show scrollablenessability
+- Fix the search box for selecting Pokemons. It looks different from the normal dropdown and it is rendered under the canvas..

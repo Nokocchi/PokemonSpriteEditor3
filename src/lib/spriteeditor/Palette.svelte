@@ -59,6 +59,8 @@
     const multiSelect = () => {
         if (multiColorModeStarted) return;
 
+        if (!multiSelectStarted) $contextCurrentLockedValueStore.clear();
+
         if (multiSelected) {
             currentlyMultiSelectedColors = currentlyMultiSelectedColors.filter(
                 (selectedColor) => selectedColor !== initialColorKey

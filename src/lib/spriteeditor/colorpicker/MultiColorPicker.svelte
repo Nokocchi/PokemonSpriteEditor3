@@ -1,102 +1,143 @@
 <script lang="ts">
     import {
         type RGB,
-        getAsRGB,
         RGBVal,
         type multiSelectUpdate,
     } from "../types";
-    import Slider from "./Slider.svelte";
     import { createEventDispatcher } from "svelte";
-    import { contextColorUpdateStore, contextCurrentLockedValueStore } from "../store";
+    import {
+        contextColorUpdateStore,
+        contextCurrentLockedValueStore,
+    } from "../store";
+    import RangeSlider from "./multislider/RangeSlider.svelte";
     const dispatch = createEventDispatcher();
 
     export let currentlyMultiSelectedColors: string[];
 
-    let rMin: number, rMax: number;
-    let gMin: number, gMax: number;
-    let bMin: number, bMax: number;
-    let currentR: number, currentG: number, currentB: number;
+    const getRGBValsFromColorKeys = (
+        colors: Map<string, RGB>,
+        rgbVal: string
+    ): number[] => {
+        return Array.from(colors.values()).map((rgb) => rgb[rgbVal]);
+    };
 
-    const change = (offset: number, rgbVal: string) => {
-        if (offset === undefined) return;
-        let updateMap: Map<string, multiSelectUpdate> = new Map(
-            currentlyMultiSelectedColors.map((ck) => [
-                ck,
-                createMultiSelectUpdateObj(rgbVal, $contextCurrentLockedValueStore.get(ck)[rgbVal] + offset)
-            ])
-        );
+    let r: number[] = getRGBValsFromColorKeys(
+        $contextCurrentLockedValueStore,
+        RGBVal.r
+    );
+    let g: number[] = getRGBValsFromColorKeys(
+        $contextCurrentLockedValueStore,
+        RGBVal.g
+    );
+    let b: number[] = getRGBValsFromColorKeys(
+        $contextCurrentLockedValueStore,
+        RGBVal.b
+    );
+
+    const change = (vals: number[], rgbVal: string) => {
+        let updateMap: Map<string, multiSelectUpdate> = new Map();
+
+        // Not the best. We are assuming that the values bound to the RangeSlider are in the same order as the list we generate in getRGBValsFromColorKeys
+        // It would be better if we could change the RangeSlider so the on:change event gives us all values in multicolormode, as well as their contextkey
+        for (let i = 0; i < vals.length; i++) {
+            let colorKey: string = currentlyMultiSelectedColors[i];
+            let newVal: number = vals[i];
+            updateMap.set(colorKey, createMultiSelectUpdateObj(rgbVal, newVal));
+        }
+
         $contextColorUpdateStore = updateMap;
     };
 
+    // Not pretty. This component needs to be updated anyway
     const resetFunction = (rgbVal: string) => {
-        let updateMap: Map<string, multiSelectUpdate> = new Map(
-            currentlyMultiSelectedColors.map((ck) => [
-                ck,
-                createMultiSelectUpdateObj(rgbVal, getAsRGB(ck)[rgbVal]),
-            ])
-        );
-        $contextColorUpdateStore = updateMap;
+        if (rgbVal === "r") {
+            r = currentlyMultiSelectedColors.map((ck) =>
+                parseInt(ck.split(":")[0])
+            );
+        } else if (rgbVal === "g") {
+            g = currentlyMultiSelectedColors.map((ck) =>
+                parseInt(ck.split(":")[1])
+            );
+        } else if (rgbVal === "b") {
+            b = currentlyMultiSelectedColors.map((ck) =>
+                parseInt(ck.split(":")[2])
+            );
+        }
     };
 
     const createMultiSelectUpdateObj = (rgbVal: string, newValue: number) => {
-        return {rgbVal, newValue};
-    }
+        return { rgbVal, newValue };
+    };
 
     const close = () => {
         dispatch("close");
     };
 
-    const setMinMax = (contextKeys: string[]) => {
-        let rgbValues: RGB[] = contextKeys.map((ck) =>
-            $contextCurrentLockedValueStore.get(ck)
-        );
-
-        ({ min: rMin, max: rMax } = getMinMax(rgbValues, RGBVal.r));
-        ({ min: gMin, max: gMax } = getMinMax(rgbValues, RGBVal.g));
-        ({ min: bMin, max: bMax } = getMinMax(rgbValues, RGBVal.b));
-    };
-
-    const getMinMax = (rgbValues: RGB[], rgbVal: string) => {
-        let sortedByRGBVal = rgbValues.slice().sort((a, b) => {
-            return a[rgbVal] - b[rgbVal];
-        });
-
-        return {
-            min: 0 - sortedByRGBVal[0][rgbVal],
-            max: 255 - sortedByRGBVal[sortedByRGBVal.length - 1][rgbVal],
-        };
-    };
-
-    $: change(currentR, RGBVal.r);
-    $: change(currentG, RGBVal.g);
-    $: change(currentB, RGBVal.b);
-    $: setMinMax(currentlyMultiSelectedColors);
+    $: change(r, RGBVal.r);
+    $: change(g, RGBVal.g);
+    $: change(b, RGBVal.b);
 </script>
 
 <div class="multi-slider-container">
-    <Slider
-        initialValue={0}
-        bind:currentValue={currentR}
-        minValue={rMin}
-        maxValue={rMax}
-        resetCallback={() => resetFunction(RGBVal.r)}
-    />
-
-    <Slider
-        initialValue={0}
-        bind:currentValue={currentG}
-        minValue={gMin}
-        maxValue={gMax}
-        resetCallback={() => resetFunction(RGBVal.g)}
-    />
-
-    <Slider
-        initialValue={0}
-        bind:currentValue={currentB}
-        minValue={bMin}
-        maxValue={bMax}
-        resetCallback={() => resetFunction(RGBVal.b)}
-    />
-
+    <div class="slider-container">
+        <button on:click={() => resetFunction(RGBVal.r)}>Reset</button>
+        <RangeSlider
+            id="r"
+            min={0}
+            max={255}
+            bind:values={r}
+            springValues={{ stiffness: 1, damping: 1 }}
+            float
+            multiMoveMode
+        />
+    </div>
+    <div class="slider-container">
+        <button on:click={() => resetFunction(RGBVal.g)}>Reset</button>
+        <RangeSlider
+            id="g"
+            min={0}
+            max={255}
+            bind:values={g}
+            springValues={{ stiffness: 1, damping: 1 }}
+            float
+            multiMoveMode
+        />
+    </div>
+    <div class="slider-container">
+        <button on:click={() => resetFunction(RGBVal.b)}>Reset</button>
+        <RangeSlider
+            id="b"
+            min={0}
+            max={255}
+            bind:values={b}
+            springValues={{ stiffness: 1, damping: 1 }}
+            float
+            multiMoveMode
+        />
+    </div>
     <button on:click={close}>Close</button>
 </div>
+
+<style>
+    .slider-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    :global(.rangeSlider){
+        flex-grow: 1;
+    }
+
+    :global(#r) {
+        background-color: red;
+    }
+
+    :global(#g) {
+        background-color: green;
+    }
+
+    :global(#b) {
+        background-color: blue;
+    }
+
+</style>
