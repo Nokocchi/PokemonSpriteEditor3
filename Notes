@@ -1,9 +1,18 @@
+Bugs:
 - RGB<->HSL Conversion function seems to be buggy and produce colors slightly off
+- RGB<->HSL change in multicolor mode resets the color
+- Fix the search box for selecting Pokemons. It looks different from the normal dropdown and it is rendered under the canvas..
+
+Features:
+- Palette Grid
+    - Keep palette grid size when resetting
+    - Palette grid, make edges blurry or add arrows or something to show scrollablenessability
+
+Code quality:
 - Update color picker:
     - Use same Color Picker component for both single and multicolor change. 
     - Check all the store/mount logic in the colorpicker. Is it still needed now that they are created on demand? 
 - Palette Grid
-    - Keep palette grid size when resetting
     - Should it be changed in a different way than a dropdown? 
-- Palette grid, make edges blurry or add arrows or something to show scrollablenessability
-- Fix the search box for selecting Pokemons. It looks different from the normal dropdown and it is rendered under the canvas..
+- Enforce strict TS typing
+- Clean up types.ts which is currently a mess

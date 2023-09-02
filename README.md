@@ -89,13 +89,13 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - [x] Implement an upload image feature
 - [x] Resizable canvas
 - [x] Add a download button for the re-colored result
-- [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
 - [x] Select multiple colors at the same time and change all of them at the same time. 
-- - [ ] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?
+- - [x] Do something similar for HSL. This will probably act weird for random colors, but work well for similar-looking colors?
+- [ ] Look into whether it is possible to link to your "your current state" so that you can share it with others and they can play around with it
 - [ ] Allow importing of second pokemon as color palette
 - - [ ] Use the Pokemon Selector component
 - - [ ] Some kind of way to select which color should replace which color
 - - [ ] Randomize which colors get replaced with which colors
-- [ ] Save color palette so it can be used for other Pokemons
+- - [ ] Save color palette so it can be used for other Pokemons
 - [ ] Add info page that explains how the app works
 - [ ] Make a banner for the Select Pokemon screen when no pokemon has been selected. Maybe Pokemon whose colors are being changed randomly as they are flying by? Or pre-defined by me? 

@@ -95,10 +95,11 @@ export const RGBVal = Object.freeze({
     b: "b",
 });
 
-export type multiSelectUpdate = {
-    rgbVal: string,
-    newValue: number
-};
+export const HSLVal = Object.freeze({
+    h: "h",
+    s: "s",
+    l: "l",
+});
 
 export const extractPixelData = (pkmnImage: HTMLImageElement): ImageData => {
     if (!pkmnImage) return;
@@ -117,7 +118,6 @@ export const extractPixelData = (pkmnImage: HTMLImageElement): ImageData => {
 export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanvasSize, updateFunction]) => {
 
     // How important are destroy and update functions in the return value? 
-    // Maybe only allow drag / show drag handle when there is a pokemon selected?
     // Make the resizing of the canvas prettier. Avoid all those weird if(undefined). Maybe use a keyblock around the whole canvas? 
     let moving = false;
 
@@ -129,8 +129,6 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
 
     dragHandle.addEventListener('touchstart', (e) => {
         moving = true;
-        //e.preventDefault();
-        //e.stopImmediatePropagation();
     }, { passive: false });
 
     window.addEventListener('mousemove', (e) => {
@@ -147,8 +145,6 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
             dragHandle.style.height = `${mouseYPos}px`;
             updateFunction(mouseYPos);
         }
-        //e.preventDefault();
-        //e.stopImmediatePropagation();
     }, { passive: false });
 
     window.addEventListener('mouseup', () => {
@@ -182,5 +178,16 @@ export const ColorPickerMode = Object.freeze({
     HSL: "HSL",
     HEX: "HEX",
 });
+
+export const getSliderColor = (h: number, hslValue: string, val: number) => {
+    // for all slider background colors, use current hue, full saturation and medium luminosity
+    // for the individual slider's min and max values, we can just set those to 0 or 100
+    let hsl: HSL = {h: h, s: 100, l: 50};
+    if(hslValue){
+        hsl[hslValue] = val;
+    }
+    let rgb: RGB = HSLToRGB(hsl);
+    return "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")"
+}
 
 

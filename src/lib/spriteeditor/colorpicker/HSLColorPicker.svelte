@@ -4,7 +4,7 @@
 <script lang="ts">
     import Slider, { SliderType } from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
-    import { type HSL, type RGB, RGBToHSL, HSLToRGB } from "../types";
+    import { type HSL, type RGB, RGBToHSL, HSLToRGB, getSliderColor } from "../types";
 
     export const reset = () => {
         setCurrentColor(initialValue);
@@ -37,17 +37,6 @@
         mounted = true;
         setCurrentColor($rgbStore);
     });
-
-    const getSliderColor = (h: number, hslValue: string, val: number) => {
-        // for all slider background colors, use current hue, full saturation and medium luminosity
-        // for the individual slider's min and max values, we can just set those to 0 or 100
-        let hsl: HSL = {h: h, s: 100, l: 50};
-        if(hslValue){
-            hsl[hslValue] = val;
-        }
-        let rgb: RGB = HSLToRGB(hsl);
-        return "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")"
-    }
 
     $: setCurrentColor($rgbStore);
     $: setRgbStoreFromSlider(currentH, currentS, currentL);

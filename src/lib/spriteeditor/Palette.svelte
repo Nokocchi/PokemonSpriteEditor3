@@ -10,7 +10,6 @@
     import {
         getAsRGB,
         isEquals,
-        type multiSelectUpdate,
         type RGB,
     } from "./types";
     import { getContext } from "svelte";
@@ -76,12 +75,11 @@
     };
 
     const updateColorFromMultiselect = (
-        updateMap: Map<string, multiSelectUpdate>
+        updateMap: Map<string, RGB>
     ) => {
-        let update: multiSelectUpdate = updateMap.get(initialColorKey);
+        let update: RGB = updateMap.get(initialColorKey);
         if (update) {
-            $rgbStore[update.rgbVal] = update.newValue;
-            $rgbStore = $rgbStore;
+            $rgbStore = update;
         }
     };
 </script>
