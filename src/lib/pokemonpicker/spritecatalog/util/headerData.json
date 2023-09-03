@@ -1,6 +1,6 @@
 [
     {
-        "url": "/sprites/gen4/heartgold-soulsilver/186.png",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
@@ -15,7 +15,7 @@
         ]
     },
     {
-        "url": "/sprites/gen4/heartgold-soulsilver/female/186.png",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/female/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
@@ -30,7 +30,7 @@
         ]
     },
     {
-        "url": "/sprites/gen4/heartgold-soulsilver/female/frame2/186.png",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/female/frame2/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
@@ -45,7 +45,7 @@
         ]
     },
     {
-        "url": "/sprites/gen4/heartgold-soulsilver/back/186.png",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/back/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
@@ -60,7 +60,7 @@
         ]
     },
     {
-        "url": "/sprites/gen4/heartgold-soulsilver/back/female/186.png",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/back/female/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
@@ -75,7 +75,7 @@
         ]
     },
     {
-        "url": "/sprites/gen4/heartgold-soulsilver/back/female/frame2/186.png",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/back/female/frame2/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
