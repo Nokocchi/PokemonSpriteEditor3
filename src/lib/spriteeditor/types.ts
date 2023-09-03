@@ -1,5 +1,3 @@
-import { writable, type Writable } from "svelte/store";
-
 export type SpritePath = {
     fullPath: string;
     generation: string;
@@ -25,46 +23,32 @@ export type HEX = {
     val: string;
 };
 
-
-export const HSLToRGB = (hsl: HSL) => {
+export const HSLToRGB = (hsl: HSL): RGB => {
+    console.log("new");
     let { h, s, l } = hsl;
     s /= 100;
     l /= 100;
-    const k = n => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = n =>
-        l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    return {
-        r: Math.round(255 * f(0)),
-        g: Math.round(255 * f(8)),
-        b: Math.round(255 * f(4))
-    } as RGB;
-};
 
-export const RGBToHSL = (rgb: RGB) => {
+    let a=s*Math.min(l,1-l);
+    let f= (n,k=(n+h/30)%12) => l - a*Math.max(Math.min(k-3,9-k,1),-1);
+    let r = f(0);
+    let g = f(8);
+    let b = f(4);
+    return {r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255)};
+}
+
+export const RGBToHSL = (rgb: RGB): HSL => {
     let { r, g, b } = rgb;
     r /= 255;
     g /= 255;
     b /= 255;
-    const l = Math.max(r, g, b);
-    const s = l - Math.min(r, g, b);
-    const h = s
-        ? l === r
-            ? (g - b) / s
-            : l === g
-                ? 2 + (b - r) / s
-                : 4 + (r - g) / s
-        : 0;
-    return {
-        h: Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h),
-        s: Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0)),
-        l: Math.round((100 * (2 * l - s)) / 2),
-    } as HSL;
-};
 
-export type NewColorResult = {
-    pixelsToChange: number[]
-    newColor: RGB
+    let v =Math.max(r,g,b), c=v-Math.min(r,g,b), f=(1-Math.abs(v+v-c-1)); 
+    let hTemp = c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c)); 
+    let h = 60*(hTemp<0?hTemp+6:hTemp);
+    let s = f ? c/f : 0;
+    let l = (v+v-c)/2;
+    return {h: h, s: s*100, l: l*100};
 }
 
 export const CurrentWindow = Object.freeze({
