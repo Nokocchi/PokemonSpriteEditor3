@@ -2,6 +2,7 @@ Bugs:
 - RGB<->HSL Conversion function seems to be buggy and produce colors slightly off
 - RGB<->HSL change in multicolor mode resets the color
 - Fix the search box for selecting Pokemons. It looks different from the normal dropdown and it is rendered under the canvas..
+- Holding on to the multi slider for too long seems to start some kind of contextmenu so you can't pull it around anymore?
 
 Features:
 - Palette Grid

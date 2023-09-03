@@ -2,10 +2,10 @@
     import Palette from "./Palette.svelte";
     import MultiColorPicker from "./colorpicker/MultiColorPicker.svelte";
     import ColorPicker from "./colorpicker/ColorPicker.svelte";
-    import { getAsRGB} from "./types";
+    import { ColorPickerMode, getAsRGB} from "./types";
     import { createEventDispatcher, onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
-    import { downloadPokemonStore } from "./store";
+    import { colorPickerModeStore, downloadPokemonStore } from "./store";
 
     export let invisible: boolean;
     export let originalColorPixelLocationsMap: Map<string, number[]>;
@@ -87,7 +87,7 @@
             <button
                 on:click={() => {
                     multiColorModeStarted = true;
-                }}>START MULTICOLORING</button
+                }}>Start multicolor mode</button
             >
         {/if}
         {#if multiColorModeStarted}
@@ -114,18 +114,14 @@
     .actions {
         display:flex;
         flex-direction: row;
-        gap: 40px;
+        gap: 20px;
+        justify-content: center;
     }
 
     .divider {
         width: 100%;
         border-bottom: 1px solid white;
     }
-
-    .dropdown {
-        width: 100%;
-    }
-
 
     .palette-container {
         flex-grow: 1;
@@ -138,12 +134,14 @@
     }
 
     .color-pickers-container {
-        height: 240px;
+        height: 271px;
         flex-shrink: 0;
     }
 
     .reset {
         white-space: nowrap;
         background-color: maroon;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
