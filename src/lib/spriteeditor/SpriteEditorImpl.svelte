@@ -7,8 +7,9 @@
     import { writable } from "svelte/store";
     import { downloadPokemonStore, paletteGridSizeStore } from "./store";
 
-    export let invisible: boolean;
     export let originalColorPixelLocationsMap: Map<string, number[]>;
+    export let invisible: boolean;
+
     originalColorPixelLocationsMap.forEach((val, key) =>
         setContext(key, { rgbStore: writable(getAsRGB(key)) })
     );
@@ -48,7 +49,7 @@
 </script>
 
 <div class="container" class:invisible>
-    <div class="palette-container" class:screen-wider-than-tall = {clientWidth/clientHeight > 1} bind:clientHeight bind:clientWidth>
+    <div class="palette-container" class:screen-wider-than-tall = {clientWidth/clientHeight > 1} class:blacked-out={multiColorModeStarted} bind:clientHeight bind:clientWidth>
         {#each [...originalColorPixelLocationsMap] as [initialColorKey, pixelLocations]}
             <Palette
                 {initialColorKey}
@@ -60,7 +61,7 @@
             />
         {/each}
     </div>
-    <div class=actions>
+    <div class="actions">
         <button on:click={resetPokemon} class="reset">Reset Pokemon</button>
         <select bind:value={paletteGridSize} class="dropdown">
             {#each paletteGridSizes as gridSize}
@@ -71,7 +72,7 @@
         </select>
         <button on:click={downloadPokemon} class="save">Download</button>
     </div>
-    <div class=divider/>
+    <div class="divider"/>
     <div class="color-pickers-container">
         {#if currentlySingleSelectedColor}
             {#key { currentlySingleSelectedColor }}
@@ -128,6 +129,10 @@
         flex-wrap: wrap;
         gap: 5px;
         justify-content: flex-end;
+    }
+
+    .blacked-out {
+        opacity: 33%;
     }
 
     .color-pickers-container {

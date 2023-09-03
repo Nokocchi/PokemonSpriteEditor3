@@ -7,9 +7,9 @@ Features:
     - Palette grid, make edges blurry or add arrows or something to show scrollablenessability
 
 Code quality:
-- Update color picker:
+- Update color pickers:
+    - MultiColorPicker is really badly coded because I just wanted to be done with it :(
     - Use same Color Picker component for both single and multicolor change. 
-    - Check all the store/mount logic in the colorpicker. Is it still needed now that they are created on demand? 
 - Palette Grid
     - Should it be changed in a different way than a dropdown? 
 - Enforce strict TS typing
