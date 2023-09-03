@@ -2,10 +2,10 @@
     import Palette from "./Palette.svelte";
     import MultiColorPicker from "./colorpicker/MultiColorPicker.svelte";
     import ColorPicker from "./colorpicker/ColorPicker.svelte";
-    import { ColorPickerMode, getAsRGB} from "./types";
+    import { getAsRGB} from "./types";
     import { createEventDispatcher, onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
-    import { colorPickerModeStore, downloadPokemonStore } from "./store";
+    import { downloadPokemonStore, paletteGridSizeStore } from "./store";
 
     export let invisible: boolean;
     export let originalColorPixelLocationsMap: Map<string, number[]>;
@@ -17,17 +17,14 @@
     let multiColorModeStarted: boolean = false;
     let currentlySingleSelectedColor: string;
     let currentlyMultiSelectedColors: string[] = [];
-    let paletteGridSizes: number[] = [];
-    let paletteGridSize: number = 2;
+    // We want a list of numbers from 1 to sqrt(n) + 1, where n is the amount of colors in the Pokemon
+    let paletteGridSizes: number[] = [...Array(Math.ceil(Math.sqrt(originalColorPixelLocationsMap.size)) + 1).keys()].splice(1);
+    let paletteGridSize: number = $paletteGridSizeStore;
     let clientHeight: number;
     let clientWidth: number;
 
-    onMount(() => {
-        let square: number = Math.ceil(Math.sqrt(originalColorPixelLocationsMap.size)) + 1;
-        paletteGridSizes = [...Array(square).keys()].splice(1);
-    });
-
     $: tryResetCurrentlySingleSelectedColor(currentlyMultiSelectedColors);
+    $: $paletteGridSizeStore = paletteGridSize;
 
     const tryResetCurrentlySingleSelectedColor = (currentMultiSelected: string[]) => {
         if (currentMultiSelected.length && currentlySingleSelectedColor) {
