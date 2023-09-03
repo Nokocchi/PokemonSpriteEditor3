@@ -17,6 +17,8 @@
         secondaryColorDeltaMultiplier: number;
         pixelLocations: Map<string, number[]>;
         imageData: ImageData;
+        primaryColors: string[];
+        secondaryColors: string[];
     };
 
     let screenWidth: number;
@@ -27,7 +29,7 @@
 
     onMount(() => {
         canvas.width = screenWidth;
-        headerPokemons.data.forEach((pkmn) => {
+        headerPokemons.forEach((pkmn) => {
             addPokemonToDrawMap(pkmn);
         });
 
@@ -74,6 +76,8 @@
                 secondaryColorDeltaMultiplier: Math.random(),
                 pixelLocations: originalColorPixelLocationsMap,
                 imageData: imageData,
+                primaryColors: pkmn.primaryColors,
+                secondaryColors: pkmn.secondaryColors
             };
             toDraw.set(url, canvasPkmn);
         };
@@ -91,8 +95,6 @@
         let dirtyImagePixels: Uint8ClampedArray = new Uint8ClampedArray(
             canvasPkmn.imageData.data
         );
-        let primaryColors: string[] = headerPokemons.data[0].primaryColors;
-        let secondaryColors: string[] = headerPokemons.data[0].secondaryColors;
 
         canvasPkmn.pixelLocations.forEach((pixelLocations, colorKey) => {
             if (colorKey === "alpha") {
@@ -105,9 +107,9 @@
             } else {
                 let delta = 0;
 
-                if (primaryColors.includes(colorKey)) {
+                if (canvasPkmn.primaryColors.includes(colorKey)) {
                     delta = canvasPkmn.primaryColorDeltaMultiplier;
-                } else if (secondaryColors.includes(colorKey)) {
+                } else if (canvasPkmn.secondaryColors.includes(colorKey)) {
                     delta = canvasPkmn.secondaryColorDeltaMultiplier;
                 }
                 let hsl: HSL = RGBToHSL(getAsRGB(colorKey));
@@ -137,7 +139,7 @@
 
         if (canvasPkmn.xPos > screenWidth) {
             toDraw.delete(url);
-            let pkmnToDraw: any = headerPokemons.data[Math.floor(Math.random() * headerPokemons.data.length)];
+            let pkmnToDraw: any = headerPokemons[Math.floor(Math.random() * headerPokemons.length)];
             addPokemonToDrawMap(pkmnToDraw);
         }
     };

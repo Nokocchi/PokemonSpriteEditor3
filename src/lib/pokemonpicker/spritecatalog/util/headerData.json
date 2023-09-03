@@ -1,34 +1,92 @@
-{
-    "data": [
-        {
-            "url": "/sprites/gen4/heartgold-soulsilver/186.png",
-            "primaryColors": ["82:123:115", "205:255:131", "156:238:49", "49:123:0", "123:189:24"],
-            "secondaryColors": ["230:180:41", "255:230:82", "156:98:0"]
-        },
-        {
-            "url": "/sprites/gen4/heartgold-soulsilver/female/186.png",
-            "primaryColors": ["82:123:115", "205:255:131", "156:238:49", "49:123:0", "123:189:24"],
-            "secondaryColors": ["230:180:41", "255:230:82", "156:98:0"]
-        },
-        {
-            "url": "/sprites/gen4/heartgold-soulsilver/female/frame2/186.png",
-            "primaryColors": ["82:123:115", "205:255:131", "156:238:49", "49:123:0", "123:189:24"],
-            "secondaryColors": ["230:180:41", "255:230:82", "156:98:0"]
-        },
-        {
-            "url": "/sprites/gen4/heartgold-soulsilver/back/186.png",
-            "primaryColors": ["82:123:115", "205:255:131", "156:238:49", "49:123:0", "123:189:24"],
-            "secondaryColors": ["230:180:41", "255:230:82", "156:98:0"]
-        },
-        {
-            "url": "/sprites/gen4/heartgold-soulsilver/back/female/186.png",
-            "primaryColors": ["82:123:115", "205:255:131", "156:238:49", "49:123:0", "123:189:24"],
-            "secondaryColors": ["230:180:41", "255:230:82", "156:98:0"]
-        },
-        {
-            "url": "/sprites/gen4/heartgold-soulsilver/back/female/frame2/186.png",
-            "primaryColors": ["82:123:115", "205:255:131", "156:238:49", "49:123:0", "123:189:24"],
-            "secondaryColors": ["230:180:41", "255:230:82", "156:98:0"]
-        }
-    ]
-}
+[
+    {
+        "url": "/sprites/gen4/heartgold-soulsilver/186.png",
+        "primaryColors": [
+            "82:123:115",
+            "205:255:131",
+            "156:238:49",
+            "49:123:0",
+            "123:189:24"
+        ],
+        "secondaryColors": [
+            "230:180:41",
+            "255:230:82",
+            "156:98:0"
+        ]
+    },
+    {
+        "url": "/sprites/gen4/heartgold-soulsilver/female/186.png",
+        "primaryColors": [
+            "82:123:115",
+            "205:255:131",
+            "156:238:49",
+            "49:123:0",
+            "123:189:24"
+        ],
+        "secondaryColors": [
+            "230:180:41",
+            "255:230:82",
+            "156:98:0"
+        ]
+    },
+    {
+        "url": "/sprites/gen4/heartgold-soulsilver/female/frame2/186.png",
+        "primaryColors": [
+            "82:123:115",
+            "205:255:131",
+            "156:238:49",
+            "49:123:0",
+            "123:189:24"
+        ],
+        "secondaryColors": [
+            "230:180:41",
+            "255:230:82",
+            "156:98:0"
+        ]
+    },
+    {
+        "url": "/sprites/gen4/heartgold-soulsilver/back/186.png",
+        "primaryColors": [
+            "82:123:115",
+            "205:255:131",
+            "156:238:49",
+            "49:123:0",
+            "123:189:24"
+        ],
+        "secondaryColors": [
+            "230:180:41",
+            "255:230:82",
+            "156:98:0"
+        ]
+    },
+    {
+        "url": "/sprites/gen4/heartgold-soulsilver/back/female/186.png",
+        "primaryColors": [
+            "82:123:115",
+            "205:255:131",
+            "156:238:49",
+            "49:123:0",
+            "123:189:24"
+        ],
+        "secondaryColors": [
+            "230:180:41",
+            "255:230:82",
+            "156:98:0"
+        ]
+    },
+    {
+        "url": "/sprites/gen4/heartgold-soulsilver/back/female/frame2/186.png",
+        "primaryColors": [
+            "82:123:115",
+            "205:255:131",
+            "156:238:49",
+            "49:123:0",
+            "123:189:24"
+        ],
+        "secondaryColors": [
+            "230:180:41",
+            "255:230:82",
+            "156:98:0"
+        ]
+    }
+]
