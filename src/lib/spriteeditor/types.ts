@@ -24,7 +24,6 @@ export type HEX = {
 };
 
 export const HSLToRGB = (hsl: HSL): RGB => {
-    console.log("new");
     let { h, s, l } = hsl;
     s /= 100;
     l /= 100;
@@ -148,6 +147,18 @@ export const canvasScaler = (dragHandle: HTMLDivElement, [initialHeight, maxCanv
             tooltip.destroy();
         }
     };*/
+
+}
+
+export const scrollGlassPaneWidth = (scrollGlassPanel: HTMLDivElement, parent: HTMLDivElement) => {
+    
+    scrollGlassPanel.style.width = parent ? `${parent.scrollWidth}px` : "0px";
+    
+    return {
+        update(updatedParent: HTMLDivElement) {
+            scrollGlassPanel.style.width = `${updatedParent.scrollWidth}px`;
+        },
+    };
 
 }
 
