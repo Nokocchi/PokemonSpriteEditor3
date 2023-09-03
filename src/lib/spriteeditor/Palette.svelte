@@ -7,12 +7,7 @@
         contextColorUpdateStore,
         contextCurrentLockedValueStore,
     } from "./store";
-    import {
-        getAsRGB,
-        isEquals,
-        type RGB,
-    } from "./types";
-    import { getContext } from "svelte";
+    import { getAsRGB, isEquals, type RGB } from "./types";
 
     export let initialColorKey: string;
     export let currentlySingleSelectedColor: string;
@@ -20,8 +15,8 @@
     export let multiColorModeStarted: boolean;
     export let paletteGridSize: number;
     export let pixelLocations: number[];
-    const { rgbStore }: any = getContext(initialColorKey);
     let initialColorRGB: RGB = getAsRGB(initialColorKey);
+    let currentColor: RGB = initialColorRGB;
 
     $: multiSelected =
         currentlyMultiSelectedColors.filter(
@@ -30,17 +25,6 @@
     $: multiSelectStarted = currentlyMultiSelectedColors.length > 0;
     $: selected = currentlySingleSelectedColor === initialColorKey;
     $: updateColorFromMultiselect($contextColorUpdateStore);
-    $: updateResultCanvas($rgbStore);
-
-    const updateResultCanvas = (newColor: RGB) => {
-        for (let i = 0; i < pixelLocations.length; i++) {
-            const pixelToUpdate: number = pixelLocations[i];
-            $dirtyImageDataStore[pixelToUpdate] = newColor.r;
-            $dirtyImageDataStore[pixelToUpdate + 1] = newColor.g;
-            $dirtyImageDataStore[pixelToUpdate + 2] = newColor.b;
-        }
-        $dirtyImageDataStore = $dirtyImageDataStore;
-    }
 
     const click = () => {
         if (multiColorModeStarted) return;
@@ -71,15 +55,22 @@
             ];
         }
 
-        $contextCurrentLockedValueStore.set(initialColorKey, { ...$rgbStore });
+        $contextCurrentLockedValueStore.set(initialColorKey, {
+            ...currentColor,
+        });
     };
 
-    const updateColorFromMultiselect = (
-        updateMap: Map<string, RGB>
-    ) => {
+    const updateColorFromMultiselect = (updateMap: Map<string, RGB>) => {
         let update: RGB = updateMap.get(initialColorKey);
         if (update) {
-            $rgbStore = update;
+            for (let i = 0; i < pixelLocations.length; i++) {
+                const pixelToUpdate: number = pixelLocations[i];
+                $dirtyImageDataStore[pixelToUpdate] = update.r;
+                $dirtyImageDataStore[pixelToUpdate + 1] = update.g;
+                $dirtyImageDataStore[pixelToUpdate + 2] = update.b;
+            }
+            $dirtyImageDataStore = $dirtyImageDataStore;
+            currentColor = update;
         }
     };
 </script>
@@ -87,7 +78,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    style="--r: {$rgbStore.r}; --g: {$rgbStore.g}; --b: {$rgbStore.b}; --palette-grid-size: {paletteGridSize}"
+    style="--r: {currentColor.r}; --g: {currentColor.g}; --b: {currentColor.b}; --palette-grid-size: {paletteGridSize}"
     class="palette"
     on:click={click}
     on:contextmenu|preventDefault|stopPropagation={multiSelect}
@@ -95,7 +86,7 @@
     class:multiSelectStarted
     class:multiColorModeStarted
     class:selected
-    class:changed={!isEquals($rgbStore, initialColorRGB)}
+    class:changed={!isEquals(currentColor, initialColorRGB)}
 >
     <MultiSelectIcon class="palette-icon multi-select-icon" />
     <SelectedMultiSelectIcon class="palette-icon selected-multi-select-icon" />

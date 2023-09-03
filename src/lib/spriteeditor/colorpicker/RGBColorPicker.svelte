@@ -4,8 +4,8 @@
 <script lang="ts">
     import Slider, { SliderType } from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
-    import { RGBVal, type RGB } from "../types";
-    import type { Writable } from "svelte/store";
+    import { type RGB } from "../types";
+    import { contextColorUpdateStore } from "../store";
 
     export const reset = () => {
         setCurrentColor(initialValue);
@@ -32,6 +32,9 @@
         // sliders will have undefined values before this component is mounted
         if (mounted) {
             $rgbStore = { r, g, b };
+            let update: Map<string, RGB> = new Map<string, RGB>();
+            update.set(contextKey, { r, g, b });
+            $contextColorUpdateStore = update;
         }
     };
 
@@ -55,7 +58,7 @@
         {minValue}
         {maxValue}
         sliderType={SliderType.R}
-        resetButtondisabled = {initialValue.r === $rgbStore.r}
+        resetButtondisabled = {initialValue.r === currentR}
     />
     <Slider
         bind:currentValue={currentG}
@@ -63,7 +66,7 @@
         {minValue}
         {maxValue}
         sliderType={SliderType.G}
-        resetButtondisabled = {initialValue.g === $rgbStore.g}
+        resetButtondisabled = {initialValue.g === currentG}
     />
     <Slider
         bind:currentValue={currentB}
@@ -71,7 +74,7 @@
         {minValue}
         {maxValue}
         sliderType={SliderType.B}
-        resetButtondisabled = {initialValue.b === $rgbStore.b}
+        resetButtondisabled = {initialValue.b === currentB}
     />
 </div>
 

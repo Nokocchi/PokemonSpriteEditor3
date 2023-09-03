@@ -60,8 +60,26 @@
         HSLVal.l
     );
 
-    const changeMode = (mode: string) => {
-        $colorPickerModeStore = mode;
+    const changeMode = (newMode: string) => {
+        if (newMode === ColorPickerMode.RGB) {
+            let rgbVals: RGB[] = [];
+            for (let i = 0; i < currentlyMultiSelectedColors.length; i++) {
+                rgbVals.push(HSLToRGB({ h: h[i], s: s[i], l: l[i] }));
+            }
+            r = rgbVals.map((rgb) => rgb.r);
+            g = rgbVals.map((rgb) => rgb.g);
+            b = rgbVals.map((rgb) => rgb.b);
+        } else if (newMode === ColorPickerMode.HSL) {
+            let hslVals: HSL[] = [];
+            for (let i = 0; i < currentlyMultiSelectedColors.length; i++) {
+                hslVals.push(RGBToHSL({ r: r[i], g: g[i], b: b[i] }));
+            }
+            h = hslVals.map((hsl) => hsl.h);
+            s = hslVals.map((hsl) => hsl.s);
+            l = hslVals.map((hsl) => hsl.l);
+        }
+
+        $colorPickerModeStore = newMode;
     };
 
     const changeHSL = (vals: number[], hslVal: string) => {
@@ -97,7 +115,6 @@
         $contextColorUpdateStore = updateMap;
     };
 
-    // Not pretty. This component needs to be updated anyway
     const resetFunction = (rgbVal: string) => {
         let originalVals = currentlyMultiSelectedColors.map(
             (ck) => getAsRGB(ck)[rgbVal]

@@ -1,6 +1,5 @@
 Bugs:
 - RGB<->HSL Conversion function seems to be buggy and produce colors slightly off
-- RGB<->HSL change in multicolor mode resets the color
 - Fix the search box for selecting Pokemons. It looks different from the normal dropdown and it is rendered under the canvas..
 
 Features:

@@ -5,6 +5,7 @@
     import Slider, { SliderType } from "./Slider.svelte";
     import { getContext, onMount } from "svelte";
     import { type HSL, type RGB, RGBToHSL, HSLToRGB, getSliderColor } from "../types";
+    import { contextColorUpdateStore } from "../store";
 
     export const reset = () => {
         setCurrentColor(initialValue);
@@ -30,6 +31,9 @@
     const setRgbStoreFromSlider = (h: number, s: number, l: number) => {
         if (mounted) {
             $rgbStore = HSLToRGB({h, s, l});
+            let update: Map<string, RGB> = new Map<string, RGB>();
+            update.set(contextKey, HSLToRGB({h, s, l}));
+            $contextColorUpdateStore = update;
         }
     }
 
@@ -50,7 +54,7 @@
         {minValue}
         maxValue={hMaxValue}
         sliderType={SliderType.H}
-        resetButtondisabled={initialValue.r === $rgbStore.r}
+        resetButtondisabled={initialHSLValue.h === currentH}
     />
     <Slider
         bind:currentValue={currentS}
@@ -60,7 +64,7 @@
         sliderType={SliderType.S}
         --color-min={getSliderColor(currentH, "s", 0)}
         --color-max={getSliderColor(currentH, "s", 100)}
-        resetButtondisabled={initialValue.g === $rgbStore.g}
+        resetButtondisabled={initialHSLValue.s === currentS}
     />
     <Slider
         bind:currentValue={currentL}
@@ -71,7 +75,7 @@
         --color-min={getSliderColor(currentH, "l", 0)}
         --color-mid={getSliderColor(currentH, null, null)}
         --color-max={getSliderColor(currentH, "l", 100)}
-        resetButtondisabled={initialValue.b === $rgbStore.b}
+        resetButtondisabled={initialHSLValue.l === currentL}
     />
 </div>
 
