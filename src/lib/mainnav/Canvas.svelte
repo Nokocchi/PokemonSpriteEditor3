@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import {
         dirtyImageDataStore,
         downloadPokemonStore,
@@ -18,9 +19,13 @@
     $: handleNewPokemon(originalImageData);
     $: updateDirtyCanvas($dirtyImageDataStore);
     $: $downloadPokemonStore && downloadPokemon();
+    
+    onMount(() => {
+        handleNewPokemon(originalImageData);
+    })
 
     const handleNewPokemon = (imageData: ImageData) => {
-        if (!imageData) return;
+        if (!imageData || !resultCanvas) return;
         imageHeight = imageData.height;
         imageWidth = imageData.width;
         originalImagePixels = imageData.data;
@@ -114,7 +119,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="canvas-container" class:pokemon-selected={originalImageData}>
+<div class="canvas-container">
     <canvas bind:this={originalCanvas} />
     <canvas bind:this={resultCanvas} />
     {#key maxCanvasSize}
@@ -125,7 +130,6 @@
                 maxCanvasSize,
                 updateCanvasHeightFromResizeHandle,
             ]}
-            class:hidden={!originalImageData}
         />
     {/key}
 </div>
@@ -136,15 +140,10 @@
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-        background-color: blue;
-        height: 150px;
-        flex-shrink: 0;
-        overflow-x: hidden;
-    }
-
-    .canvas-container.pokemon-selected {
         background-color: white;
         height: auto;
+        flex-shrink: 0;
+        overflow-x: hidden;
     }
 
     .canvas-resize-handle {
@@ -154,9 +153,5 @@
         width: 100%;
         touch-action: none;
         top: 0;
-    }
-
-    .canvas-resize-handle.hidden {
-        display: none;
     }
 </style>

@@ -3,8 +3,13 @@
     import Menu from "./Menu.svelte";
     import PokemonSelector from "../pokemonpicker/PokemonSelector.svelte";
     import SpriteEditor from "../spriteeditor/SpriteEditor.svelte";
-    import { contextColorUpdateStore, contextCurrentLockedValueStore, dirtyImageDataStore } from "../spriteeditor/store";
+    import {
+        contextColorUpdateStore,
+        contextCurrentLockedValueStore,
+        dirtyImageDataStore,
+    } from "../spriteeditor/store";
     import { CurrentWindow } from "../spriteeditor/types";
+    import CoolHeader from "../pokemonpicker/CoolHeader.svelte";
 
     let canvas: Canvas;
     let currentWindow: string = CurrentWindow.SELECT;
@@ -24,7 +29,12 @@
 </script>
 
 <div class="main-page">
-    <Canvas bind:this={canvas} {originalImageData} />
+    {#if originalImageData}
+        <Canvas bind:this={canvas} {originalImageData} />
+    {:else}
+        <CoolHeader />
+    {/if}
+
     <div
         class="main-content"
         class:should-scroll={currentWindow === CurrentWindow.SELECT}
