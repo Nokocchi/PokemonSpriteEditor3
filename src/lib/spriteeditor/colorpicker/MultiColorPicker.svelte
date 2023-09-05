@@ -10,7 +10,7 @@
         HSLVal,
         getSliderColor,
     } from "../types";
-    import { createEventDispatcher, tick } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import {
         contextColorUpdateStore,
         contextCurrentLockedValueStore,
@@ -18,39 +18,27 @@
     import RangeSlider from "./multislider/RangeSlider.svelte";
     import { colorPickerModeStore } from "../store";
     const dispatch = createEventDispatcher();
-
+    
     export let currentlyMultiSelectedColors: string[];
 
-    const getRGBValsFromColorKeys = (
-        rgbVal: string
-    ): number[] => {
-        return Array.from($contextCurrentLockedValueStore.values()).map((rgb) => rgb[rgbVal]);
+    const getRGBValsFromColorKeys = (rgbVal: string): number[] => {
+        return Array.from($contextCurrentLockedValueStore.values()).map(
+            (rgb) => rgb[rgbVal]
+        );
     };
 
-    const getHSLValsFromColorKeys = (
-        hslVal: string
-    ): number[] => {
-        return Array.from($contextCurrentLockedValueStore.values()).map((rgb) => RGBToHSL(rgb)[hslVal]);
+    const getHSLValsFromColorKeys = (hslVal: string): number[] => {
+        return Array.from($contextCurrentLockedValueStore.values()).map(
+            (rgb) => RGBToHSL(rgb)[hslVal]
+        );
     };
 
-    let r: number[] = getRGBValsFromColorKeys(
-        RGBVal.r
-    );
-    let g: number[] = getRGBValsFromColorKeys(
-        RGBVal.g
-    );
-    let b: number[] = getRGBValsFromColorKeys(
-        RGBVal.b
-    );
-    let h: number[] = getHSLValsFromColorKeys(
-        HSLVal.h
-    );
-    let s: number[] = getHSLValsFromColorKeys(
-        HSLVal.s
-    );
-    let l: number[] = getHSLValsFromColorKeys(
-        HSLVal.l
-    );
+    let r: number[] = getRGBValsFromColorKeys(RGBVal.r);
+    let g: number[] = getRGBValsFromColorKeys(RGBVal.g);
+    let b: number[] = getRGBValsFromColorKeys(RGBVal.b);
+    let h: number[] = getHSLValsFromColorKeys(HSLVal.h);
+    let s: number[] = getHSLValsFromColorKeys(HSLVal.s);
+    let l: number[] = getHSLValsFromColorKeys(HSLVal.l);
 
     const changeMode = (newMode: string) => {
         if (newMode === ColorPickerMode.RGB) {
@@ -152,13 +140,15 @@
     };
 
     const compareRGB = (vals: number[], rgbVal: string) => {
-        return getRGBValsFromColorKeys(rgbVal).every((v,i) => vals[i] === v);
-    }
+        return getRGBValsFromColorKeys(rgbVal).every((v, i) => vals[i] === v);
+    };
 
     const compareHSL = (vals: number[], hslVal: string) => {
-        // The Math.round is an attempt to make this comparison work.. Might remove later if it doesn't work. 
-        return getHSLValsFromColorKeys(hslVal).every((v,i) => vals[i] === Math.round(v));
-    }
+        // The Math.round is an attempt to make this comparison work.. Might remove later if it doesn't work.
+        return getHSLValsFromColorKeys(hslVal).every(
+            (v, i) => vals[i] === Math.round(v)
+        );
+    };
 
     $: hAvg = h.reduce((a, c) => a + c, 0) / h.length;
     $: changeHSL(h, HSLVal.h);
@@ -197,7 +187,11 @@
     {#if $colorPickerModeStore == ColorPickerMode.RGB}
         <div class="column">
             <div class="slider-component">
-                <button class="reset" on:click={() => resetFunction(RGBVal.r)} disabled={compareRGB(r, RGBVal.r)}>Reset</button>
+                <button
+                    class="reset"
+                    on:click={() => resetFunction(RGBVal.r)}
+                    disabled={compareRGB(r, RGBVal.r)}>Reset</button
+                >
                 <div class="slider-input-container">
                     <RangeSlider
                         id="r"
@@ -215,7 +209,11 @@
                 </div>
             </div>
             <div class="slider-component">
-                <button class="reset" on:click={() => resetFunction(RGBVal.g)} disabled={compareRGB(g, RGBVal.g)}>Reset</button>
+                <button
+                    class="reset"
+                    on:click={() => resetFunction(RGBVal.g)}
+                    disabled={compareRGB(g, RGBVal.g)}>Reset</button
+                >
                 <div class="slider-input-container">
                     <RangeSlider
                         id="g"
@@ -233,7 +231,11 @@
                 </div>
             </div>
             <div class="slider-component">
-                <button class="reset" on:click={() => resetFunction(RGBVal.b)} disabled={compareRGB(b, RGBVal.b)}>Reset</button>
+                <button
+                    class="reset"
+                    on:click={() => resetFunction(RGBVal.b)}
+                    disabled={compareRGB(b, RGBVal.b)}>Reset</button
+                >
                 <div class="slider-input-container">
                     <RangeSlider
                         id="b"
@@ -254,8 +256,10 @@
     {:else if $colorPickerModeStore == ColorPickerMode.HSL}
         <div class="column">
             <div class="slider-component">
-                <button class="reset" on:click={() => resetFunctionHSL(HSLVal.h)} disabled={compareHSL(h, HSLVal.h)}
-                    >Reset</button
+                <button
+                    class="reset"
+                    on:click={() => resetFunctionHSL(HSLVal.h)}
+                    disabled={compareHSL(h, HSLVal.h)}>Reset</button
                 >
                 <div class="slider-input-container">
                     <RangeSlider
@@ -277,8 +281,10 @@
                 class="slider-component"
                 style="--s-min: {sMin}; --s-max: {sMax};"
             >
-                <button class="reset" on:click={() => resetFunctionHSL(HSLVal.s)} disabled={compareHSL(s, HSLVal.s)}
-                    >Reset</button
+                <button
+                    class="reset"
+                    on:click={() => resetFunctionHSL(HSLVal.s)}
+                    disabled={compareHSL(s, HSLVal.s)}>Reset</button
                 >
                 <div class="slider-input-container">
                     <RangeSlider
@@ -300,8 +306,10 @@
                 class="slider-component"
                 style="--l-min: {lMin}; --l-mid: {lMid}; --l-max: {lMax};"
             >
-                <button class="reset" on:click={() => resetFunctionHSL(HSLVal.l)} disabled={compareHSL(l, HSLVal.l)}
-                    >Reset</button
+                <button
+                    class="reset"
+                    on:click={() => resetFunctionHSL(HSLVal.l)}
+                    disabled={compareHSL(l, HSLVal.l)}>Reset</button
                 >
                 <div class="slider-input-container">
                     <RangeSlider

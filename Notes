@@ -4,6 +4,8 @@ Bugs:
 Features:
 - Palette Grid
     - Palette grid, make edges blurry or add arrows or something to show scrollablenessability
+- Cool Header:
+    - Implement sprite animation
 
 Code quality:
 - Update color pickers:

@@ -98,4 +98,4 @@ The sprites are stored in a hierarchical folder structure using the folder names
 - - [ ] Randomize which colors get replaced with which colors
 - - [ ] Save color palette so it can be used for other Pokemons
 - [ ] Add info page that explains how the app works
-- [ ] Make a banner for the Select Pokemon screen when no pokemon has been selected. Maybe Pokemon whose colors are being changed randomly as they are flying by? Or pre-defined by me? 
+- [x] Make a banner for the Select Pokemon screen when no pokemon has been selected. Maybe Pokemon whose colors are being changed randomly as they are flying by? Or pre-defined by me? 

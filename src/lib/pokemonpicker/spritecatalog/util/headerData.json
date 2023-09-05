@@ -1,6 +1,7 @@
 [
     {
-        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/186.png",
+        "name": "Politoed",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/frame2/186.png",
         "primaryColors": [
             "82:123:115",
             "205:255:131",
@@ -15,78 +16,75 @@
         ]
     },
     {
-        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/female/186.png",
+        "name": "Dunsparce",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/frame2/206.png",
         "primaryColors": [
-            "82:123:115",
-            "205:255:131",
-            "156:238:49",
-            "49:123:0",
-            "123:189:24"
+            "255:246:197",
+            "246:230:123",
+            "189:139:32",
+            "222:189:57",
+            "115:90:65"
         ],
         "secondaryColors": [
-            "230:180:41",
-            "255:230:82",
-            "156:98:0"
+            "32:106:131",
+            "49:139:164",
+            "106:189:205"
         ]
     },
     {
-        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/female/frame2/186.png",
+        "name": "Whishcash",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/frame2/340.png",
         "primaryColors": [
-            "82:123:115",
-            "205:255:131",
-            "156:238:49",
-            "49:123:0",
-            "123:189:24"
+            "98:131:189",
+            "57:98:156",
+            "65:115:180",
+            "115:172:230",
+            "41:65:90",
+            "98:139:189",
+            "123:180:230",
+            "131:222:255"
         ],
         "secondaryColors": [
-            "230:180:41",
-            "255:230:82",
-            "156:98:0"
+            "180:180:131",
+            "123:90:32",
+            "205:156:57",
+            "255:213:65"
         ]
     },
     {
-        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/back/186.png",
-        "primaryColors": [
-            "82:123:115",
-            "205:255:131",
-            "156:238:49",
-            "49:123:0",
-            "123:189:24"
-        ],
-        "secondaryColors": [
-            "230:180:41",
-            "255:230:82",
-            "156:98:0"
-        ]
+        "name": "Flygon",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/frame2/330.png",
+        "primaryColors": [ "115:148:65", "74:106:24", "213:255:131", "172:222:115", "131:189:98" ],
+        "secondaryColors": [ "90:123:82", "49:90:90", "106:164:115", "148:213:156" ]
     },
     {
-        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/back/female/186.png",
-        "primaryColors": [
-            "82:123:115",
-            "205:255:131",
-            "156:238:49",
-            "49:123:0",
-            "123:189:24"
-        ],
-        "secondaryColors": [
-            "230:180:41",
-            "255:230:82",
-            "156:98:0"
-        ]
+        "name": "Ho-oh",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/frame2/250.png",
+        "primaryColors": [ "255:106:90", "180:41:32", "139:32:32", "255:49:8" ],
+        "secondaryColors": [ "172:246:172", "65:106:57", "123:205:74" ]
     },
     {
-        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/back/female/frame2/186.png",
-        "primaryColors": [
-            "82:123:115",
-            "205:255:131",
-            "156:238:49",
-            "49:123:0",
-            "123:189:24"
-        ],
-        "secondaryColors": [
-            "230:180:41",
-            "255:230:82",
-            "156:98:0"
-        ]
+        "name": "Rapidash",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/diamond-pearl/frame2/78.png",
+        "primaryColors": [ "238:197:139", "197:148:106", "139:82:49", "115:49:49", "255:230:197" ],
+        "secondaryColors": [ "255:222:82", "255:156:24", "230:98:41", "222:16:16" ]
+    },
+    {
+        "name": "Torterra",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/frame2/389.png",
+        "primaryColors": [ "180:131:82", "139:106:65", "98:74:57" ],
+        "secondaryColors": [ "49:139:57", "57:90:41", "65:172:65", "24:98:24", "90:123:65" ]
+    },
+    {
+        "name": "Gyarados",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/diamond-pearl/frame2/130.png",
+        "primaryColors": [ "123:213:238", "32:139:172", "24:65:115", "24:98:148", "65:180:238" ],
+        "secondaryColors": []
+    },
+    {
+        "name": "Kyogre",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/platinum/frame2/382.png",
+        "primaryColors": [ "49:58:115", "74:132:214", "41:82:148", "132:206:255", "90:165:255", "58:99:181" ],
+        "secondaryColors": [ "247:16:16", "165:49:99", "115:41:58" ]
     }
 ]
