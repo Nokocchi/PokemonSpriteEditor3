@@ -2,17 +2,21 @@
 </script>
 
 <script lang="ts">
-    import { colorPickerModeStore } from "../store";
+    import { colorPickerModeStore, contextCurrentLockedValueStore } from "../store";
     import { ColorPickerMode, getAsRGB, isEquals, type RGB } from "../types";
 
     import HslColorPicker from "./HSLColorPicker.svelte";
     import RgbColorPicker from "./RGBColorPicker.svelte";
-    import { getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
 
     export let contextKey: string;
     let initialColor: RGB = getAsRGB(contextKey);
 
     let { rgbStore }: any = getContext(contextKey);
+
+    onMount(() => {
+        $rgbStore = $contextCurrentLockedValueStore.get(contextKey);
+    });
 
     const reset = () => {
         $rgbStore = initialColor;

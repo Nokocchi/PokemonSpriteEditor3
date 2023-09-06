@@ -32,6 +32,8 @@
         if (currentlyMultiSelectedColors.length) {
             multiSelect();
         } else {
+            $contextCurrentLockedValueStore.clear();
+            $contextCurrentLockedValueStore.set(initialColorKey, currentColor);
             currentlySingleSelectedColor =
                 currentlySingleSelectedColor === initialColorKey
                     ? undefined

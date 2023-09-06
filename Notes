@@ -2,6 +2,8 @@ Bugs:
 - Fix the search box for selecting Pokemons. It looks different from the normal dropdown and it is rendered under the canvas..
 
 Features:
+- Canvas
+    - When selecting / Multiselecting, the selected colors should be highlighted on the original sprite
 - Palette Grid
     - Palette grid, make edges blurry or add arrows or something to show scrollablenessability
 - Cool Header:

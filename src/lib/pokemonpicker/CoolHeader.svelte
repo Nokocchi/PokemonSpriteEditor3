@@ -1,13 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import {
-        RGBToHSL,
-        extractPixelData,
-        getAsRGB,
-        type HSL,
-        HSLToRGB,
-        type RGB,
-    } from "../spriteeditor/types";
+    import { RGBToHSL, extractPixelData, getAsRGB, type HSL, HSLToRGB, type RGB } from "../spriteeditor/types";
 
     type CanvasPkmn = {
         xPos: number;
@@ -15,8 +8,11 @@
         velocity: number;
         primaryColorChangeMultiplier: number;
         secondaryColorChangeMultiplier: number;
+        initialHueValue: number;
         primaryColors: string[];
         secondaryColors: string[];
+        frameOne: FrameSpecificData;
+        frameTwo: FrameSpecificData;
     };
 
     type FrameSpecificData = {
@@ -29,14 +25,6 @@
     let screenWidth: number;
     let canvas: HTMLCanvasElement;
     let toDraw: Map<string, CanvasPkmn> = new Map<string, CanvasPkmn>();
-    let frameOneData: Map<string, FrameSpecificData> = new Map<
-        string,
-        FrameSpecificData
-    >();
-    let frameTwoData: Map<string, FrameSpecificData> = new Map<
-        string,
-        FrameSpecificData
-    >();
 
     import headerPokemons from "./spritecatalog/util/headerData.json";
 
@@ -68,48 +56,52 @@
     const addPokemonToDrawMap = (pkmn: any) => {
         let url: string = pkmn.url;
 
-        let canvasPkmn: CanvasPkmn = createInitialRandomizedPokemon(pkmn, 50);
+        let canvasPkmn: CanvasPkmn = {
+            velocity: Math.random() + 1,
+            xPos: getRandomXPos(),
+            yPos: 0,
+            primaryColorChangeMultiplier: getPrimaryColorChangeMultiplier(),
+            secondaryColorChangeMultiplier: getSecondaryColorChangeMultiplier(),
+            primaryColors: pkmn.primaryColors,
+            secondaryColors: pkmn.secondaryColors,
+            initialHueValue: Math.floor(Math.random() * 360),
+            frameOne: null,
+            frameTwo: null,
+        };
         toDraw.set(url, canvasPkmn);
 
         const frameOne = new Image();
-        frameOne.src = url;
+        frameOne.src = url.replace("/frame2", "");
         frameOne.onload = () => {
             let imageData: ImageData = extractPixelData(frameOne);
-            let originalColorPixelLocationsMap =
-                getOriginalColorPixelLocationMap(imageData);
-            frameTwoData.set(url, {
+            let originalColorPixelLocationsMap = getOriginalColorPixelLocationMap(imageData);
+            canvasPkmn.yPos = getRandomYPos(imageData.height);
+            canvasPkmn.frameOne = {
                 pixelLocations: originalColorPixelLocationsMap,
                 originalImageData: imageData,
-            });
+            };
         };
 
         const frameTwo = new Image();
-        frameTwo.src = url.replace("/frame2", "");
+        frameTwo.src = url;
         frameTwo.onload = () => {
             let imageData: ImageData = extractPixelData(frameTwo);
-            let originalColorPixelLocationsMap =
-                getOriginalColorPixelLocationMap(imageData);
-            frameOneData.set(url, {
+            let originalColorPixelLocationsMap = getOriginalColorPixelLocationMap(imageData);
+            canvasPkmn.frameTwo = {
                 pixelLocations: originalColorPixelLocationsMap,
                 originalImageData: imageData,
-            });
+            };
         };
     };
 
     const drawPokemon = (url: string, canvasPkmn: CanvasPkmn) => {
-        if(!frameOneData.get(url) || !frameTwoData.get(url)) return;
+        if (!canvasPkmn.frameOne || !canvasPkmn.frameTwo) return;
 
-        let changedImageData: ImageData = changeAndGetImageData(
-            url,
-            canvasPkmn
-        );
+        let changedImageData: ImageData = changeAndGetImageData(url, canvasPkmn);
 
         canvasPkmn.xPos = canvasPkmn.xPos + 1 * canvasPkmn.velocity;
 
-        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(
-            changedImageData.width,
-            changedImageData.height
-        );
+        let tempCanvas: OffscreenCanvas = new OffscreenCanvas(changedImageData.width, changedImageData.height);
         tempCanvas.getContext("2d").putImageData(changedImageData, 0, 0);
 
         let presentContext: CanvasRenderingContext2D = canvas.getContext("2d");
@@ -121,27 +113,22 @@
         }
     };
 
-    const changeAndGetImageData = (
-        url: string,
-        canvasPokemon: CanvasPkmn
-    ): ImageData => {
+    const changeAndGetImageData = (url: string, canvasPokemon: CanvasPkmn): ImageData => {
         let frameData: FrameSpecificData;
         let currentFrameStartedAt: Date = new Date();
         let moreThanSecHasPassed: boolean = currentFrameStartedAt.getTime() > previousFrameStartedAt.getTime() + 1000;
 
         if (moreThanSecHasPassed) {
-            frameOne = !frameOne
+            frameOne = !frameOne;
             previousFrameStartedAt = currentFrameStartedAt;
-        } 
-        if(frameOne){
-            frameData = frameOneData.get(url);
+        }
+        if (frameOne) {
+            frameData = canvasPokemon.frameOne;
         } else {
-            frameData = frameTwoData.get(url);
+            frameData = canvasPokemon.frameTwo;
         }
 
-        let dirtyImagePixels: Uint8ClampedArray = new Uint8ClampedArray(
-            frameData.originalImageData.data
-        );
+        let dirtyImagePixels: Uint8ClampedArray = new Uint8ClampedArray(frameData.originalImageData.data);
 
         frameData.pixelLocations.forEach((pixelLocations, colorKey) => {
             if (!colorKey) {
@@ -161,7 +148,7 @@
                 }
 
                 let hsl: HSL = RGBToHSL(getAsRGB(colorKey));
-                hsl.h += canvasPokemon.xPos * delta;
+                hsl.h += canvasPokemon.initialHueValue + (canvasPokemon.xPos * delta);
                 if (hsl.h < 0) {
                     hsl.h = Math.abs(hsl.h) % 359;
                 }
@@ -176,36 +163,14 @@
             }
         });
 
-        return new ImageData(
-            dirtyImagePixels,
-            frameData.originalImageData.width,
-            frameData.originalImageData.height
-        );
+        return new ImageData(dirtyImagePixels, frameData.originalImageData.width, frameData.originalImageData.height);
     };
 
     const resetAndRandomize = (canvasPokemon: CanvasPkmn) => {
         canvasPokemon.xPos = 0;
-        canvasPokemon.yPos = getRandomYPos(50);
-        canvasPokemon.primaryColorChangeMultiplier =
-            getPrimaryColorChangeMultiplier();
-        canvasPokemon.secondaryColorChangeMultiplier =
-            getSecondaryColorChangeMultiplier();
-    };
-
-    // Don't just hardcode the image height to 50 pixels. Each frame should be the same size, so figure out how to pass that to this function..
-    const createInitialRandomizedPokemon = (
-        pkmn: any,
-        height: number
-    ): CanvasPkmn => {
-        return {
-            velocity: Math.random() + 1,
-            xPos: getRandomXPos(),
-            yPos: getRandomYPos(height),
-            primaryColorChangeMultiplier: getPrimaryColorChangeMultiplier(),
-            secondaryColorChangeMultiplier: getSecondaryColorChangeMultiplier(),
-            primaryColors: pkmn.primaryColors,
-            secondaryColors: pkmn.secondaryColors,
-        };
+        canvasPokemon.yPos = getRandomYPos(canvasPokemon.frameOne.originalImageData.height);
+        canvasPokemon.primaryColorChangeMultiplier = getPrimaryColorChangeMultiplier();
+        canvasPokemon.secondaryColorChangeMultiplier = getSecondaryColorChangeMultiplier();
     };
 
     const getOriginalColorPixelLocationMap = (imageData: ImageData) => {
@@ -213,18 +178,14 @@
         const imageWidth = imageData.width;
         const imageRGBData = imageData.data;
 
-        let originalColorPixelLocationsMap: Map<string, number[]> = new Map<
-            string,
-            number[]
-        >();
+        let originalColorPixelLocationsMap: Map<string, number[]> = new Map<string, number[]>();
 
         //4 indexes for each pixel
         for (let i = 0; i < imageHeight * imageWidth * 4; i += 4) {
             let r: number = imageRGBData[i];
             let g: number = imageRGBData[i + 1];
             let b: number = imageRGBData[i + 2];
-            const colorKey: string =
-                imageRGBData[i + 3] < 255 ? null : r + ":" + g + ":" + b;
+            const colorKey: string = imageRGBData[i + 3] < 255 ? null : r + ":" + g + ":" + b;
             if (!originalColorPixelLocationsMap.has(colorKey)) {
                 originalColorPixelLocationsMap.set(colorKey, []);
             }
@@ -243,16 +204,12 @@
 
     const getPrimaryColorChangeMultiplier = (): number => {
         let primaryColorChangeMultiplier: number = Math.random() / 2;
-        return Math.random() > 0.5
-            ? primaryColorChangeMultiplier
-            : -primaryColorChangeMultiplier;
+        return Math.random() > 0.5 ? primaryColorChangeMultiplier : -primaryColorChangeMultiplier;
     };
 
     const getSecondaryColorChangeMultiplier = (): number => {
         let secondaryColorChangeMultiplier: number = Math.random();
-        return Math.random() > 0.5
-            ? secondaryColorChangeMultiplier
-            : -secondaryColorChangeMultiplier;
+        return Math.random() > 0.5 ? secondaryColorChangeMultiplier : -secondaryColorChangeMultiplier;
     };
 </script>
 
