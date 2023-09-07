@@ -86,5 +86,11 @@
         "url": "/PokemonSpriteEditor3/sprites/gen4/platinum/frame2/382.png",
         "primaryColors": [ "49:58:115", "74:132:214", "41:82:148", "132:206:255", "90:165:255", "58:99:181" ],
         "secondaryColors": [ "247:16:16", "165:49:99", "115:41:58" ]
+    },
+    {
+        "name": "furret",
+        "url": "/PokemonSpriteEditor3/sprites/gen4/heartgold-soulsilver/162.png",
+        "primaryColors": [],
+        "secondaryColors": [ "156:98:74", "123:65:57" ]
     }
 ]

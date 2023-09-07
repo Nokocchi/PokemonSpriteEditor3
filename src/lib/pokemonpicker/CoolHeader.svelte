@@ -20,9 +20,12 @@
         originalImageData: ImageData;
     };
 
+    const canvasHeight: number = 150;
     let frameOne: boolean = false;
-    setInterval(() => {frameOne = !frameOne}, 1000);
-    let screenWidth: number;
+    setInterval(() => {
+        frameOne = !frameOne;
+    }, 1000);
+    let canvasWidth: number;
     let canvas: HTMLCanvasElement;
     let toDraw: Map<string, CanvasPkmn> = new Map<string, CanvasPkmn>();
 
@@ -32,7 +35,7 @@
     // 1: Add all pokemon from headerData.json to a map
     // 2: Then, start drawing
     onMount(() => {
-        canvas.width = screenWidth;
+        canvas.width = canvasWidth;
         headerPokemons.forEach((pkmn) => {
             addPokemonToDrawMap(pkmn);
         });
@@ -46,10 +49,18 @@
     const drawFrame = () => {
         if (!canvas) return;
 
-        canvas.getContext("2d").clearRect(0, 0, screenWidth, 150);
+        let ctx: CanvasRenderingContext2D = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         toDraw.forEach((canvasPkmn, url) => {
             drawPokemon(url, canvasPkmn);
         });
+        ctx.font = "70px Arial";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = 'black';
+        ctx.textBaseline = 'middle'; 
+        ctx.textAlign = "center";
+        ctx.fillText("Sprite Editor", canvasWidth / 2, canvasHeight / 2, canvasWidth);
+        ctx.strokeText("Sprite Editor", canvasWidth / 2, canvasHeight / 2, canvasWidth);
         window.requestAnimationFrame(() => drawFrame());
     };
 
@@ -108,7 +119,7 @@
         presentContext.imageSmoothingEnabled = false;
         presentContext.drawImage(tempCanvas, canvasPkmn.xPos, canvasPkmn.yPos);
 
-        if (canvasPkmn.xPos > screenWidth) {
+        if (canvasPkmn.xPos > canvasWidth) {
             resetAndRandomize(toDraw.get(url));
         }
     };
@@ -135,7 +146,7 @@
                 }
 
                 let hsl: HSL = RGBToHSL(getAsRGB(colorKey));
-                hsl.h += canvasPokemon.initialHueValue + (canvasPokemon.xPos * delta);
+                hsl.h += canvasPokemon.initialHueValue + canvasPokemon.xPos * delta;
                 if (hsl.h < 0) {
                     hsl.h = Math.abs(hsl.h) % 359;
                 }
@@ -182,11 +193,11 @@
     };
 
     const getRandomXPos = () => {
-        return Math.random() * screenWidth;
+        return Math.random() * canvasWidth;
     };
 
     const getRandomYPos = (imageHeight: number) => {
-        return Math.max(0, Math.random() * 150 - imageHeight);
+        return Math.max(0, Math.random() * canvasHeight - imageHeight);
     };
 
     const getPrimaryColorChangeMultiplier = (): number => {
@@ -200,8 +211,8 @@
     };
 </script>
 
-<div class="cool-header" bind:clientWidth={screenWidth}>
-    <canvas bind:this={canvas} height="150"/>
+<div class="cool-header" bind:clientWidth={canvasWidth}>
+    <canvas bind:this={canvas} height={canvasHeight} />
 </div>
 
 <style>

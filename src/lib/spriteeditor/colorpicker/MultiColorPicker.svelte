@@ -18,7 +18,7 @@
     import RangeSlider from "./multislider/RangeSlider.svelte";
     import { colorPickerModeStore } from "../store";
     const dispatch = createEventDispatcher();
-    
+
     export let currentlyMultiSelectedColors: string[];
 
     const getRGBValsFromColorKeys = (rgbVal: string): number[] => {
@@ -32,6 +32,8 @@
             (rgb) => RGBToHSL(rgb)[hslVal]
         );
     };
+
+    //$: console.log(currentlyMultiSelectedColors);
 
     let r: number[] = getRGBValsFromColorKeys(RGBVal.r);
     let g: number[] = getRGBValsFromColorKeys(RGBVal.g);
