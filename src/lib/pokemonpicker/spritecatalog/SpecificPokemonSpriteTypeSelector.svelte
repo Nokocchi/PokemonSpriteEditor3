@@ -90,7 +90,7 @@
         display: flex;
         flex-direction: row;
         gap: 15px;
-        overflow-x: scroll;
+        overflow-x: auto;
     }
 
     img {

@@ -200,14 +200,14 @@
     };
 </script>
 
-<div class="cool-header">
-    <canvas bind:this={canvas} height="150" />
+<div class="cool-header" bind:clientWidth={screenWidth}>
+    <canvas bind:this={canvas} height="150"/>
 </div>
-<svelte:window bind:innerWidth={screenWidth} />
 
 <style>
     .cool-header {
         height: fit-content;
         background-color: white;
+        width: 100%;
     }
 </style>

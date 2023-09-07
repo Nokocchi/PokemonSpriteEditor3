@@ -47,7 +47,7 @@
     .pokemon-selector {
         display: flex;
         flex-direction: column;
-        overflow-y: scroll;
+        overflow-y: auto;
         height: 100%; /* To enable scrolling */
     }
 

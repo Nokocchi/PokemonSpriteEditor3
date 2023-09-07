@@ -135,7 +135,7 @@
 
     .palette-container {
         flex-grow: 1;
-        overflow-x: scroll;
+        overflow-x: auto;
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
