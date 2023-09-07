@@ -18,6 +18,7 @@
     let screenWidth: number;
     let maxCanvasSize: number;
     let shouldBlinkSelectedColor: boolean = false;
+    let clearBlinkWhenSelectionStops: boolean = false;
 
     $: handleNewPokemon(originalImageData);
     $: updateDirtyCanvas($dirtyImageDataStore);
@@ -32,7 +33,12 @@
     })
 
     const blinkSelectedColors = (shouldBlinkSelectedColor: boolean) => {
-        if(!$currentlySelectedColorPixelLocationsStore.size) return
+        if(!$currentlySelectedColorPixelLocationsStore.size && clearBlinkWhenSelectionStops){
+            presentImage(originalCanvas, originalImagePixels);
+            clearBlinkWhenSelectionStops = false;
+            return;
+        }
+        clearBlinkWhenSelectionStops = true;
 
         if(!shouldBlinkSelectedColor){
             presentImage(originalCanvas, originalImagePixels);

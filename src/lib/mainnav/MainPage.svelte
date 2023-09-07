@@ -6,6 +6,7 @@
     import {
         contextColorUpdateStore,
         contextCurrentLockedValueStore,
+        currentlySelectedColorPixelLocationsStore,
         dirtyImageDataStore,
     } from "../spriteeditor/store";
     import { CurrentWindow } from "../spriteeditor/types";
@@ -24,6 +25,7 @@
         $dirtyImageDataStore = new Uint8ClampedArray(originalImageData.data);
         $contextColorUpdateStore.clear();
         $contextCurrentLockedValueStore.clear();
+        $currentlySelectedColorPixelLocationsStore = new Map<string, number[]>();
         originalImageData = originalImageData;
     };
 </script>
