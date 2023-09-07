@@ -146,7 +146,7 @@
                 }
 
                 let hsl: HSL = RGBToHSL(getAsRGB(colorKey));
-                hsl.h += canvasPokemon.initialHueValue + canvasPokemon.xPos * delta;
+                hsl.h += (canvasPokemon.initialHueValue + canvasPokemon.xPos) * delta;
                 if (hsl.h < 0) {
                     hsl.h = Math.abs(hsl.h) % 359;
                 }
