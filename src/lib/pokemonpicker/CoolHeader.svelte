@@ -21,7 +21,7 @@
     };
 
     let frameOne: boolean = false;
-    let previousFrameStartedAt = new Date();
+    setInterval(() => {frameOne = !frameOne}, 1000);
     let screenWidth: number;
     let canvas: HTMLCanvasElement;
     let toDraw: Map<string, CanvasPkmn> = new Map<string, CanvasPkmn>();
@@ -114,20 +114,7 @@
     };
 
     const changeAndGetImageData = (url: string, canvasPokemon: CanvasPkmn): ImageData => {
-        let frameData: FrameSpecificData;
-        let currentFrameStartedAt: Date = new Date();
-        let moreThanSecHasPassed: boolean = currentFrameStartedAt.getTime() > previousFrameStartedAt.getTime() + 1000;
-
-        if (moreThanSecHasPassed) {
-            frameOne = !frameOne;
-            previousFrameStartedAt = currentFrameStartedAt;
-        }
-        if (frameOne) {
-            frameData = canvasPokemon.frameOne;
-        } else {
-            frameData = canvasPokemon.frameTwo;
-        }
-
+        let frameData: FrameSpecificData = frameOne ? canvasPokemon.frameOne : canvasPokemon.frameTwo;
         let dirtyImagePixels: Uint8ClampedArray = new Uint8ClampedArray(frameData.originalImageData.data);
 
         frameData.pixelLocations.forEach((pixelLocations, colorKey) => {

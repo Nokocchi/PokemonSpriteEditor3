@@ -14,3 +14,4 @@ export const dirtyImageDataStore: Writable<Uint8ClampedArray> = writable();
 export const colorPickerModeStore: Writable<string> = writable(ColorPickerMode.RGB);
 export const downloadPokemonStore: Writable<boolean> = writable(false);
 export const paletteGridSizeStore: Writable<number> = writable(2);
+export const currentlySelectedColorPixelLocationsStore: Writable<Map<string, number[]>> = writable(new Map<string, number[]>());

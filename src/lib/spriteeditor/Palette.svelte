@@ -2,11 +2,7 @@
     import Pencil from "~icons/mdi/pencil";
     import MultiSelectIcon from "~icons/mdi/checkbox-blank-circle-outline";
     import SelectedMultiSelectIcon from "~icons/mdi/check-circle-outline";
-    import {
-        dirtyImageDataStore,
-        contextColorUpdateStore,
-        contextCurrentLockedValueStore,
-    } from "./store";
+    import { dirtyImageDataStore, contextColorUpdateStore, contextCurrentLockedValueStore, currentlySelectedColorPixelLocationsStore } from "./store";
     import { getAsRGB, isEquals, type RGB } from "./types";
 
     export let initialColorKey: string;
@@ -18,10 +14,7 @@
     let initialColorRGB: RGB = getAsRGB(initialColorKey);
     let currentColor: RGB = initialColorRGB;
 
-    $: multiSelected =
-        currentlyMultiSelectedColors.filter(
-            (other) => other === initialColorKey
-        ).length > 0;
+    $: multiSelected = currentlyMultiSelectedColors.filter((other) => other === initialColorKey).length > 0;
     $: multiSelectStarted = currentlyMultiSelectedColors.length > 0;
     $: selected = currentlySingleSelectedColor === initialColorKey;
     $: updateColorFromMultiselect($contextColorUpdateStore);
@@ -32,30 +25,33 @@
         if (currentlyMultiSelectedColors.length) {
             multiSelect();
         } else {
+            let currentColorAlreadySelected: boolean = currentlySingleSelectedColor === initialColorKey;
             $contextCurrentLockedValueStore.clear();
-            $contextCurrentLockedValueStore.set(initialColorKey, currentColor);
-            currentlySingleSelectedColor =
-                currentlySingleSelectedColor === initialColorKey
-                    ? undefined
-                    : initialColorKey;
+            if(currentColorAlreadySelected){
+                currentlySingleSelectedColor = undefined;
+                $currentlySelectedColorPixelLocationsStore = new Map<string, number[]>();
+            } else {
+                currentlySingleSelectedColor = initialColorKey
+                $contextCurrentLockedValueStore.set(initialColorKey, currentColor);
+                $currentlySelectedColorPixelLocationsStore = new Map<string, number[]>([[initialColorKey, pixelLocations]]);
+            }
         }
     };
 
     const multiSelect = () => {
         if (multiColorModeStarted) return;
+        if (currentlySingleSelectedColor) $currentlySelectedColorPixelLocationsStore.clear(); 
 
         if (!multiSelectStarted) $contextCurrentLockedValueStore.clear();
 
         if (multiSelected) {
-            currentlyMultiSelectedColors = currentlyMultiSelectedColors.filter(
-                (selectedColor) => selectedColor !== initialColorKey
-            );
+            currentlyMultiSelectedColors = currentlyMultiSelectedColors.filter((selectedColor) => selectedColor !== initialColorKey);
+            $currentlySelectedColorPixelLocationsStore.delete(initialColorKey);
         } else {
-            currentlyMultiSelectedColors = [
-                ...currentlyMultiSelectedColors,
-                initialColorKey,
-            ];
+            currentlyMultiSelectedColors = [...currentlyMultiSelectedColors, initialColorKey];
+            $currentlySelectedColorPixelLocationsStore.set(initialColorKey, pixelLocations);
         }
+        $currentlySelectedColorPixelLocationsStore = $currentlySelectedColorPixelLocationsStore;
 
         $contextCurrentLockedValueStore.set(initialColorKey, {
             ...currentColor,
@@ -107,18 +103,12 @@
         aspect-ratio: 1 / 1;
         /* The height of an element should be 100% divided by how many elements we want in the height. Minus the gap between each element.
         There's a gap between each element, so if the grid has n elements in a column, there will be n-1 grid gaps*/
-        width: calc(
-            calc(100% / var(--palette-grid-size)) -
-                calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1))
-        );
+        width: calc(calc(100% / var(--palette-grid-size)) - calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1)));
         height: auto;
     }
 
     :global(.screen-wider-than-tall .palette) {
-        height: calc(
-            calc(100% / var(--palette-grid-size)) -
-                calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1))
-        );
+        height: calc(calc(100% / var(--palette-grid-size)) - calc(var(--grid-gap) * calc(var(--palette-grid-size) - 1)));
         width: auto;
     }
 

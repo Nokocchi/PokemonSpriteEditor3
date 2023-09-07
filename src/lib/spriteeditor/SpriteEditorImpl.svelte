@@ -5,7 +5,7 @@
     import { getAsRGB } from "./types";
     import { createEventDispatcher, onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
-    import { downloadPokemonStore, paletteGridSizeStore } from "./store";
+    import { currentlySelectedColorPixelLocationsStore, downloadPokemonStore, paletteGridSizeStore } from "./store";
 
     export let originalColorPixelLocationsMap: Map<string, number[]>;
     export let invisible: boolean;
@@ -42,6 +42,7 @@
     const closeMultiColor = () => {
         multiColorModeStarted = false;
         currentlyMultiSelectedColors = [];
+        $currentlySelectedColorPixelLocationsStore = new Map<string, number[]>();
     };
 
     const resetPokemon = () => {

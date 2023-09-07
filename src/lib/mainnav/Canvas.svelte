@@ -1,12 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import {
+    currentlySelectedColorPixelLocationsStore,
         dirtyImageDataStore,
         downloadPokemonStore,
     } from "../spriteeditor/store";
     import { canvasScaler, getMaxCanvasHeight } from "../spriteeditor/types";
 
     export let originalImageData: ImageData;
+    const selectedColorBlinkSpeedMs: number = 500;
     let imageHeight: number;
     let imageWidth: number;
     let originalImagePixels: Uint8ClampedArray;
@@ -15,6 +17,7 @@
     let canvasHeight: number;
     let screenWidth: number;
     let maxCanvasSize: number;
+    let shouldBlinkSelectedColor: boolean = false;
 
     $: handleNewPokemon(originalImageData);
     $: updateDirtyCanvas($dirtyImageDataStore);
@@ -22,7 +25,30 @@
     
     onMount(() => {
         handleNewPokemon(originalImageData);
+        setInterval(() => {
+            blinkSelectedColors(shouldBlinkSelectedColor);
+            shouldBlinkSelectedColor = !shouldBlinkSelectedColor;
+        }, selectedColorBlinkSpeedMs)
     })
+
+    const blinkSelectedColors = (shouldBlinkSelectedColor: boolean) => {
+        if(!$currentlySelectedColorPixelLocationsStore.size) return
+
+        if(!shouldBlinkSelectedColor){
+            presentImage(originalCanvas, originalImagePixels);
+        } else {
+            let highlightedPixels: Uint8ClampedArray = new Uint8ClampedArray(originalImagePixels);
+            $currentlySelectedColorPixelLocationsStore.forEach((pixelLocations, colorKey) => {
+                for (let i = 0; i < pixelLocations.length; i++) {
+                const pixelToUpdate: number = pixelLocations[i];
+                highlightedPixels[pixelToUpdate] = 255;
+                highlightedPixels[pixelToUpdate + 1] = 255;
+                highlightedPixels[pixelToUpdate + 2] = 255;
+            }
+            });
+            presentImage(originalCanvas, highlightedPixels);
+        }
+    }
 
     const handleNewPokemon = (imageData: ImageData) => {
         if (!imageData || !resultCanvas) return;
